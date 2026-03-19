@@ -118,7 +118,7 @@ export function UsersTableWithFilters({
               <TableHead>Nom</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Rôle</TableHead>
-              <TableHead>Date de création</TableHead>
+
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -126,12 +126,14 @@ export function UsersTableWithFilters({
           <TableBody>
             {filteredUsers.map((user) => (
               <TableRow key={user.id}>
-                <TableCell className="font-medium">{user.name ?? "—"}</TableCell>
+                <TableCell className="font-medium">
+                  {user.name ?? "—"}
+                </TableCell>
                 <TableCell>{user.email ?? "—"}</TableCell>
                 <TableCell>
                   <UserRoleSelect userId={user.id} role={user.role} />
                 </TableCell>
-                <TableCell>{formatCreatedAt(user.createdAt)}</TableCell>
+
                 <TableCell className="text-right">
                   <UserDeleteButton
                     userId={user.id}
