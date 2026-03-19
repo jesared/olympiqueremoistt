@@ -98,10 +98,9 @@ export default async function ActualiteDetailPage({
             <Image
               src={post.image}
               alt={post.title}
-              fill
-              priority
-              sizes="(min-width: 1024px) 896px, 100vw"
-              className="object-cover"
+              width={1200}
+              height={600}
+              className="rounded-xl object-cover"
             />
           ) : (
             <div className="text-muted-foreground/90 flex h-full items-center justify-center text-sm">
