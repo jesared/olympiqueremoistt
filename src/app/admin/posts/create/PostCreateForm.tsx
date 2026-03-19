@@ -8,6 +8,7 @@ import { ImageUpload } from "~/components/ImageUpload";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
+import { uploadImage } from "~/lib/supabase";
 
 const DRAFT_KEY = "post-create-draft";
 
@@ -86,7 +87,11 @@ export function PostCreateForm({ action }: PostCreateFormProps) {
 
       <div className="grid gap-2">
         <label className="text-sm font-medium">Image</label>
-        <ImageUpload value={image} onUploaded={setImage} />
+        <ImageUpload
+          value={image}
+          uploadImage={uploadImage}
+          onUploaded={setImage}
+        />
         <input type="hidden" name="image" value={image} />
       </div>
 
