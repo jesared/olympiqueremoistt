@@ -5,9 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireAdmin } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
 
-export const APP_ROLES = ["USER", "ORGANIZER", "ADMIN"] as const;
-
-export type AppRole = (typeof APP_ROLES)[number];
+import { APP_ROLES, type AppRole } from "./roles";
 
 export async function updateUserRole(userId: string, role: AppRole) {
   await requireAdmin();

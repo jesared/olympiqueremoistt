@@ -3,11 +3,8 @@
 import { Loader2 } from "lucide-react";
 import { type ChangeEvent, useState, useTransition } from "react";
 
-import {
-  APP_ROLES,
-  type AppRole,
-  updateUserRole,
-} from "~/app/admin/users/actions";
+import { updateUserRole } from "~/app/admin/users/actions";
+import { APP_ROLES, type AppRole } from "~/app/admin/users/roles";
 import { Badge } from "~/components/ui/badge";
 import { Select, SelectItem } from "~/components/ui/select";
 

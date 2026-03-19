@@ -10,7 +10,7 @@ import {
 import { requireAdmin } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
 
-import { type AppRole } from "./actions";
+import { type AppRole } from "./roles";
 import { UserRoleSelect } from "./UserRoleSelect";
 
 type UserListItem = {
