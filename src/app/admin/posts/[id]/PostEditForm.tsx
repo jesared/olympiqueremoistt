@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { type FormEvent, useState, useTransition } from "react";
 
+import RichTextEditor from "~/components/RichTextEditor";
 import { Button } from "~/components/ui/button";
 import { CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
 
 import { updatePost } from "./actions";
 
@@ -36,6 +36,7 @@ const ERROR_MESSAGES: Record<string, string> = {
 export function PostEditForm({ post }: PostEditFormProps) {
   const [toast, setToast] = useState<ToastState>(null);
   const [isPending, startTransition] = useTransition();
+  const [content, setContent] = useState(post.content);
 
   const showToast = (nextToast: ToastState) => {
     setToast(nextToast);
@@ -84,10 +85,16 @@ export function PostEditForm({ post }: PostEditFormProps) {
         </div>
 
         <div className="grid gap-2">
-          <label htmlFor="content" className="text-sm font-medium">
+          <label htmlFor="content-editor" className="text-sm font-medium">
             Contenu
           </label>
-          <Textarea id="content" name="content" required defaultValue={post.content} />
+          <input type="hidden" name="content" value={content} required />
+          <RichTextEditor
+            value={content}
+            onChange={setContent}
+            placeholder="Rédigez votre actualité..."
+            className="w-full"
+          />
         </div>
 
         <div className="grid gap-2">
