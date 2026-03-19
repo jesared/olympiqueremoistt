@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { db as prisma } from "~/server/db";
 
@@ -29,6 +30,7 @@ export default async function ActualitesPage() {
     select: {
       id: true,
       title: true,
+      slug: true,
       image: true,
       content: true,
       createdAt: true,
@@ -54,41 +56,40 @@ export default async function ActualitesPage() {
       ) : (
         <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {posts.map((post) => (
-            <Card
-              key={post.id}
-              className="h-full overflow-hidden border-border/70 p-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="bg-muted relative aspect-[16/9] overflow-hidden">
-                {post.image ? (
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    fill
-                    sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="text-muted-foreground/90 flex h-full items-center justify-center text-sm">
-                    Image indisponible
-                  </div>
-                )}
-              </div>
+            <Link key={post.id} href={`/actualites/${post.slug}`} className="h-full">
+              <Card className="h-full overflow-hidden border-border/70 p-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                <div className="bg-muted relative aspect-[16/9] overflow-hidden">
+                  {post.image ? (
+                    <Image
+                      src={post.image}
+                      alt={post.title}
+                      fill
+                      sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="text-muted-foreground/90 flex h-full items-center justify-center text-sm">
+                      Image indisponible
+                    </div>
+                  )}
+                </div>
 
-              <CardHeader className="space-y-2 px-5 pt-5">
-                <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                  {dateFormatter.format(post.createdAt)}
-                </p>
-                <CardTitle className="text-lg leading-snug sm:text-xl">
-                  {post.title}
-                </CardTitle>
-              </CardHeader>
+                <CardHeader className="space-y-2 px-5 pt-5">
+                  <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                    {dateFormatter.format(post.createdAt)}
+                  </p>
+                  <CardTitle className="text-lg leading-snug sm:text-xl">
+                    {post.title}
+                  </CardTitle>
+                </CardHeader>
 
-              <CardContent className="mt-auto px-5 pb-5">
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {toExcerpt(post.content)}
-                </p>
-              </CardContent>
-            </Card>
+                <CardContent className="mt-auto px-5 pb-5">
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {toExcerpt(post.content)}
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </section>
       )}
