@@ -14,17 +14,18 @@ if (!supabaseAnonKey) {
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function uploadImage(file: File): Promise<string> {
-  const uniqueFileName = `${Date.now()}-${file.name}`;
+  const fileName = `${Date.now()}-${file.name}`;
 
-  const { error: uploadError } = await supabase.storage
+  const { error } = await supabase.storage
     .from("posts")
-    .upload(uniqueFileName, file);
+    .upload(fileName, file);
 
-  if (uploadError) {
-    throw new Error(`Failed to upload image: ${uploadError.message}`);
+  if (error) {
+    console.error("Supabase upload error:", error.message);
+    throw error;
   }
 
-  const { data } = supabase.storage.from("posts").getPublicUrl(uniqueFileName);
+  const { data } = supabase.storage.from("posts").getPublicUrl(fileName);
 
   return data.publicUrl;
 }
