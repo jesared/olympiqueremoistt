@@ -3,15 +3,21 @@ import { Bell, CalendarCheck2, Plus, Trophy, UsersRound } from "lucide-react";
 import { DashboardHeading } from "~/components/dashboard/dashboard-heading";
 import { StatCard } from "~/components/dashboard/stat-card";
 import { Badge } from "~/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import {
   dashboardStats,
   dashboardUser,
   notifications,
   participations,
   playerFeatures,
-  registrations,
 } from "~/data/dashboard";
+import { tournamentRegistrations } from "~/data/tournaments";
 
 export default function DashboardPage() {
   return (
@@ -22,6 +28,7 @@ export default function DashboardPage() {
         action={{
           label: "Nouvelle inscription",
           icon: <Plus className="mr-1 size-4" />,
+          href: "/dashboard/inscriptions/nouvelle",
         }}
       />
 
@@ -56,27 +63,27 @@ export default function DashboardPage() {
         <Card className="gap-4">
           <CardHeader>
             <CardTitle>Mes prochaines inscriptions</CardTitle>
-            <CardDescription>Vue rapide des événements à venir.</CardDescription>
+            <CardDescription>
+              Vue rapide des événements à venir.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            {registrations.slice(0, 3).map((registration) => (
+            {tournamentRegistrations.slice(0, 3).map((registration) => (
               <div
                 key={registration.id}
                 className="bg-muted/40 flex items-center justify-between rounded-lg p-3"
               >
                 <div>
-                  <p className="text-sm font-medium">{registration.name}</p>
+                  <p className="text-sm font-medium">
+                    {registration.tournamentName}
+                  </p>
                   <p className="text-muted-foreground text-xs">
                     {registration.date} • {registration.city}
                   </p>
                 </div>
                 <Badge
                   variant={
-                    registration.status === "Confirmée"
-                      ? "success"
-                      : registration.status === "En attente"
-                        ? "warning"
-                        : "destructive"
+                    registration.status === "Validé" ? "success" : "warning"
                   }
                 >
                   {registration.status}
@@ -89,7 +96,9 @@ export default function DashboardPage() {
         <Card className="gap-4">
           <CardHeader>
             <CardTitle>Fonctionnalités recommandées</CardTitle>
-            <CardDescription>Roadmap utile pour un joueur ORTT.</CardDescription>
+            <CardDescription>
+              Roadmap utile pour un joueur ORTT.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             {playerFeatures.slice(0, 5).map((feature) => (
@@ -108,7 +117,10 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {participations.slice(0, 3).map((participation) => (
-              <div key={participation.id} className="bg-muted/40 rounded-lg p-3">
+              <div
+                key={participation.id}
+                className="bg-muted/40 rounded-lg p-3"
+              >
                 <p className="text-sm font-medium">{participation.event}</p>
                 <p className="text-muted-foreground text-xs">
                   {participation.date} • {participation.result}
@@ -127,9 +139,13 @@ export default function DashboardPage() {
               <div key={notification.id} className="bg-muted/40 rounded-lg p-3">
                 <div className="mb-1 flex items-center justify-between gap-2">
                   <p className="text-sm font-medium">{notification.title}</p>
-                  {notification.unread && <Badge variant="secondary">Nouveau</Badge>}
+                  {notification.unread && (
+                    <Badge variant="secondary">Nouveau</Badge>
+                  )}
                 </div>
-                <p className="text-muted-foreground text-xs">{notification.message}</p>
+                <p className="text-muted-foreground text-xs">
+                  {notification.message}
+                </p>
               </div>
             ))}
           </CardContent>
