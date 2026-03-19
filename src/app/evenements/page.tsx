@@ -15,13 +15,14 @@ const truncateDescription = (description: string, maxLength = 140) => {
 };
 
 export default async function EvenementsPage() {
-  const today = new Date();
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
 
   const events = await prisma.event.findMany({
     where: {
       published: true,
       startDate: {
-        gte: today,
+        gte: startOfToday,
       },
     },
     orderBy: {
