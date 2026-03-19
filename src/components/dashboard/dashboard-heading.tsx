@@ -1,5 +1,7 @@
 import { type ReactNode } from "react";
 
+import Link from "next/link";
+
 import { Button } from "~/components/ui/button";
 
 type DashboardHeadingProps = {
@@ -8,10 +10,15 @@ type DashboardHeadingProps = {
   action?: {
     label: string;
     icon?: ReactNode;
+    href?: string;
   };
 };
 
-export function DashboardHeading({ title, description, action }: DashboardHeadingProps) {
+export function DashboardHeading({
+  title,
+  description,
+  action,
+}: DashboardHeadingProps) {
   return (
     <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
       <div className="space-y-1">
@@ -20,9 +27,18 @@ export function DashboardHeading({ title, description, action }: DashboardHeadin
       </div>
 
       {action ? (
-        <Button className="w-full sm:w-auto">
-          {action.icon}
-          {action.label}
+        <Button className="w-full sm:w-auto" asChild={Boolean(action.href)}>
+          {action.href ? (
+            <Link href={action.href}>
+              {action.icon}
+              {action.label}
+            </Link>
+          ) : (
+            <>
+              {action.icon}
+              {action.label}
+            </>
+          )}
         </Button>
       ) : null}
     </div>
