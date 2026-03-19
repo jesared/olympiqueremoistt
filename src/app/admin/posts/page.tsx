@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { PostDeleteButton } from "~/app/admin/posts/PostDeleteButton";
-import { Badge } from "~/components/ui/badge";
+import { PublishToggleButton } from "~/app/admin/posts/PublishToggleButton";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -42,7 +42,7 @@ export default async function AdminPostsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Titre</TableHead>
-                  <TableHead>Statut</TableHead>
+                  <TableHead className="text-right">Publication</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -50,10 +50,11 @@ export default async function AdminPostsPage() {
                 {posts.map((post) => (
                   <TableRow key={post.id}>
                     <TableCell className="font-medium">{post.title}</TableCell>
-                    <TableCell>
-                      <Badge variant={post.published ? "success" : "outline"}>
-                        {post.published ? "Publié" : "Brouillon"}
-                      </Badge>
+                    <TableCell className="text-right">
+                      <PublishToggleButton
+                        postId={post.id}
+                        initialPublished={post.published}
+                      />
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
