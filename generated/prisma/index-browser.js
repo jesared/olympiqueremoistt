@@ -160,6 +160,11 @@ exports.Prisma.UserScalarFieldEnum = {
   image: 'image'
 };
 
+exports.Prisma.TournamentScalarFieldEnum = {
+  id: 'id',
+  organizerId: 'organizerId'
+};
+
 exports.Prisma.VerificationTokenScalarFieldEnum = {
   identifier: 'identifier',
   token: 'token',
@@ -187,6 +192,7 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Session: 'Session',
   User: 'User',
+  Tournament: 'Tournament',
   VerificationToken: 'VerificationToken'
 };
 
