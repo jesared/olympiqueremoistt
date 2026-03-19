@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
+import { slugify } from "~/lib/slug";
 import { db as prisma } from "~/server/db";
 
 const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
@@ -11,7 +12,7 @@ const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
 });
 
 type ActualiteDetailPageProps = {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 };
 
 async function getPostBySlug(slug: string) {
@@ -25,6 +26,7 @@ async function getPostBySlug(slug: string) {
       image: true,
       content: true,
       createdAt: true,
+      slug: true,
     },
   });
 }
@@ -32,8 +34,7 @@ async function getPostBySlug(slug: string) {
 export async function generateMetadata({
   params,
 }: ActualiteDetailPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const post = await getPostBySlug(params.slug);
 
   if (!post) {
     return {
@@ -49,10 +50,34 @@ export async function generateMetadata({
 export default async function ActualiteDetailPage({
   params,
 }: ActualiteDetailPageProps) {
-  const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const requestedSlug = decodeURIComponent(params.slug);
+  const post = await getPostBySlug(requestedSlug);
 
   if (!post) {
+    const postByTitle = await prisma.post.findFirst({
+      where: {
+        title: requestedSlug,
+        published: true,
+      },
+      select: {
+        slug: true,
+      },
+    });
+
+    if (postByTitle) {
+      redirect(`/actualites/${postByTitle.slug}`);
+    }
+
+    const normalizedSlug = slugify(requestedSlug);
+
+    if (normalizedSlug && normalizedSlug !== requestedSlug) {
+      const normalizedPost = await getPostBySlug(normalizedSlug);
+
+      if (normalizedPost) {
+        redirect(`/actualites/${normalizedPost.slug}`);
+      }
+    }
+
     notFound();
   }
 
