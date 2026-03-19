@@ -35,7 +35,7 @@ export default async function AdminEventsPage() {
         <CardHeader className="flex flex-row items-center justify-between gap-4">
           <CardTitle>Événements</CardTitle>
           <Button asChild>
-            <Link href="/admin/events/new">Créer un événement</Link>
+            <Link href="/admin/events/create">Créer un événement</Link>
           </Button>
         </CardHeader>
 
