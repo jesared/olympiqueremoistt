@@ -1,9 +1,9 @@
 "use client";
 
-import { Edit, Plus, Trash2 } from "lucide-react";
+import { Edit, Loader2, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 
-import { togglePublish } from "~/app/admin/actualites/actions";
+import { deletePost, togglePublish } from "~/app/admin/actualites/actions";
 
 import { StatusBadge } from "~/components/admin/cms/status-badge";
 import { Button } from "~/components/ui/button";
@@ -37,6 +37,11 @@ const emptyForm: Omit<NewsArticle, "id"> = {
   status: "draft",
 };
 
+type ToastState = {
+  message: string;
+  kind: "success" | "error";
+} | null;
+
 type NewsManagerProps = {
   initialArticles?: NewsArticle[];
 };
@@ -46,9 +51,17 @@ export function NewsManager({
 }: NewsManagerProps) {
   const [articles, setArticles] = useState(initialArticles);
   const [pendingPublishId, setPendingPublishId] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<NewsArticle | null>(null);
+  const [toast, setToast] = useState<ToastState>(null);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+
+  const showToast = (nextToast: ToastState) => {
+    setToast(nextToast);
+    window.setTimeout(() => setToast(null), 2500);
+  };
 
   const reset = () => {
     setForm(emptyForm);
@@ -122,6 +135,27 @@ export function NewsManager({
       console.error("Erreur lors du changement de publication", error);
     } finally {
       setPendingPublishId(null);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget || pendingDeleteId) return;
+
+    setPendingDeleteId(deleteTarget.id);
+
+    try {
+      await deletePost(deleteTarget.id);
+      setArticles((prev) => prev.filter((item) => item.id !== deleteTarget.id));
+      setDeleteTarget(null);
+      showToast({ message: "Actualité supprimée.", kind: "success" });
+    } catch (error) {
+      console.error("Erreur lors de la suppression", error);
+      showToast({
+        message: "Impossible de supprimer cette actualité.",
+        kind: "error",
+      });
+    } finally {
+      setPendingDeleteId(null);
     }
   };
 
@@ -271,13 +305,14 @@ export function NewsManager({
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() =>
-                        setArticles((prev) =>
-                          prev.filter((item) => item.id !== article.id),
-                        )
-                      }
+                      onClick={() => setDeleteTarget(article)}
+                      disabled={pendingDeleteId === article.id}
                     >
-                      <Trash2 className="size-3.5" />
+                      {pendingDeleteId === article.id ? (
+                        <Loader2 className="size-3.5 animate-spin" />
+                      ) : (
+                        <Trash2 className="size-3.5" />
+                      )}
                       Supprimer
                     </Button>
                   </div>
@@ -287,6 +322,62 @@ export function NewsManager({
           </TableBody>
         </Table>
       </CardContent>
+
+      <Dialog
+        open={Boolean(deleteTarget)}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setDeleteTarget(null);
+          }
+        }}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Confirmer la suppression</DialogTitle>
+            <DialogDescription>
+              Voulez-vous vraiment supprimer{" "}
+              <strong>{deleteTarget?.title}</strong> ? Cette action est
+              irréversible.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDeleteTarget(null)}
+              disabled={Boolean(pendingDeleteId)}
+            >
+              Annuler
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => void handleDelete()}
+              disabled={Boolean(pendingDeleteId)}
+            >
+              {pendingDeleteId ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Trash2 className="size-4" />
+              )}
+              <span>Supprimer</span>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {toast ? (
+        <div
+          role="status"
+          className={`fixed right-4 bottom-4 z-50 rounded-md border px-4 py-2 text-sm shadow-lg ${
+            toast.kind === "success"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200"
+              : "border-red-200 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200"
+          }`}
+        >
+          {toast.message}
+        </div>
+      ) : null}
     </Card>
   );
 }
