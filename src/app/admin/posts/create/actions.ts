@@ -31,6 +31,7 @@ export async function createPost(data: FormData) {
   await prisma.post.create({
     data: {
       title,
+      slug,
       content,
       image: image || null,
       published,
