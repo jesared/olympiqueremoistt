@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { PostEditorPanel } from "~/components/admin/post-editor-panel";
+import { ImageUpload } from "~/components/ImageUpload";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
@@ -84,16 +85,9 @@ export function PostCreateForm({ action }: PostCreateFormProps) {
       </p>
 
       <div className="grid gap-2">
-        <label htmlFor="image" className="text-sm font-medium">
-          Image (URL)
-        </label>
-        <Input
-          id="image"
-          name="image"
-          type="url"
-          value={image}
-          onChange={(event) => setImage(event.target.value)}
-        />
+        <label className="text-sm font-medium">Image</label>
+        <ImageUpload value={image} onUploaded={setImage} />
+        <input type="hidden" name="image" value={image} />
       </div>
 
       <div className="grid gap-2">
