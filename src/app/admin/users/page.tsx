@@ -11,6 +11,7 @@ import { requireAdmin } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
 
 import { type AppRole } from "./roles";
+import { UserDeleteButton } from "./UserDeleteButton";
 import { UserRoleSelect } from "./UserRoleSelect";
 
 type UserListItem = {
@@ -32,7 +33,7 @@ const formatCreatedAt = (date: Date | null | undefined) => {
 };
 
 export default async function AdminUsersPage() {
-  await requireAdmin();
+  const session = await requireAdmin();
 
   const users = (await prisma.user.findMany({
     orderBy: { name: "asc" },
@@ -58,6 +59,7 @@ export default async function AdminUsersPage() {
                   <TableHead>Email</TableHead>
                   <TableHead>Rôle</TableHead>
                   <TableHead>Date de création</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -72,6 +74,13 @@ export default async function AdminUsersPage() {
                       <UserRoleSelect userId={user.id} role={user.role} />
                     </TableCell>
                     <TableCell>{formatCreatedAt(user.createdAt)}</TableCell>
+                    <TableCell className="text-right">
+                      <UserDeleteButton
+                        userId={user.id}
+                        userLabel={user.name ?? user.email ?? "cet utilisateur"}
+                        disabled={session.user.id === user.id}
+                      />
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
