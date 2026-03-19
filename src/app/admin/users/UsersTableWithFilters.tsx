@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 
-import { Ellipsis } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -135,7 +135,7 @@ export function UsersTableWithFilters({
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="size-8 p-0">
-                        <Ellipsis className="size-4" />
+                        <EllipsisVertical className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
