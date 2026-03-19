@@ -53,6 +53,7 @@ const adminNavSections: AdminNavSection[] = [
     items: [
       { href: "/admin/pages", label: "Pages", icon: FileText },
       { href: "/admin/actualites", label: "Actualités", icon: Newspaper },
+      { href: "/admin/posts", label: "Posts", icon: Newspaper },
       { href: "/admin/events", label: "Événements", icon: CalendarDays },
       { href: "/admin/users", label: "Users", icon: UserCog },
     ],
