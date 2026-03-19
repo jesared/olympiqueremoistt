@@ -36,7 +36,7 @@ model User {
 }
 
 model Account {
-  id                       String   @id @default(cuid())
+  id                       String  @id @default(cuid())
   userId                   String
   type                     String
   provider                 String
@@ -49,7 +49,7 @@ model Account {
   id_token                 String?
   session_state            String?
   refresh_token_expires_in Int?
-  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -116,13 +116,13 @@ model Event {
 
 
 model Tournament {
-  id            String           @id @default(cuid())
+  id            String            @id @default(cuid())
   name          String
   location      String
   startDate     DateTime
-  createdAt     DateTime         @default(now())
+  createdAt     DateTime          @default(now())
   organizerId   String
-  organizer     User             @relation("TournamentOrganizer", fields: [organizerId], references: [id], onDelete: Restrict)
+  organizer     User              @relation("TournamentOrganizer", fields: [organizerId], references: [id], onDelete: Restrict)
   events        TournamentEvent[]
   registrations Registration[]
 
@@ -147,14 +147,14 @@ model TournamentEvent {
 }
 
 model Registration {
-  id              String              @id @default(cuid())
-  userId          String
-  tournamentId    String
-  status          RegistrationStatus  @default(PENDING)
-  createdAt       DateTime            @default(now())
-  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tournament      Tournament          @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
-  selectedEvents  RegistrationEvent[]
+  id             String              @id @default(cuid())
+  userId         String
+  tournamentId   String
+  status         RegistrationStatus  @default(PENDING)
+  createdAt      DateTime            @default(now())
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tournament     Tournament          @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  selectedEvents RegistrationEvent[]
 
   @@unique([userId, tournamentId])
   @@index([userId])
