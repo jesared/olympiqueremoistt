@@ -27,3 +27,23 @@ export async function updateUserRole(userId: string, role: AppRole) {
 
   return { ok: true };
 }
+
+export async function deleteUser(userId: string) {
+  const session = await requireAdmin();
+
+  if (!userId) {
+    throw new Error("Utilisateur invalide.");
+  }
+
+  if (session.user.id === userId) {
+    throw new Error("Vous ne pouvez pas supprimer votre propre compte.");
+  }
+
+  await prisma.user.delete({
+    where: { id: userId },
+  });
+
+  revalidatePath("/admin/users");
+
+  return { ok: true };
+}
