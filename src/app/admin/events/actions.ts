@@ -17,6 +17,7 @@ export async function deleteEvent(id: string) {
   });
 
   revalidatePath("/admin/events");
+  revalidatePath("/events");
   revalidatePath("/evenements");
 
   return { ok: true };

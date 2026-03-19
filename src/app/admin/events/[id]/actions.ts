@@ -77,6 +77,7 @@ export async function updateEvent(
   }
 
   revalidatePath("/admin/events");
+  revalidatePath("/events");
   revalidatePath(`/admin/events/${id}`);
 
   return { success: true };
