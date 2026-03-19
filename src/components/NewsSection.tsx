@@ -1,4 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 
 const newsItems = [
   {
@@ -19,17 +25,21 @@ const newsItems = [
       "Le club organise un stage intensif sur 4 jours pour perfectionner le service, la régularité et le jeu court.",
     date: "8 mars 2026",
   },
-]
+];
 
 export default function NewsSection() {
   return (
     <section aria-labelledby="news-heading" className="py-12 sm:py-16">
       <div className="mb-8 sm:mb-10">
-        <h2 id="news-heading" className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        <h2
+          id="news-heading"
+          className="text-3xl font-bold tracking-tight sm:text-4xl"
+        >
           Actualités
         </h2>
-        <p className="mt-3 max-w-2xl text-sm text-slate-300 sm:text-base">
-          Retrouvez les dernières informations du club, les résultats et les prochains rendez-vous.
+        <p className="text-muted-foreground mt-3 max-w-2xl text-sm sm:text-base">
+          Retrouvez les dernières informations du club, les résultats et les
+          prochains rendez-vous.
         </p>
       </div>
 
@@ -37,15 +47,21 @@ export default function NewsSection() {
         {newsItems.map((item) => (
           <Card key={item.title} className="h-full">
             <CardHeader>
-              <p className="text-xs font-semibold tracking-wide text-sky-300 uppercase">{item.date}</p>
-              <CardTitle className="text-lg leading-snug">{item.title}</CardTitle>
+              <p className="text-primary text-xs font-semibold tracking-wide uppercase">
+                {item.date}
+              </p>
+              <CardTitle className="text-lg leading-snug">
+                {item.title}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <CardDescription className="text-sm leading-relaxed">{item.description}</CardDescription>
+              <CardDescription className="text-sm leading-relaxed">
+                {item.description}
+              </CardDescription>
             </CardContent>
           </Card>
         ))}
       </div>
     </section>
-  )
+  );
 }
