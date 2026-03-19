@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Bold, Heading1, Heading2, Italic, Link2, List } from "lucide-react";
+import { useEffect } from "react";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { Bold, Heading1, Heading2, Italic, List } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 
@@ -14,93 +16,43 @@ type RichTextEditorProps = {
   className?: string;
 };
 
-type ToolbarState = {
-  bold: boolean;
-  italic: boolean;
-  h1: boolean;
-  h2: boolean;
-  list: boolean;
-  link: boolean;
-};
-
-const INITIAL_STATE: ToolbarState = {
-  bold: false,
-  italic: false,
-  h1: false,
-  h2: false,
-  list: false,
-  link: false,
-};
-
 export default function RichTextEditor({
   value,
   onChange,
   placeholder,
   className,
 }: RichTextEditorProps) {
-  const editorRef = useRef<HTMLDivElement>(null);
-  const [toolbarState, setToolbarState] = useState<ToolbarState>(INITIAL_STATE);
-
-  const refreshToolbarState = () => {
-    const selection = window.getSelection();
-    let hasLink = false;
-
-    if (selection?.anchorNode) {
-      const element =
-        selection.anchorNode instanceof Element
-          ? selection.anchorNode
-          : selection.anchorNode.parentElement;
-
-      hasLink = Boolean(element?.closest("a"));
-    }
-
-    setToolbarState({
-      bold: document.queryCommandState("bold"),
-      italic: document.queryCommandState("italic"),
-      h1: document.queryCommandValue("formatBlock") === "h1",
-      h2: document.queryCommandValue("formatBlock") === "h2",
-      list: document.queryCommandState("insertUnorderedList"),
-      link: hasLink,
-    });
-  };
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: value,
+    editorProps: {
+      attributes: {
+        class:
+          "prose prose-zinc dark:prose-invert min-h-48 max-w-none px-3 py-2 text-sm focus-visible:outline-none",
+        "data-placeholder": placeholder ?? "Écrivez votre contenu...",
+      },
+    },
+    onUpdate: ({ editor: currentEditor }) => {
+      onChange(currentEditor.getHTML());
+    },
+    immediatelyRender: false,
+  });
 
   useEffect(() => {
-    const element = editorRef.current;
+    if (!editor) return;
 
-    if (!element) return;
+    const currentHtml = editor.getHTML();
 
-    if (element.innerHTML !== value) {
-      element.innerHTML = value;
+    if (value !== currentHtml) {
+      editor.commands.setContent(value || "", false);
     }
-  }, [value]);
+  }, [editor, value]);
 
-  useEffect(() => {
-    const handleSelectionChange = () => refreshToolbarState();
+  const runCommand = (command: () => void) => {
+    if (!editor) return;
 
-    document.addEventListener("selectionchange", handleSelectionChange);
-    return () => {
-      document.removeEventListener("selectionchange", handleSelectionChange);
-    };
-  }, []);
-
-  const runCommand = (command: string, commandValue?: string) => {
-    editorRef.current?.focus();
-    document.execCommand(command, false, commandValue);
-    onChange(editorRef.current?.innerHTML ?? "");
-    refreshToolbarState();
-  };
-
-  const handleLink = () => {
-    if (toolbarState.link) {
-      runCommand("unlink");
-      return;
-    }
-
-    const url = window.prompt("URL du lien", "https://");
-
-    if (!url) return;
-
-    runCommand("createLink", url.trim());
+    command();
+    onChange(editor.getHTML());
   };
 
   return (
@@ -109,9 +61,13 @@ export default function RichTextEditor({
         <Button
           type="button"
           size="sm"
-          variant={toolbarState.bold ? "default" : "outline"}
+          variant={editor?.isActive("bold") ? "default" : "outline"}
           className="gap-1"
-          onClick={() => runCommand("bold")}
+          onClick={() =>
+            runCommand(() => {
+              editor?.chain().focus().toggleBold().run();
+            })
+          }
         >
           <Bold className="h-4 w-4" aria-hidden="true" />
           Gras
@@ -120,9 +76,13 @@ export default function RichTextEditor({
         <Button
           type="button"
           size="sm"
-          variant={toolbarState.italic ? "default" : "outline"}
+          variant={editor?.isActive("italic") ? "default" : "outline"}
           className="gap-1"
-          onClick={() => runCommand("italic")}
+          onClick={() =>
+            runCommand(() => {
+              editor?.chain().focus().toggleItalic().run();
+            })
+          }
         >
           <Italic className="h-4 w-4" aria-hidden="true" />
           Italique
@@ -131,9 +91,13 @@ export default function RichTextEditor({
         <Button
           type="button"
           size="sm"
-          variant={toolbarState.h1 ? "default" : "outline"}
+          variant={editor?.isActive("heading", { level: 1 }) ? "default" : "outline"}
           className="gap-1"
-          onClick={() => runCommand("formatBlock", "h1")}
+          onClick={() =>
+            runCommand(() => {
+              editor?.chain().focus().toggleHeading({ level: 1 }).run();
+            })
+          }
         >
           <Heading1 className="h-4 w-4" aria-hidden="true" />
           Titre 1
@@ -142,9 +106,13 @@ export default function RichTextEditor({
         <Button
           type="button"
           size="sm"
-          variant={toolbarState.h2 ? "default" : "outline"}
+          variant={editor?.isActive("heading", { level: 2 }) ? "default" : "outline"}
           className="gap-1"
-          onClick={() => runCommand("formatBlock", "h2")}
+          onClick={() =>
+            runCommand(() => {
+              editor?.chain().focus().toggleHeading({ level: 2 }).run();
+            })
+          }
         >
           <Heading2 className="h-4 w-4" aria-hidden="true" />
           Titre 2
@@ -153,35 +121,22 @@ export default function RichTextEditor({
         <Button
           type="button"
           size="sm"
-          variant={toolbarState.list ? "default" : "outline"}
+          variant={editor?.isActive("bulletList") ? "default" : "outline"}
           className="gap-1"
-          onClick={() => runCommand("insertUnorderedList")}
+          onClick={() =>
+            runCommand(() => {
+              editor?.chain().focus().toggleBulletList().run();
+            })
+          }
         >
           <List className="h-4 w-4" aria-hidden="true" />
           Liste
         </Button>
-
-        <Button
-          type="button"
-          size="sm"
-          variant={toolbarState.link ? "default" : "outline"}
-          className="gap-1"
-          onClick={handleLink}
-        >
-          <Link2 className="h-4 w-4" aria-hidden="true" />
-          Lien
-        </Button>
       </div>
 
-      <div
-        ref={editorRef}
-        id="content-editor"
-        contentEditable
-        suppressContentEditableWarning
-        onInput={(event) => onChange(event.currentTarget.innerHTML)}
-        className="prose prose-zinc dark:prose-invert border-input bg-background min-h-48 max-w-none rounded-b-md border border-t-0 px-3 py-2 text-sm focus-visible:outline-none"
-        data-placeholder={placeholder ?? "Écrivez votre contenu..."}
-      />
+      <div className="border-input bg-background rounded-b-md border border-t-0">
+        <EditorContent editor={editor} id="content-editor" />
+      </div>
     </div>
   );
 }

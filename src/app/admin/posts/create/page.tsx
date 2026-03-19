@@ -42,12 +42,9 @@ export default async function AdminCreatePostPage({
               <Input id="title" name="title" required />
             </div>
 
-            <div className="grid gap-2">
-              <label htmlFor="slug" className="text-sm font-medium">
-                Slug
-              </label>
-              <Input id="slug" name="slug" required />
-            </div>
+            <p className="text-muted-foreground text-xs">
+              Le slug est généré automatiquement à partir du titre.
+            </p>
 
             <PostCreateFormContentField />
 
