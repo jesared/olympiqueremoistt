@@ -3,9 +3,9 @@ import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
 
 import { createPost } from "./actions";
+import { PostCreateFormContentField } from "./PostCreateForm";
 
 const ERROR_MESSAGES: Record<string, string> = {
   "missing-fields": "Veuillez remplir les champs obligatoires.",
@@ -49,12 +49,7 @@ export default async function AdminCreatePostPage({
               <Input id="slug" name="slug" required />
             </div>
 
-            <div className="grid gap-2">
-              <label htmlFor="content" className="text-sm font-medium">
-                Contenu
-              </label>
-              <Textarea id="content" name="content" required />
-            </div>
+            <PostCreateFormContentField />
 
             <div className="grid gap-2">
               <label htmlFor="image" className="text-sm font-medium">

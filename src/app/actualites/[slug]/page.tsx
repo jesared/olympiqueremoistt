@@ -68,7 +68,7 @@ export default async function ActualiteDetailPage({
           </h1>
         </header>
 
-        <div className="bg-muted relative aspect-[16/9] w-full overflow-hidden rounded-lg border border-border/70">
+        <div className="bg-muted border-border/70 relative aspect-[16/9] w-full overflow-hidden rounded-lg border">
           {post.image ? (
             <Image
               src={post.image}
@@ -85,9 +85,10 @@ export default async function ActualiteDetailPage({
           )}
         </div>
 
-        <section className="prose prose-zinc max-w-none whitespace-pre-line dark:prose-invert">
-          {post.content}
-        </section>
+        <section
+          className="prose prose-zinc dark:prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
       </article>
     </main>
   );
