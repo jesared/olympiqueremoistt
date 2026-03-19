@@ -1,8 +1,10 @@
 "use client";
 
 import {
+  CalendarDays,
   ClipboardList,
   CreditCard,
+  FileText,
   LayoutDashboard,
   Menu,
   Newspaper,
@@ -10,8 +12,6 @@ import {
   Trophy,
   UserCog,
   Users,
-  FileText,
-  CalendarDays,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -52,7 +52,7 @@ const adminNavSections: AdminNavSection[] = [
     label: "Site",
     items: [
       { href: "/admin/pages", label: "Pages", icon: FileText },
-      { href: "/admin/actualites", label: "Actualités", icon: Newspaper },
+
       { href: "/admin/posts", label: "Posts", icon: Newspaper },
       { href: "/admin/events", label: "Événements", icon: CalendarDays },
       { href: "/admin/users", label: "Users", icon: UserCog },
