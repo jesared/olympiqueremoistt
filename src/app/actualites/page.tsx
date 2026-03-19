@@ -58,21 +58,17 @@ export default async function ActualitesPage() {
           {posts.map((post) => (
             <Link key={post.id} href={`/actualites/${post.slug}`} className="h-full">
               <Card className="h-full overflow-hidden border-border/70 p-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-                <div className="bg-muted relative aspect-[16/9] overflow-hidden">
-                  {post.image ? (
+                {post.image ? (
+                  <div className="bg-muted relative mx-4 mt-4 aspect-[16/9] overflow-hidden rounded-xl">
                     <Image
                       src={post.image}
                       alt={post.title}
                       fill
                       sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover"
+                      className="rounded-xl object-cover"
                     />
-                  ) : (
-                    <div className="text-muted-foreground/90 flex h-full items-center justify-center text-sm">
-                      Image indisponible
-                    </div>
-                  )}
-                </div>
+                  </div>
+                ) : null}
 
                 <CardHeader className="space-y-2 px-5 pt-5">
                   <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
