@@ -3,6 +3,7 @@
 import { type ChangeEvent, useEffect, useState } from "react";
 
 type ImageUploadProps = {
+  value?: string;
   uploadImage: (file: File) => Promise<string>;
   onUploaded: (url: string) => void;
   accept?: string;
@@ -10,18 +11,33 @@ type ImageUploadProps = {
 };
 
 export function ImageUpload({
+  value,
   uploadImage,
   onUploaded,
   accept = "image/*",
   className,
 }: ImageUploadProps) {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(value ?? null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!value) {
+      return;
+    }
+
+    setPreviewUrl((previousPreview) => {
+      if (previousPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(previousPreview);
+      }
+
+      return value;
+    });
+  }, [value]);
+
+  useEffect(() => {
     return () => {
-      if (previewUrl) {
+      if (previewUrl?.startsWith("blob:")) {
         URL.revokeObjectURL(previewUrl);
       }
     };
@@ -40,7 +56,7 @@ export function ImageUpload({
 
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl((previousPreview) => {
-      if (previousPreview) {
+      if (previousPreview?.startsWith("blob:")) {
         URL.revokeObjectURL(previousPreview);
       }
 
