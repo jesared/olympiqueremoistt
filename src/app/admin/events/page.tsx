@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { EventDeleteButton } from "~/app/admin/events/EventDeleteButton";
 import { db as prisma } from "~/server/db";
 
 const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
@@ -67,9 +68,12 @@ export default async function AdminEventsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button asChild size="sm" variant="outline">
-                        <Link href={`/admin/events/${event.id}`}>Modifier</Link>
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        <Button asChild size="sm" variant="outline">
+                          <Link href={`/admin/events/${event.id}`}>Modifier</Link>
+                        </Button>
+                        <EventDeleteButton eventId={event.id} eventTitle={event.title} />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
