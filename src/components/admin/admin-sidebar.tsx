@@ -5,9 +5,13 @@ import {
   CreditCard,
   LayoutDashboard,
   Menu,
+  Newspaper,
   Settings,
   Trophy,
+  UserCog,
   Users,
+  FileText,
+  CalendarDays,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -23,43 +27,69 @@ type AdminNavItem = {
   icon: ComponentType<{ className?: string }>;
 };
 
-const adminNavItems: AdminNavItem[] = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/inscriptions", label: "Inscriptions", icon: ClipboardList },
-  { href: "/admin/joueurs", label: "Joueurs", icon: Users },
-  { href: "/admin/tournois", label: "Tournois", icon: Trophy },
-  { href: "/admin/paiements", label: "Paiements", icon: CreditCard },
-  { href: "/admin/parametres", label: "Paramètres", icon: Settings },
+type AdminNavSection = {
+  label: string;
+  items: AdminNavItem[];
+};
+
+const adminNavSections: AdminNavSection[] = [
+  {
+    label: "Tournoi",
+    items: [
+      { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/admin/inscriptions", label: "Inscriptions", icon: ClipboardList },
+      { href: "/admin/joueurs", label: "Joueurs", icon: Users },
+      { href: "/admin/tournois", label: "Tournois", icon: Trophy },
+      { href: "/admin/paiements", label: "Paiements", icon: CreditCard },
+      { href: "/admin/parametres", label: "Paramètres", icon: Settings },
+    ],
+  },
+  {
+    label: "Site",
+    items: [
+      { href: "/admin/pages", label: "Pages", icon: FileText },
+      { href: "/admin/actualites", label: "Actualités", icon: Newspaper },
+      { href: "/admin/evenements", label: "Événements", icon: CalendarDays },
+      { href: "/admin/users", label: "Users", icon: UserCog },
+    ],
+  },
 ];
 
 function AdminNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <nav className="space-y-1" aria-label="Navigation administration">
-      {adminNavItems.map((item) => {
-        const isActive =
-          item.href === "/admin"
-            ? pathname === item.href
-            : pathname.startsWith(item.href);
+    <nav className="space-y-5" aria-label="Navigation administration">
+      {adminNavSections.map((section) => (
+        <div key={section.label} className="space-y-1">
+          <p className="text-muted-foreground px-3 text-xs font-semibold tracking-wide uppercase">
+            {section.label}
+          </p>
+          {section.items.map((item) => {
+            const isActive =
+              item.href === "/admin"
+                ? pathname === item.href
+                : pathname.startsWith(item.href);
 
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={onNavigate}
-            className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-              isActive
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
-            )}
-          >
-            <item.icon className="size-4" />
-            <span>{item.label}</span>
-          </Link>
-        );
-      })}
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onNavigate}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}
+              >
+                <item.icon className="size-4" />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      ))}
     </nav>
   );
 }
