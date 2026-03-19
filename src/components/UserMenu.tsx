@@ -57,7 +57,7 @@ export function UserMenu({ user }: UserMenuProps) {
 
         <DropdownMenuItem asChild>
           <Link
-            href="/profile"
+            href="/dashboard"
             className="flex cursor-pointer items-center gap-2"
           >
             <User className="size-4" />
