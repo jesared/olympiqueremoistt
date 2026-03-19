@@ -184,10 +184,12 @@ exports.Prisma.PostScalarFieldEnum = {
 exports.Prisma.EventScalarFieldEnum = {
   id: 'id',
   title: 'title',
+  slug: 'slug',
   description: 'description',
   location: 'location',
   startDate: 'startDate',
   endDate: 'endDate',
+  published: 'published',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

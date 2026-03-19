@@ -8623,10 +8623,12 @@ export namespace Prisma {
   export type EventMinAggregateOutputType = {
     id: string | null
     title: string | null
+    slug: string | null
     description: string | null
     location: string | null
     startDate: Date | null
     endDate: Date | null
+    published: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8634,10 +8636,12 @@ export namespace Prisma {
   export type EventMaxAggregateOutputType = {
     id: string | null
     title: string | null
+    slug: string | null
     description: string | null
     location: string | null
     startDate: Date | null
     endDate: Date | null
+    published: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8645,10 +8649,12 @@ export namespace Prisma {
   export type EventCountAggregateOutputType = {
     id: number
     title: number
+    slug: number
     description: number
     location: number
     startDate: number
     endDate: number
+    published: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -8658,10 +8664,12 @@ export namespace Prisma {
   export type EventMinAggregateInputType = {
     id?: true
     title?: true
+    slug?: true
     description?: true
     location?: true
     startDate?: true
     endDate?: true
+    published?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8669,10 +8677,12 @@ export namespace Prisma {
   export type EventMaxAggregateInputType = {
     id?: true
     title?: true
+    slug?: true
     description?: true
     location?: true
     startDate?: true
     endDate?: true
+    published?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8680,10 +8690,12 @@ export namespace Prisma {
   export type EventCountAggregateInputType = {
     id?: true
     title?: true
+    slug?: true
     description?: true
     location?: true
     startDate?: true
     endDate?: true
+    published?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8764,10 +8776,12 @@ export namespace Prisma {
   export type EventGroupByOutputType = {
     id: string
     title: string
+    slug: string
     description: string
     location: string
     startDate: Date
-    endDate: Date
+    endDate: Date | null
+    published: boolean
     createdAt: Date
     updatedAt: Date
     _count: EventCountAggregateOutputType | null
@@ -8792,10 +8806,12 @@ export namespace Prisma {
   export type EventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    slug?: boolean
     description?: boolean
     location?: boolean
     startDate?: boolean
     endDate?: boolean
+    published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["event"]>
@@ -8803,10 +8819,12 @@ export namespace Prisma {
   export type EventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    slug?: boolean
     description?: boolean
     location?: boolean
     startDate?: boolean
     endDate?: boolean
+    published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["event"]>
@@ -8814,10 +8832,12 @@ export namespace Prisma {
   export type EventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    slug?: boolean
     description?: boolean
     location?: boolean
     startDate?: boolean
     endDate?: boolean
+    published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["event"]>
@@ -8825,15 +8845,17 @@ export namespace Prisma {
   export type EventSelectScalar = {
     id?: boolean
     title?: boolean
+    slug?: boolean
     description?: boolean
     location?: boolean
     startDate?: boolean
     endDate?: boolean
+    published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "startDate" | "endDate" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
+  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "location" | "startDate" | "endDate" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
 
   export type $EventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Event"
@@ -8841,10 +8863,12 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       title: string
+      slug: string
       description: string
       location: string
       startDate: Date
-      endDate: Date
+      endDate: Date | null
+      published: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["event"]>
@@ -9272,10 +9296,12 @@ export namespace Prisma {
   interface EventFieldRefs {
     readonly id: FieldRef<"Event", 'String'>
     readonly title: FieldRef<"Event", 'String'>
+    readonly slug: FieldRef<"Event", 'String'>
     readonly description: FieldRef<"Event", 'String'>
     readonly location: FieldRef<"Event", 'String'>
     readonly startDate: FieldRef<"Event", 'DateTime'>
     readonly endDate: FieldRef<"Event", 'DateTime'>
+    readonly published: FieldRef<"Event", 'Boolean'>
     readonly createdAt: FieldRef<"Event", 'DateTime'>
     readonly updatedAt: FieldRef<"Event", 'DateTime'>
   }
@@ -14177,10 +14203,12 @@ export namespace Prisma {
   export const EventScalarFieldEnum: {
     id: 'id',
     title: 'title',
+    slug: 'slug',
     description: 'description',
     location: 'location',
     startDate: 'startDate',
     endDate: 'endDate',
+    published: 'published',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -14769,10 +14797,12 @@ export namespace Prisma {
     NOT?: EventWhereInput | EventWhereInput[]
     id?: StringFilter<"Event"> | string
     title?: StringFilter<"Event"> | string
+    slug?: StringFilter<"Event"> | string
     description?: StringFilter<"Event"> | string
     location?: StringFilter<"Event"> | string
     startDate?: DateTimeFilter<"Event"> | Date | string
-    endDate?: DateTimeFilter<"Event"> | Date | string
+    endDate?: DateTimeNullableFilter<"Event"> | Date | string | null
+    published?: BoolFilter<"Event"> | boolean
     createdAt?: DateTimeFilter<"Event"> | Date | string
     updatedAt?: DateTimeFilter<"Event"> | Date | string
   }
@@ -14780,16 +14810,19 @@ export namespace Prisma {
   export type EventOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrder
+    slug?: SortOrder
     description?: SortOrder
     location?: SortOrder
     startDate?: SortOrder
-    endDate?: SortOrder
+    endDate?: SortOrderInput | SortOrder
+    published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type EventWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    slug?: string
     AND?: EventWhereInput | EventWhereInput[]
     OR?: EventWhereInput[]
     NOT?: EventWhereInput | EventWhereInput[]
@@ -14797,18 +14830,21 @@ export namespace Prisma {
     description?: StringFilter<"Event"> | string
     location?: StringFilter<"Event"> | string
     startDate?: DateTimeFilter<"Event"> | Date | string
-    endDate?: DateTimeFilter<"Event"> | Date | string
+    endDate?: DateTimeNullableFilter<"Event"> | Date | string | null
+    published?: BoolFilter<"Event"> | boolean
     createdAt?: DateTimeFilter<"Event"> | Date | string
     updatedAt?: DateTimeFilter<"Event"> | Date | string
-  }, "id">
+  }, "id" | "slug">
 
   export type EventOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrder
+    slug?: SortOrder
     description?: SortOrder
     location?: SortOrder
     startDate?: SortOrder
-    endDate?: SortOrder
+    endDate?: SortOrderInput | SortOrder
+    published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: EventCountOrderByAggregateInput
@@ -14822,10 +14858,12 @@ export namespace Prisma {
     NOT?: EventScalarWhereWithAggregatesInput | EventScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Event"> | string
     title?: StringWithAggregatesFilter<"Event"> | string
+    slug?: StringWithAggregatesFilter<"Event"> | string
     description?: StringWithAggregatesFilter<"Event"> | string
     location?: StringWithAggregatesFilter<"Event"> | string
     startDate?: DateTimeWithAggregatesFilter<"Event"> | Date | string
-    endDate?: DateTimeWithAggregatesFilter<"Event"> | Date | string
+    endDate?: DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
+    published?: BoolWithAggregatesFilter<"Event"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
   }
@@ -15525,10 +15563,12 @@ export namespace Prisma {
   export type EventCreateInput = {
     id?: string
     title: string
+    slug: string
     description: string
     location: string
     startDate: Date | string
-    endDate: Date | string
+    endDate?: Date | string | null
+    published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15536,10 +15576,12 @@ export namespace Prisma {
   export type EventUncheckedCreateInput = {
     id?: string
     title: string
+    slug: string
     description: string
     location: string
     startDate: Date | string
-    endDate: Date | string
+    endDate?: Date | string | null
+    published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15547,10 +15589,12 @@ export namespace Prisma {
   export type EventUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15558,10 +15602,12 @@ export namespace Prisma {
   export type EventUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15569,10 +15615,12 @@ export namespace Prisma {
   export type EventCreateManyInput = {
     id?: string
     title: string
+    slug: string
     description: string
     location: string
     startDate: Date | string
-    endDate: Date | string
+    endDate?: Date | string | null
+    published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15580,10 +15628,12 @@ export namespace Prisma {
   export type EventUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15591,10 +15641,12 @@ export namespace Prisma {
   export type EventUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16293,10 +16345,12 @@ export namespace Prisma {
   export type EventCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    slug?: SortOrder
     description?: SortOrder
     location?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
+    published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16304,10 +16358,12 @@ export namespace Prisma {
   export type EventMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    slug?: SortOrder
     description?: SortOrder
     location?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
+    published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16315,10 +16371,12 @@ export namespace Prisma {
   export type EventMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    slug?: SortOrder
     description?: SortOrder
     location?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
+    published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }

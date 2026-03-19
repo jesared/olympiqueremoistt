@@ -1,9 +1,5 @@
-import { EventsManager } from "~/components/admin/cms/events-manager";
+import { redirect } from "next/navigation";
 
 export default function AdminEvenementsPage() {
-  return (
-    <div className="space-y-6">
-      <EventsManager />
-    </div>
-  );
+  redirect("/admin/events");
 }
