@@ -32,3 +32,21 @@ export async function togglePublish(id: string) {
 
   return updatedPost;
 }
+
+export async function deletePost(id: string) {
+  await requireAdmin();
+
+  if (!id) {
+    throw new Error("Actualité invalide.");
+  }
+
+  await prisma.post.delete({
+    where: { id },
+  });
+
+  revalidatePath("/admin/actualites");
+  revalidatePath("/admin/posts");
+  revalidatePath("/actualites");
+
+  return { ok: true };
+}
