@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { auth } from "~/server/auth";
 
 export default auth((req) => {
+  console.log("[middleware] req.auth:", req.auth);
+
   const role = req.auth?.user?.role;
   const { pathname } = req.nextUrl;
 
