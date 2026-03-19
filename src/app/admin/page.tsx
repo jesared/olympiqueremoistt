@@ -17,12 +17,45 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { adminStats, registrations } from "~/data/admin";
+import { canEditTournament } from "~/lib/permissions";
+import { requireAdmin } from "~/server/auth/auth-helpers";
 
 const icons = [CheckCircle2, Hourglass, AlertCircle];
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const session = await requireAdmin();
+  const canCurrentAdminEditTournament = canEditTournament(session.user, {
+    organizerId: "organizer-demo-id",
+  });
+
   return (
     <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Exemple d&apos;autorisation dans /admin</CardTitle>
+          <CardDescription>
+            Cette page est protégée avec <code>requireAdmin()</code>, puis on
+            vérifie aussi <code>canEditTournament()</code> pour le tournoi
+            ciblé.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground text-sm">
+            Utilisateur courant&nbsp;:{" "}
+            <span className="font-medium">
+              {session.user.name ?? session.user.email ?? session.user.id}
+            </span>{" "}
+            ({session.user.role ?? "UNKNOWN"})
+          </p>
+          <p className="text-muted-foreground mt-1 text-sm">
+            Peut modifier le tournoi de démonstration&nbsp;:{" "}
+            <span className="font-medium">
+              {canCurrentAdminEditTournament ? "oui" : "non"}
+            </span>
+          </p>
+        </CardContent>
+      </Card>
+
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {adminStats.map((stat, index) => {
           const Icon = icons[index] ?? CheckCircle2;
