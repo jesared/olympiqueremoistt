@@ -37,7 +37,11 @@ const adminNavSections: AdminNavSection[] = [
     label: "Tournoi",
     items: [
       { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/admin/inscriptions", label: "Inscriptions", icon: ClipboardList },
+      {
+        href: "/admin/inscriptions",
+        label: "Inscriptions",
+        icon: ClipboardList,
+      },
       { href: "/admin/joueurs", label: "Joueurs", icon: Users },
       { href: "/admin/tournois", label: "Tournois", icon: Trophy },
       { href: "/admin/paiements", label: "Paiements", icon: CreditCard },
@@ -49,7 +53,7 @@ const adminNavSections: AdminNavSection[] = [
     items: [
       { href: "/admin/pages", label: "Pages", icon: FileText },
       { href: "/admin/actualites", label: "Actualités", icon: Newspaper },
-      { href: "/admin/evenements", label: "Événements", icon: CalendarDays },
+      { href: "/admin/events", label: "Événements", icon: CalendarDays },
       { href: "/admin/users", label: "Users", icon: UserCog },
     ],
   },
