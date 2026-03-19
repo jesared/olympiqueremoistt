@@ -20,14 +20,27 @@ export const authConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+
   adapter: PrismaAdapter(db),
+
+  session: {
+    strategy: "jwt", // 🔥 IMPORTANT
+  },
+
   callbacks: {
-    session: ({ session, user }) => ({
+    jwt: ({ token, user }) => {
+      if (user) {
+        token.role = (user as { role?: string | null }).role ?? null;
+      }
+      return token;
+    },
+
+    session: ({ session, token }) => ({
       ...session,
       user: {
         ...session.user,
-        id: user.id,
-        role: (user as { role?: string | null }).role ?? null,
+        id: token.sub!,
+        role: (token as { role?: string | null }).role ?? null,
       },
     }),
   },
