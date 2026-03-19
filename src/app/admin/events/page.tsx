@@ -51,6 +51,7 @@ export default async function AdminEventsPage() {
                   <TableHead>Titre</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Statut</TableHead>
+                  <TableHead className="text-right">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -64,6 +65,11 @@ export default async function AdminEventsPage() {
                       <Badge variant={event.published ? "success" : "outline"}>
                         {event.published ? "Publié" : "Brouillon"}
                       </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button asChild size="sm" variant="outline">
+                        <Link href={`/admin/events/${event.id}`}>Modifier</Link>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
