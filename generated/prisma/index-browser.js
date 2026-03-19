@@ -121,12 +121,13 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.PostScalarFieldEnum = {
+exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  createdById: 'createdById'
+  email: 'email',
+  emailVerified: 'emailVerified',
+  image: 'image',
+  role: 'role'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -152,23 +153,77 @@ exports.Prisma.SessionScalarFieldEnum = {
   expires: 'expires'
 };
 
-exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  emailVerified: 'emailVerified',
-  image: 'image'
-};
-
-exports.Prisma.TournamentScalarFieldEnum = {
-  id: 'id',
-  organizerId: 'organizerId'
-};
-
 exports.Prisma.VerificationTokenScalarFieldEnum = {
   identifier: 'identifier',
   token: 'token',
   expires: 'expires'
+};
+
+exports.Prisma.PageScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  content: 'content',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  authorId: 'authorId'
+};
+
+exports.Prisma.PostScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  image: 'image',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  authorId: 'authorId'
+};
+
+exports.Prisma.EventScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  location: 'location',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TournamentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  location: 'location',
+  startDate: 'startDate',
+  createdAt: 'createdAt',
+  organizerId: 'organizerId'
+};
+
+exports.Prisma.TournamentEventScalarFieldEnum = {
+  id: 'id',
+  tournamentId: 'tournamentId',
+  label: 'label',
+  minPoints: 'minPoints',
+  maxPoints: 'maxPoints',
+  startAt: 'startAt',
+  feeOnlineCents: 'feeOnlineCents',
+  feeOnsiteCents: 'feeOnsiteCents'
+};
+
+exports.Prisma.RegistrationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tournamentId: 'tournamentId',
+  status: 'status',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RegistrationEventScalarFieldEnum = {
+  id: 'id',
+  registrationId: 'registrationId',
+  eventId: 'eventId'
 };
 
 exports.Prisma.SortOrder = {
@@ -185,15 +240,30 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.Role = exports.$Enums.Role = {
+  USER: 'USER',
+  ORGANIZER: 'ORGANIZER',
+  ADMIN: 'ADMIN'
+};
 
+exports.RegistrationStatus = exports.$Enums.RegistrationStatus = {
+  PENDING: 'PENDING',
+  VALIDATED: 'VALIDATED',
+  REFUSED: 'REFUSED'
+};
 
 exports.Prisma.ModelName = {
-  Post: 'Post',
+  User: 'User',
   Account: 'Account',
   Session: 'Session',
-  User: 'User',
+  VerificationToken: 'VerificationToken',
+  Page: 'Page',
+  Post: 'Post',
+  Event: 'Event',
   Tournament: 'Tournament',
-  VerificationToken: 'VerificationToken'
+  TournamentEvent: 'TournamentEvent',
+  Registration: 'Registration',
+  RegistrationEvent: 'RegistrationEvent'
 };
 
 /**

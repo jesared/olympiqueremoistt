@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -8,43 +5,54 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-  // Further reading:
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  createdBy   User   @relation(fields: [createdById], references: [id])
-  createdById String
-
-  @@index([name])
+enum Role {
+  USER
+  ORGANIZER
+  ADMIN
 }
 
-// Necessary for Next auth
+enum RegistrationStatus {
+  PENDING
+  VALIDATED
+  REFUSED
+}
+
+model User {
+  id                   String         @id @default(cuid())
+  name                 String?
+  email                String?        @unique
+  emailVerified        DateTime?
+  image                String?
+  role                 Role           @default(USER)
+  accounts             Account[]
+  sessions             Session[]
+  pages                Page[]
+  posts                Post[]
+  registrations        Registration[]
+  organizedTournaments Tournament[]   @relation("TournamentOrganizer")
+}
+
 model Account {
   id                       String  @id @default(cuid())
   userId                   String
   type                     String
   provider                 String
   providerAccountId        String
-  refresh_token            String? // @db.Text
-  access_token             String? // @db.Text
+  refresh_token            String?
+  access_token             String?
   expires_at               Int?
   token_type               String?
   scope                    String?
-  id_token                 String? // @db.Text
+  id_token                 String?
   session_state            String?
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   refresh_token_expires_in Int?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -53,24 +61,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
 
-model User {
-  id                   String       @id @default(cuid())
-  name                 String?
-  email                String?      @unique
-  emailVerified        DateTime?
-  image                String?
-  accounts             Account[]
-  sessions             Session[]
-  posts                Post[]
-  organizedTournaments Tournament[]
-}
-
-model Tournament {
-  id          String @id @default(cuid())
-  organizerId String
-  organizer   User   @relation(fields: [organizerId], references: [id])
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -79,4 +71,102 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([authorId])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  image     String?
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([authorId])
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  location    String
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Tournament {
+  id            String            @id @default(cuid())
+  name          String
+  location      String
+  startDate     DateTime
+  createdAt     DateTime          @default(now())
+  organizerId   String
+  organizer     User              @relation("TournamentOrganizer", fields: [organizerId], references: [id], onDelete: Restrict)
+  events        TournamentEvent[]
+  registrations Registration[]
+
+  @@index([organizerId])
+  @@index([startDate])
+}
+
+model TournamentEvent {
+  id             String              @id @default(cuid())
+  tournamentId   String
+  label          String
+  minPoints      Int
+  maxPoints      Int
+  startAt        DateTime
+  feeOnlineCents Int
+  feeOnsiteCents Int
+  tournament     Tournament          @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  registrations  RegistrationEvent[]
+
+  @@index([tournamentId])
+  @@index([startAt])
+}
+
+model Registration {
+  id             String              @id @default(cuid())
+  userId         String
+  tournamentId   String
+  status         RegistrationStatus  @default(PENDING)
+  createdAt      DateTime            @default(now())
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tournament     Tournament          @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  selectedEvents RegistrationEvent[]
+
+  @@unique([userId, tournamentId])
+  @@index([userId])
+  @@index([tournamentId])
+  @@index([status])
+}
+
+model RegistrationEvent {
+  id             String          @id @default(cuid())
+  registrationId String
+  eventId        String
+  registration   Registration    @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  event          TournamentEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([registrationId, eventId])
+  @@index([registrationId])
+  @@index([eventId])
 }

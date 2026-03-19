@@ -93,12 +93,13 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.PostScalarFieldEnum = {
+exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  createdById: 'createdById'
+  email: 'email',
+  emailVerified: 'emailVerified',
+  image: 'image',
+  role: 'role'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -124,23 +125,77 @@ exports.Prisma.SessionScalarFieldEnum = {
   expires: 'expires'
 };
 
-exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  emailVerified: 'emailVerified',
-  image: 'image'
-};
-
-exports.Prisma.TournamentScalarFieldEnum = {
-  id: 'id',
-  organizerId: 'organizerId'
-};
-
 exports.Prisma.VerificationTokenScalarFieldEnum = {
   identifier: 'identifier',
   token: 'token',
   expires: 'expires'
+};
+
+exports.Prisma.PageScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  content: 'content',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  authorId: 'authorId'
+};
+
+exports.Prisma.PostScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  image: 'image',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  authorId: 'authorId'
+};
+
+exports.Prisma.EventScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  location: 'location',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TournamentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  location: 'location',
+  startDate: 'startDate',
+  createdAt: 'createdAt',
+  organizerId: 'organizerId'
+};
+
+exports.Prisma.TournamentEventScalarFieldEnum = {
+  id: 'id',
+  tournamentId: 'tournamentId',
+  label: 'label',
+  minPoints: 'minPoints',
+  maxPoints: 'maxPoints',
+  startAt: 'startAt',
+  feeOnlineCents: 'feeOnlineCents',
+  feeOnsiteCents: 'feeOnsiteCents'
+};
+
+exports.Prisma.RegistrationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tournamentId: 'tournamentId',
+  status: 'status',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RegistrationEventScalarFieldEnum = {
+  id: 'id',
+  registrationId: 'registrationId',
+  eventId: 'eventId'
 };
 
 exports.Prisma.SortOrder = {
@@ -157,15 +212,30 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.Role = exports.$Enums.Role = {
+  USER: 'USER',
+  ORGANIZER: 'ORGANIZER',
+  ADMIN: 'ADMIN'
+};
 
+exports.RegistrationStatus = exports.$Enums.RegistrationStatus = {
+  PENDING: 'PENDING',
+  VALIDATED: 'VALIDATED',
+  REFUSED: 'REFUSED'
+};
 
 exports.Prisma.ModelName = {
-  Post: 'Post',
+  User: 'User',
   Account: 'Account',
   Session: 'Session',
-  User: 'User',
+  VerificationToken: 'VerificationToken',
+  Page: 'Page',
+  Post: 'Post',
+  Event: 'Event',
   Tournament: 'Tournament',
-  VerificationToken: 'VerificationToken'
+  TournamentEvent: 'TournamentEvent',
+  Registration: 'Registration',
+  RegistrationEvent: 'RegistrationEvent'
 };
 /**
  * Create the Client
@@ -214,13 +284,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below\n  // Further reading:\n  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema\n  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Post {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  createdBy   User   @relation(fields: [createdById], references: [id])\n  createdById String\n\n  @@index([name])\n}\n\n// Necessary for Next auth\nmodel Account {\n  id                       String  @id @default(cuid())\n  userId                   String\n  type                     String\n  provider                 String\n  providerAccountId        String\n  refresh_token            String? // @db.Text\n  access_token             String? // @db.Text\n  expires_at               Int?\n  token_type               String?\n  scope                    String?\n  id_token                 String? // @db.Text\n  session_state            String?\n  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)\n  refresh_token_expires_in Int?\n\n  @@unique([provider, providerAccountId])\n}\n\nmodel Session {\n  id           String   @id @default(cuid())\n  sessionToken String   @unique\n  userId       String\n  expires      DateTime\n  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n\nmodel User {\n  id                   String       @id @default(cuid())\n  name                 String?\n  email                String?      @unique\n  emailVerified        DateTime?\n  image                String?\n  accounts             Account[]\n  sessions             Session[]\n  posts                Post[]\n  organizedTournaments Tournament[]\n}\n\nmodel Tournament {\n  id          String @id @default(cuid())\n  organizerId String\n  organizer   User   @relation(fields: [organizerId], references: [id])\n}\n\nmodel VerificationToken {\n  identifier String\n  token      String   @unique\n  expires    DateTime\n\n  @@unique([identifier, token])\n}\n",
-  "inlineSchemaHash": "f12f89238401ec4bb279a6f82d8673952ab8825ca92e3c9ca1904c9a8924f7fa",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nenum Role {\n  USER\n  ORGANIZER\n  ADMIN\n}\n\nenum RegistrationStatus {\n  PENDING\n  VALIDATED\n  REFUSED\n}\n\nmodel User {\n  id                   String         @id @default(cuid())\n  name                 String?\n  email                String?        @unique\n  emailVerified        DateTime?\n  image                String?\n  role                 Role           @default(USER)\n  accounts             Account[]\n  sessions             Session[]\n  pages                Page[]\n  posts                Post[]\n  registrations        Registration[]\n  organizedTournaments Tournament[]   @relation(\"TournamentOrganizer\")\n}\n\nmodel Account {\n  id                       String  @id @default(cuid())\n  userId                   String\n  type                     String\n  provider                 String\n  providerAccountId        String\n  refresh_token            String?\n  access_token             String?\n  expires_at               Int?\n  token_type               String?\n  scope                    String?\n  id_token                 String?\n  session_state            String?\n  refresh_token_expires_in Int?\n  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([provider, providerAccountId])\n  @@index([userId])\n}\n\nmodel Session {\n  id           String   @id @default(cuid())\n  sessionToken String   @unique\n  userId       String\n  expires      DateTime\n  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@index([userId])\n}\n\nmodel VerificationToken {\n  identifier String\n  token      String   @unique\n  expires    DateTime\n\n  @@unique([identifier, token])\n}\n\nmodel Page {\n  id        String   @id @default(cuid())\n  title     String\n  slug      String   @unique\n  content   String\n  published Boolean  @default(false)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  authorId  String\n  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)\n\n  @@index([authorId])\n}\n\nmodel Post {\n  id        String   @id @default(cuid())\n  title     String\n  content   String\n  image     String?\n  published Boolean  @default(false)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  authorId  String\n  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)\n\n  @@index([authorId])\n}\n\nmodel Event {\n  id          String   @id @default(cuid())\n  title       String\n  description String\n  location    String\n  startDate   DateTime\n  endDate     DateTime\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n}\n\nmodel Tournament {\n  id            String            @id @default(cuid())\n  name          String\n  location      String\n  startDate     DateTime\n  createdAt     DateTime          @default(now())\n  organizerId   String\n  organizer     User              @relation(\"TournamentOrganizer\", fields: [organizerId], references: [id], onDelete: Restrict)\n  events        TournamentEvent[]\n  registrations Registration[]\n\n  @@index([organizerId])\n  @@index([startDate])\n}\n\nmodel TournamentEvent {\n  id             String              @id @default(cuid())\n  tournamentId   String\n  label          String\n  minPoints      Int\n  maxPoints      Int\n  startAt        DateTime\n  feeOnlineCents Int\n  feeOnsiteCents Int\n  tournament     Tournament          @relation(fields: [tournamentId], references: [id], onDelete: Cascade)\n  registrations  RegistrationEvent[]\n\n  @@index([tournamentId])\n  @@index([startAt])\n}\n\nmodel Registration {\n  id             String              @id @default(cuid())\n  userId         String\n  tournamentId   String\n  status         RegistrationStatus  @default(PENDING)\n  createdAt      DateTime            @default(now())\n  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)\n  tournament     Tournament          @relation(fields: [tournamentId], references: [id], onDelete: Cascade)\n  selectedEvents RegistrationEvent[]\n\n  @@unique([userId, tournamentId])\n  @@index([userId])\n  @@index([tournamentId])\n  @@index([status])\n}\n\nmodel RegistrationEvent {\n  id             String          @id @default(cuid())\n  registrationId String\n  eventId        String\n  registration   Registration    @relation(fields: [registrationId], references: [id], onDelete: Cascade)\n  event          TournamentEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)\n\n  @@unique([registrationId, eventId])\n  @@index([registrationId])\n  @@index([eventId])\n}\n",
+  "inlineSchemaHash": "297c0da8bf4a9def278c11daf30d3dac7a7d13b3d35b064a017a00a6cc3a4ff8",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Post\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdBy\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"PostToUser\"},{\"name\":\"createdById\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerAccountId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"refresh_token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"access_token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"token_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"scope\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"id_token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"session_state\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"AccountToUser\"},{\"name\":\"refresh_token_expires_in\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null},\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sessionToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expires\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SessionToUser\"}],\"dbName\":null},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerified\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accounts\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"AccountToUser\"},{\"name\":\"sessions\",\"kind\":\"object\",\"type\":\"Session\",\"relationName\":\"SessionToUser\"},{\"name\":\"posts\",\"kind\":\"object\",\"type\":\"Post\",\"relationName\":\"PostToUser\"},{\"name\":\"organizedTournaments\",\"kind\":\"object\",\"type\":\"Tournament\",\"relationName\":\"TournamentToUser\"}],\"dbName\":null},\"Tournament\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizer\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"TournamentToUser\"}],\"dbName\":null},\"VerificationToken\":{\"fields\":[{\"name\":\"identifier\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expires\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerified\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"accounts\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"AccountToUser\"},{\"name\":\"sessions\",\"kind\":\"object\",\"type\":\"Session\",\"relationName\":\"SessionToUser\"},{\"name\":\"pages\",\"kind\":\"object\",\"type\":\"Page\",\"relationName\":\"PageToUser\"},{\"name\":\"posts\",\"kind\":\"object\",\"type\":\"Post\",\"relationName\":\"PostToUser\"},{\"name\":\"registrations\",\"kind\":\"object\",\"type\":\"Registration\",\"relationName\":\"RegistrationToUser\"},{\"name\":\"organizedTournaments\",\"kind\":\"object\",\"type\":\"Tournament\",\"relationName\":\"TournamentOrganizer\"}],\"dbName\":null},\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerAccountId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"refresh_token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"access_token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"token_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"scope\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"id_token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"session_state\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"refresh_token_expires_in\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"AccountToUser\"}],\"dbName\":null},\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sessionToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expires\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SessionToUser\"}],\"dbName\":null},\"VerificationToken\":{\"fields\":[{\"name\":\"identifier\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expires\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Page\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"published\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"authorId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"author\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"PageToUser\"}],\"dbName\":null},\"Post\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"published\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"authorId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"author\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"PostToUser\"}],\"dbName\":null},\"Event\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"location\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Tournament\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"location\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"organizerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizer\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"TournamentOrganizer\"},{\"name\":\"events\",\"kind\":\"object\",\"type\":\"TournamentEvent\",\"relationName\":\"TournamentToTournamentEvent\"},{\"name\":\"registrations\",\"kind\":\"object\",\"type\":\"Registration\",\"relationName\":\"RegistrationToTournament\"}],\"dbName\":null},\"TournamentEvent\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tournamentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"minPoints\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"maxPoints\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"startAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"feeOnlineCents\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"feeOnsiteCents\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"tournament\",\"kind\":\"object\",\"type\":\"Tournament\",\"relationName\":\"TournamentToTournamentEvent\"},{\"name\":\"registrations\",\"kind\":\"object\",\"type\":\"RegistrationEvent\",\"relationName\":\"RegistrationEventToTournamentEvent\"}],\"dbName\":null},\"Registration\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tournamentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"RegistrationStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"RegistrationToUser\"},{\"name\":\"tournament\",\"kind\":\"object\",\"type\":\"Tournament\",\"relationName\":\"RegistrationToTournament\"},{\"name\":\"selectedEvents\",\"kind\":\"object\",\"type\":\"RegistrationEvent\",\"relationName\":\"RegistrationToRegistrationEvent\"}],\"dbName\":null},\"RegistrationEvent\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"registrationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"eventId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"registration\",\"kind\":\"object\",\"type\":\"Registration\",\"relationName\":\"RegistrationToRegistrationEvent\"},{\"name\":\"event\",\"kind\":\"object\",\"type\":\"TournamentEvent\",\"relationName\":\"RegistrationEventToTournamentEvent\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),
