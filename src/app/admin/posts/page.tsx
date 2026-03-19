@@ -30,7 +30,7 @@ export default async function AdminPostsPage() {
         <CardHeader className="flex flex-row items-center justify-between gap-4">
           <CardTitle>Actualités</CardTitle>
           <Button asChild>
-            <Link href="/admin/actualites">Créer une actualité</Link>
+            <Link href="/admin/posts/create">Créer une actualité</Link>
           </Button>
         </CardHeader>
 
