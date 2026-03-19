@@ -1,4 +1,3 @@
-import { Badge } from "~/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   Table,
@@ -8,24 +7,18 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { requireAdmin } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
 
-type AppRole = "ADMIN" | "ORGANIZER" | "USER";
+import { type AppRole } from "./roles";
+import { UserRoleSelect } from "./UserRoleSelect";
 
-type UserWithOptionalCreatedAt = {
+type UserListItem = {
   id: string;
   name: string | null;
   email: string | null;
   role: AppRole;
   createdAt?: Date | null;
-};
-
-const roleBadgeClasses: Record<AppRole, string> = {
-  ADMIN:
-    "border-violet-200 bg-violet-100 text-violet-700 dark:border-violet-800 dark:bg-violet-950 dark:text-violet-300",
-  ORGANIZER:
-    "border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300",
-  USER: "border-zinc-200 bg-zinc-100 text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300",
 };
 
 const formatCreatedAt = (date: Date | null | undefined) => {
@@ -39,7 +32,11 @@ const formatCreatedAt = (date: Date | null | undefined) => {
 };
 
 export default async function AdminUsersPage() {
-  const users = (await prisma.user.findMany()) as UserWithOptionalCreatedAt[];
+  await requireAdmin();
+
+  const users = (await prisma.user.findMany({
+    orderBy: { name: "asc" },
+  })) as UserListItem[];
 
   return (
     <div className="space-y-6">
@@ -67,12 +64,12 @@ export default async function AdminUsersPage() {
               <TableBody>
                 {users.map((user) => (
                   <TableRow key={user.id}>
-                    <TableCell className="font-medium">{user.name ?? "—"}</TableCell>
+                    <TableCell className="font-medium">
+                      {user.name ?? "—"}
+                    </TableCell>
                     <TableCell>{user.email ?? "—"}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className={roleBadgeClasses[user.role]}>
-                        {user.role}
-                      </Badge>
+                      <UserRoleSelect userId={user.id} role={user.role} />
                     </TableCell>
                     <TableCell>{formatCreatedAt(user.createdAt)}</TableCell>
                   </TableRow>
