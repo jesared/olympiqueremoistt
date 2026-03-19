@@ -27,4 +27,57 @@ You can check out the [create-t3-app GitHub repository](https://github.com/t3-os
 ## How do I deploy this?
 
 Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+
 # olympiqueremoistt
+
+## Configuration Supabase Storage (upload d’images)
+
+### 1) Créer le bucket `posts` (public)
+
+Dans **Supabase Dashboard**:
+
+1. Ouvrir **Storage**.
+2. Cliquer **New bucket**.
+3. Nommer le bucket: `posts`.
+4. Activer **Public bucket**.
+5. Valider la création.
+
+Option SQL (éditeur SQL Supabase):
+
+```sql
+insert into storage.buckets (id, name, public)
+values ('posts', 'posts', true)
+on conflict (id) do update
+set public = excluded.public;
+```
+
+### 2) Vérifier l’accès public
+
+Une image uploadée dans `posts` doit être accessible via l’URL publique suivante :
+
+```
+https://<project-ref>.supabase.co/storage/v1/object/public/posts/<path/fichier.ext>
+```
+
+Exemple de vérification rapide :
+
+```bash
+curl -I "https://<project-ref>.supabase.co/storage/v1/object/public/posts/test.jpg"
+```
+
+Résultat attendu :
+
+- `HTTP/2 200` si le fichier existe et est public.
+- `HTTP/2 404` si le fichier n’existe pas (mais le bucket public est bien exposé).
+- `HTTP/2 401/403` indique que la ressource n’est pas publiquement accessible.
+
+### 3) Variables d’environnement
+
+Renseigner dans `.env` :
+
+```env
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+```
+
+Le schéma d’environnement du projet inclut maintenant ces variables dans `src/env.js`.
