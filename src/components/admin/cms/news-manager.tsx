@@ -3,6 +3,8 @@
 import { Edit, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 
+import { togglePublish } from "~/app/admin/actualites/actions";
+
 import { StatusBadge } from "~/components/admin/cms/status-badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -35,8 +37,15 @@ const emptyForm: Omit<NewsArticle, "id"> = {
   status: "draft",
 };
 
-export function NewsManager() {
-  const [articles, setArticles] = useState(actualitesMock);
+type NewsManagerProps = {
+  initialArticles?: NewsArticle[];
+};
+
+export function NewsManager({
+  initialArticles = actualitesMock,
+}: NewsManagerProps) {
+  const [articles, setArticles] = useState(initialArticles);
+  const [pendingPublishId, setPendingPublishId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
@@ -65,6 +74,57 @@ export function NewsManager() {
     setOpen(true);
   };
 
+  const toggleLocalStatus = (id: string) =>
+    setArticles((prev) =>
+      prev.map((article) =>
+        article.id === id
+          ? {
+              ...article,
+              status: article.status === "published" ? "draft" : "published",
+            }
+          : article,
+      ),
+    );
+
+  const handleTogglePublish = async (id: string) => {
+    if (pendingPublishId) return;
+
+    const currentStatus = articles.find((article) => article.id === id)?.status;
+
+    if (!currentStatus) return;
+
+    setPendingPublishId(id);
+    toggleLocalStatus(id);
+
+    try {
+      const updatedPost = await togglePublish(id);
+      setArticles((prev) =>
+        prev.map((article) =>
+          article.id === id
+            ? {
+                ...article,
+                status: updatedPost.published ? "published" : "draft",
+              }
+            : article,
+        ),
+      );
+    } catch (error) {
+      setArticles((prev) =>
+        prev.map((article) =>
+          article.id === id
+            ? {
+                ...article,
+                status: currentStatus,
+              }
+            : article,
+        ),
+      );
+      console.error("Erreur lors du changement de publication", error);
+    } finally {
+      setPendingPublishId(null);
+    }
+  };
+
   const save = () => {
     if (!form.title) return;
 
@@ -75,7 +135,10 @@ export function NewsManager() {
         ),
       );
     } else {
-      setArticles((prev) => [{ id: `news-${crypto.randomUUID()}`, ...form }, ...prev]);
+      setArticles((prev) => [
+        { id: `news-${crypto.randomUUID()}`, ...form },
+        ...prev,
+      ]);
     }
 
     reset();
@@ -166,6 +229,7 @@ export function NewsManager() {
               <TableHead>Date</TableHead>
               <TableHead>Image</TableHead>
               <TableHead>Statut</TableHead>
+              <TableHead>Publication</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -178,9 +242,29 @@ export function NewsManager() {
                 <TableCell>
                   <StatusBadge status={article.status} />
                 </TableCell>
+                <TableCell>
+                  <Button
+                    size="sm"
+                    variant={
+                      article.status === "published" ? "secondary" : "outline"
+                    }
+                    onClick={() => void handleTogglePublish(article.id)}
+                    disabled={pendingPublishId === article.id}
+                  >
+                    {pendingPublishId === article.id
+                      ? "Mise à jour..."
+                      : article.status === "published"
+                        ? "Dépublier"
+                        : "Publier"}
+                  </Button>
+                </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" size="sm" onClick={() => openEdit(article)}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openEdit(article)}
+                    >
                       <Edit className="size-3.5" />
                       Éditer
                     </Button>
@@ -188,7 +272,9 @@ export function NewsManager() {
                       variant="destructive"
                       size="sm"
                       onClick={() =>
-                        setArticles((prev) => prev.filter((item) => item.id !== article.id))
+                        setArticles((prev) =>
+                          prev.filter((item) => item.id !== article.id),
+                        )
                       }
                     >
                       <Trash2 className="size-3.5" />
