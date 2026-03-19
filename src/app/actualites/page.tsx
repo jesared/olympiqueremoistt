@@ -1,50 +1,97 @@
-import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { PageHeader } from "~/components/page/page-header";
-import { newsArticles } from "~/data/content";
+import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { db as prisma } from "~/server/db";
 
-export default function ActualitesPage() {
+const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+});
+
+function toExcerpt(content: string, maxLength = 160) {
+  const plainText = content
+    .replace(/<[^>]*>/g, " ")
+    .replace(/[#>*_`\-\[\]()]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (plainText.length <= maxLength) {
+    return plainText;
+  }
+
+  return `${plainText.slice(0, maxLength).trimEnd()}…`;
+}
+
+export default async function ActualitesPage() {
+  const posts = await prisma.post.findMany({
+    where: { published: true },
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      title: true,
+      image: true,
+      content: true,
+      createdAt: true,
+    },
+  });
+
   return (
     <main className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
-      <PageHeader
-        title="Actualités"
-        description="Retrouvez les dernières informations du club ORTT : résultats sportifs, vie associative et annonces importantes."
-        actions={<Button>Voir toutes les archives</Button>}
-      />
+      <header className="space-y-2">
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          Actualités
+        </h1>
+        <p className="text-muted-foreground max-w-3xl text-sm leading-relaxed sm:text-base">
+          Retrouvez les dernières publications du club : annonces, résultats et
+          vie associative.
+        </p>
+      </header>
 
-      <section className="grid gap-4 md:grid-cols-2">
-        {newsArticles.map((article) => (
-          <Card key={article.id} className="h-full">
-            <CardHeader className="space-y-3">
-              <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                {article.category}
+      {posts.length === 0 ? (
+        <p className="text-muted-foreground text-sm sm:text-base">
+          Aucune actualité publiée pour le moment.
+        </p>
+      ) : (
+        <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {posts.map((post) => (
+            <Card
+              key={post.id}
+              className="h-full overflow-hidden border-border/70 p-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="bg-muted relative aspect-[16/9] overflow-hidden">
+                {post.image ? (
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="text-muted-foreground/90 flex h-full items-center justify-center text-sm">
+                    Image indisponible
+                  </div>
+                )}
               </div>
-              <CardTitle className="text-xl leading-tight">
-                {article.title}
-              </CardTitle>
-              <CardDescription>
-                {new Date(article.date).toLocaleDateString("fr-FR", {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {article.excerpt}
-              </p>
-              <Button variant="outline">Lire l'article</Button>
-            </CardContent>
-          </Card>
-        ))}
-      </section>
+
+              <CardHeader className="space-y-2 px-5 pt-5">
+                <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                  {dateFormatter.format(post.createdAt)}
+                </p>
+                <CardTitle className="text-lg leading-snug sm:text-xl">
+                  {post.title}
+                </CardTitle>
+              </CardHeader>
+
+              <CardContent className="mt-auto px-5 pb-5">
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {toExcerpt(post.content)}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+      )}
     </main>
   );
 }
