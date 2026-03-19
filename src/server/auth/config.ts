@@ -4,44 +4,61 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { db } from "~/server/db";
 
+type SessionUserRole = "USER" | "ORGANIZER" | "ADMIN" | null;
+
+type TokenWithRole = {
+  role?: SessionUserRole;
+};
+
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      role?: string | null;
+      role: SessionUserRole;
     } & DefaultSession["user"];
+  }
+
+  interface User {
+    role?: SessionUserRole;
   }
 }
 
 export const authConfig = {
+  adapter: PrismaAdapter(db),
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-
-  adapter: PrismaAdapter(db),
-
-  session: {
-    strategy: "jwt", // 🔥 IMPORTANT
-  },
-
   callbacks: {
     jwt: ({ token, user }) => {
-      if (user) {
-        token.role = (user as { role?: string | null }).role ?? null;
-      }
-      return token;
-    },
+      const nextToken = token as typeof token & TokenWithRole;
 
-    session: ({ session, token }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: token.sub!,
-        role: (token as { role?: string | null }).role ?? null,
-      },
-    }),
+      if (user) {
+        nextToken.role = user.role ?? null;
+      }
+
+      console.log("[auth][jwt] token:", nextToken);
+      return nextToken;
+    },
+    session: ({ session, token }) => {
+      const tokenWithRole = token as typeof token & TokenWithRole;
+
+      const nextSession = {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.sub ?? "",
+          role: tokenWithRole.role ?? null,
+        },
+      };
+
+      console.log("[auth][session] session:", nextSession);
+      return nextSession;
+    },
   },
 } satisfies NextAuthConfig;
