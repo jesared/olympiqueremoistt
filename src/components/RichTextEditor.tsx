@@ -22,14 +22,16 @@ export default function RichTextEditor({
   placeholder,
   className,
 }: RichTextEditorProps) {
+  const placeholderText = placeholder ?? "Écrivez votre contenu...";
+
   const editor = useEditor({
     extensions: [StarterKit],
-    content: value,
+    content: value || "<p></p>",
     editorProps: {
       attributes: {
         class:
-          "prose prose-zinc dark:prose-invert min-h-48 max-w-none px-3 py-2 text-sm focus-visible:outline-none",
-        "data-placeholder": placeholder ?? "Écrivez votre contenu...",
+          "tiptap prose prose-zinc dark:prose-invert min-h-48 max-w-none px-3 py-2 text-sm focus-visible:outline-none",
+        "data-placeholder": placeholderText,
       },
     },
     onUpdate: ({ editor: currentEditor }) => {
@@ -44,9 +46,9 @@ export default function RichTextEditor({
     const currentHtml = editor.getHTML();
 
     if (value !== currentHtml) {
-      editor.commands.setContent(value || "", false);
+      editor.commands.setContent(value || "<p></p>", false);
     }
-  }, [editor, value]);
+  }, [editor, value, placeholderText]);
 
   const runCommand = (command: () => void) => {
     if (!editor) return;
@@ -91,7 +93,9 @@ export default function RichTextEditor({
         <Button
           type="button"
           size="sm"
-          variant={editor?.isActive("heading", { level: 1 }) ? "default" : "outline"}
+          variant={
+            editor?.isActive("heading", { level: 1 }) ? "default" : "outline"
+          }
           className="gap-1"
           onClick={() =>
             runCommand(() => {
@@ -106,7 +110,9 @@ export default function RichTextEditor({
         <Button
           type="button"
           size="sm"
-          variant={editor?.isActive("heading", { level: 2 }) ? "default" : "outline"}
+          variant={
+            editor?.isActive("heading", { level: 2 }) ? "default" : "outline"
+          }
           className="gap-1"
           onClick={() =>
             runCommand(() => {
