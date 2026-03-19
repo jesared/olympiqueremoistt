@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { requireAdmin } from "~/server/auth/auth-helpers";
@@ -48,5 +49,6 @@ export async function createEvent(data: FormData) {
     },
   });
 
+  revalidatePath("/events");
   redirect("/admin/events");
 }
