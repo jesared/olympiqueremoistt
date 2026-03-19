@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { Button } from "~/components/ui/button";
@@ -15,7 +15,6 @@ const headerConfigByPath: Record<string, HeaderConfig> = {
   "/admin": {
     title: "Dashboard admin",
     description: "Pilotage global des tournois et inscriptions.",
-    primaryAction: "Nouveau tournoi",
   },
   "/admin/inscriptions": {
     title: "Inscriptions",
@@ -30,7 +29,6 @@ const headerConfigByPath: Record<string, HeaderConfig> = {
   "/admin/tournois": {
     title: "Tournois",
     description: "Créez vos événements et suivez les tableaux.",
-    primaryAction: "Créer un tournoi",
   },
   "/admin/paiements": {
     title: "Paiements",
@@ -57,10 +55,6 @@ export function AdminHeader() {
           <p className="text-muted-foreground text-sm">{config.description}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="size-4" />
-            Export CSV
-          </Button>
           {config.primaryAction ? (
             <Button size="sm">
               <Plus className="size-4" />
