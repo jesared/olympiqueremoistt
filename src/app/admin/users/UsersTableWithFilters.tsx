@@ -13,6 +13,13 @@ import {
   TableRow,
 } from "~/components/ui/table";
 
+import { Ellipsis } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import { UserDeleteButton } from "./UserDeleteButton";
 import { UserRoleSelect } from "./UserRoleSelect";
 import { APP_ROLES, type AppRole } from "./roles";
@@ -30,16 +37,6 @@ type UserListItem = {
 type UsersTableWithFiltersProps = {
   users: UserListItem[];
   currentUserId: string;
-};
-
-const formatCreatedAt = (isoDate: string | null | undefined) => {
-  if (!isoDate) return "—";
-
-  return new Intl.DateTimeFormat("fr-FR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(isoDate));
 };
 
 export function UsersTableWithFilters({
@@ -135,11 +132,20 @@ export function UsersTableWithFilters({
                 </TableCell>
 
                 <TableCell className="text-right">
-                  <UserDeleteButton
-                    userId={user.id}
-                    userLabel={user.name ?? user.email ?? "cet utilisateur"}
-                    disabled={currentUserId === user.id}
-                  />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="size-8 p-0">
+                        <Ellipsis className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <UserDeleteButton
+                        userId={user.id}
+                        userLabel={user.name ?? user.email ?? "cet utilisateur"}
+                        disabled={currentUserId === user.id}
+                      />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}
