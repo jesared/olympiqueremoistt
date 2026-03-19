@@ -90,6 +90,7 @@ model Page {
 model Post {
   id        String   @id @default(cuid())
   title     String
+  slug      String   @unique
   content   String
   image     String?
   published Boolean  @default(false)

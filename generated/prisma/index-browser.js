@@ -173,6 +173,7 @@ exports.Prisma.PageScalarFieldEnum = {
 exports.Prisma.PostScalarFieldEnum = {
   id: 'id',
   title: 'title',
+  slug: 'slug',
   content: 'content',
   image: 'image',
   published: 'published',
