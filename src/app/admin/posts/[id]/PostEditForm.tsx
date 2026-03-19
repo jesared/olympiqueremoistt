@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { type FormEvent, useState, useTransition } from "react";
 
-import RichTextEditor from "~/components/RichTextEditor";
+import { PostEditorPanel } from "~/components/admin/post-editor-panel";
 import { Button } from "~/components/ui/button";
 import { CardContent } from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 
 import { updatePost } from "./actions";
@@ -36,7 +37,10 @@ const ERROR_MESSAGES: Record<string, string> = {
 export function PostEditForm({ post }: PostEditFormProps) {
   const [toast, setToast] = useState<ToastState>(null);
   const [isPending, startTransition] = useTransition();
+  const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
+  const [image, setImage] = useState(post.image ?? "");
+  const [published, setPublished] = useState(post.published);
 
   const showToast = (nextToast: ToastState) => {
     setToast(nextToast);
@@ -74,7 +78,13 @@ export function PostEditForm({ post }: PostEditFormProps) {
           <label htmlFor="title" className="text-sm font-medium">
             Titre
           </label>
-          <Input id="title" name="title" required defaultValue={post.title} />
+          <Input
+            id="title"
+            name="title"
+            required
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
         </div>
 
         <div className="grid gap-2">
@@ -89,11 +99,11 @@ export function PostEditForm({ post }: PostEditFormProps) {
             Contenu
           </label>
           <input type="hidden" name="content" value={content} required />
-          <RichTextEditor
-            value={content}
-            onChange={setContent}
-            placeholder="Rédigez votre actualité..."
-            className="w-full"
+          <PostEditorPanel
+            title={title}
+            image={image}
+            content={content}
+            onContentChange={setContent}
           />
         </div>
 
@@ -101,16 +111,25 @@ export function PostEditForm({ post }: PostEditFormProps) {
           <label htmlFor="image" className="text-sm font-medium">
             Image (URL)
           </label>
-          <Input id="image" name="image" type="url" defaultValue={post.image ?? ""} />
+          <Input
+            id="image"
+            name="image"
+            type="url"
+            value={image}
+            onChange={(event) => setImage(event.target.value)}
+          />
         </div>
 
         <div className="flex items-center gap-2">
-          <input
+          <Checkbox
             id="published"
+            checked={published}
+            onCheckedChange={(checked) => setPublished(checked === true)}
+          />
+          <input
+            type="hidden"
             name="published"
-            type="checkbox"
-            className="border-input h-4 w-4 rounded border"
-            defaultChecked={post.published}
+            value={published ? "on" : "off"}
           />
           <label htmlFor="published" className="text-sm font-medium">
             Publier maintenant
