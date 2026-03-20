@@ -7,7 +7,7 @@ import { db } from "~/server/db";
 
 const createCategorySchema = z.object({
   name: z.string().trim().min(1, "Le nom est requis."),
-  slug: z.string().trim().min(1, "Le slug est requis."),
+  slug: z.string().trim().optional(),
 });
 
 export async function GET() {
@@ -40,11 +40,11 @@ export async function POST(request: Request) {
   }
 
   const name = parsed.data.name.trim();
-  const slug = slugify(parsed.data.slug);
+  const slug = slugify(parsed.data.slug?.trim() || name);
 
   if (!slug) {
     return NextResponse.json(
-      { error: "Le slug est requis." },
+      { error: "Le nom est requis." },
       { status: 400 },
     );
   }

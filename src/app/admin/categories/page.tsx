@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AddCategoryForm } from "~/app/admin/categories/AddCategoryForm";
 import { CategoryDeleteButton } from "~/app/admin/categories/CategoryDeleteButton";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -29,10 +30,20 @@ export default async function AdminCategoriesPage() {
   return (
     <div className="space-y-6">
       <Card>
+        <CardHeader>
+          <CardTitle>Ajouter une catégorie</CardTitle>
+        </CardHeader>
+
+        <CardContent>
+          <AddCategoryForm />
+        </CardContent>
+      </Card>
+
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between gap-4">
           <CardTitle>Catégories</CardTitle>
-          <Button asChild>
-            <Link href="/admin/categories/create">Ajouter une catégorie</Link>
+          <Button asChild variant="outline">
+            <Link href="/admin/categories/create">Formulaire complet</Link>
           </Button>
         </CardHeader>
 
