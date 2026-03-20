@@ -48,29 +48,79 @@ const schedule = [
 
 export default function TournoisPage() {
   return (
-    <main className="mx-auto w-full max-w-6xl space-y-12 px-4 py-8 sm:px-6 lg:px-8">
-      <section className="from-primary/15 to-primary/5 rounded-2xl bg-gradient-to-r p-8 sm:p-10">
-        <Badge className="mb-4" variant="secondary">
-          Tournoi annuel du club
-        </Badge>
-        <h1 className="max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">
-          {featuredTournament.name}
-        </h1>
-        <p className="text-muted-foreground mt-4 max-w-2xl text-base sm:text-lg">
-          Une journée de compétition, de convivialité et de performance ouverte
-          aux licenciés et passionnés de tennis de table.
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Button asChild>
-            <a href="#inscriptions">Je m&apos;inscris</a>
-          </Button>
-          <Button asChild variant="outline">
-            <a href="#programme">Voir le programme</a>
-          </Button>
+    <main className="space-y-12 pb-12">
+      <section
+        className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-8 text-white"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1518112166137-85f9979a43d5?auto=format&fit=crop&w=1920&q=80')",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+        }}
+      >
+        <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
+          <Badge className="mb-6 bg-white/15 text-white hover:bg-white/20" variant="outline">
+            Tournoi annuel du club
+          </Badge>
+
+          <h1 className="text-4xl font-black tracking-[0.08em] uppercase sm:text-6xl lg:text-7xl">
+            Grand Prix de la Ville de Reims
+          </h1>
+
+          <p className="mt-4 text-xl font-semibold tracking-[0.22em] uppercase text-white/90 sm:text-2xl">
+            34e Tournoi National
+          </p>
+
+          <div className="mt-8 grid w-full max-w-3xl gap-3 text-left sm:grid-cols-3">
+            <p className="rounded-lg bg-black/35 px-4 py-3 text-sm font-medium backdrop-blur-sm sm:text-base">
+              📅 Jeudi 14 mai 2026
+            </p>
+            <p className="rounded-lg bg-black/35 px-4 py-3 text-sm font-medium backdrop-blur-sm sm:text-base">
+              📍 Complexe sportif René Tys, Reims
+            </p>
+            <p className="rounded-lg bg-black/35 px-4 py-3 text-sm font-medium backdrop-blur-sm sm:text-base">
+              🏓 60 tables
+            </p>
+          </div>
+
+          <p className="mt-4 text-sm text-white/85 sm:text-base">
+            (près du parc Léo Lagrange)
+          </p>
+
+          <div className="mt-8 flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center">
+            <Button asChild className="w-full bg-blue-600 text-white hover:bg-blue-500 sm:w-auto">
+              <a href="#inscrits">Voir les inscrits</a>
+            </Button>
+            <Button asChild className="w-full bg-emerald-600 text-white hover:bg-emerald-500 sm:w-auto">
+              <a href="#inscriptions">S&apos;inscrire au tournoi</a>
+            </Button>
+          </div>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <span className="rounded-full bg-white/15 px-4 py-2 text-xs font-semibold tracking-wide uppercase backdrop-blur-sm sm:text-sm">
+              Ville de Reims
+            </span>
+            <span className="rounded-full bg-white/15 px-4 py-2 text-xs font-semibold tracking-wide uppercase backdrop-blur-sm sm:text-sm">
+              Grand Est
+            </span>
+            <span className="rounded-full bg-white/15 px-4 py-2 text-xs font-semibold tracking-wide uppercase backdrop-blur-sm sm:text-sm">
+              Département Marne
+            </span>
+          </div>
         </div>
       </section>
 
-      <section id="infos-cles" className="space-y-4">
+      <section id="inscrits" className="mx-auto w-full max-w-6xl space-y-4 px-4 sm:px-6 lg:px-8">
+        <h2 className="text-2xl font-semibold">Inscrits</h2>
+        <Card>
+          <CardContent className="pt-6 text-sm">
+            La liste des inscrits sera publiée ici et mise à jour en temps réel
+            par l&apos;organisation.
+          </CardContent>
+        </Card>
+      </section>
+
+      <section id="infos-cles" className="mx-auto w-full max-w-6xl space-y-4 px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-semibold">Infos clés</h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {keyInfos.map((item) => {
@@ -93,7 +143,7 @@ export default function TournoisPage() {
         </div>
       </section>
 
-      <section id="inscriptions" className="space-y-4">
+      <section id="inscriptions" className="mx-auto w-full max-w-6xl space-y-4 px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-semibold">Inscriptions</h2>
         <p className="text-muted-foreground text-sm">
           Choisissez vos tableaux, validez votre participation et recevez une
@@ -102,12 +152,12 @@ export default function TournoisPage() {
         <TournamentRegistrationForm tournament={featuredTournament} />
       </section>
 
-      <section id="programme" className="space-y-4">
+      <section id="programme" className="mx-auto w-full max-w-6xl space-y-4 px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-semibold">Programme</h2>
         <Card>
           <CardContent className="space-y-3 pt-6">
             {schedule.map((item) => (
-              <p key={item} className="border-border text-sm not-last:pb-3 not-last:border-b">
+              <p key={item} className="border-border text-sm not-last:border-b not-last:pb-3">
                 {item}
               </p>
             ))}
@@ -115,7 +165,10 @@ export default function TournoisPage() {
         </Card>
       </section>
 
-      <section id="infos-pratiques" className="space-y-4">
+      <section
+        id="infos-pratiques"
+        className="mx-auto w-full max-w-6xl space-y-4 px-4 sm:px-6 lg:px-8"
+      >
         <h2 className="text-2xl font-semibold">Infos pratiques</h2>
         <Card>
           <CardContent className="space-y-2 pt-6 text-sm">
