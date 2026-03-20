@@ -1,4 +1,5 @@
 import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -39,52 +40,38 @@ export default function TournoisPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[680px] text-left text-sm">
-              <thead>
-                <tr className="border-border text-muted-foreground border-b">
-                  <th className="py-3 pr-4 font-medium">Compétition</th>
-                  <th className="px-4 py-3 font-medium">Date</th>
-                  <th className="px-4 py-3 font-medium">Lieu</th>
-                  <th className="px-4 py-3 font-medium">Catégorie</th>
-                  <th className="px-4 py-3 font-medium">Statut</th>
-                </tr>
-              </thead>
-              <tbody>
-                {upcomingTournaments.map((competition) => (
-                  <tr
-                    key={competition.id}
-                    className="border-border/70 border-b last:border-b-0"
-                  >
-                    <td className="py-3 pr-4 font-medium">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {upcomingTournaments.map((competition) => (
+              <article
+                key={competition.id}
+                className="bg-card ring-border/50 hover:ring-primary/40 group relative flex h-full flex-col justify-between rounded-xl border p-5 ring-1 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-base leading-tight font-semibold">
                       {competition.name}
-                    </td>
-                    <td className="px-4 py-3">
-                      {new Date(competition.date).toLocaleDateString("fr-FR", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td className="px-4 py-3">{competition.location}</td>
-                    <td className="px-4 py-3">{competition.category}</td>
-                    <td className="px-4 py-3">
-                      <span className="bg-muted inline-flex rounded-full px-2 py-1 text-xs">
-                        {competition.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-                {upcomingTournaments.length === 0 && (
-                  <tr>
-                    <td className="text-muted-foreground py-4" colSpan={5}>
-                      Aucun tournoi à venir pour le moment.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                    </h3>
+                    <Badge className="shrink-0">Tournoi</Badge>
+                  </div>
+                  <p className="text-muted-foreground text-sm">
+                    {new Date(competition.date).toLocaleDateString("fr-FR", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                  <p className="text-sm">{competition.location}</p>
+                </div>
+                <Button className="mt-5 w-full">Voir le tournoi</Button>
+              </article>
+            ))}
           </div>
+
+          {upcomingTournaments.length === 0 && (
+            <p className="text-muted-foreground text-sm">
+              Aucun tournoi à venir pour le moment.
+            </p>
+          )}
         </CardContent>
       </Card>
 
@@ -99,7 +86,10 @@ export default function TournoisPage() {
           {pastTournaments.length > 0 ? (
             <ul className="space-y-2 text-sm">
               {pastTournaments.map((competition) => (
-                <li key={competition.id} className="border-border rounded-md border p-3">
+                <li
+                  key={competition.id}
+                  className="border-border rounded-md border p-3"
+                >
                   <p className="font-medium">{competition.name}</p>
                   <p className="text-muted-foreground">
                     {new Date(competition.date).toLocaleDateString("fr-FR", {
