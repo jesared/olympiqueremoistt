@@ -27,6 +27,9 @@
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
+      "@lexical/link": [
+        "./node_modules/.pnpm/@lexical+link@0.42.0/node_modules/@lexical/link"
+      ],
       "~/*": ["./src/*"]
     }
   },
