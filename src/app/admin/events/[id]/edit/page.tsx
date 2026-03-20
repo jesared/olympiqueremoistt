@@ -25,16 +25,23 @@ export default async function AdminEventEditPage({
       startDate: true,
       endDate: true,
       published: true,
+      categoryId: true,
     },
   });
 
   if (!event) notFound();
+
+  const categories = await prisma.category.findMany({
+    orderBy: { name: "asc" },
+    select: { id: true, name: true },
+  });
 
   return (
     <div className="space-y-6">
       <EventForm
         mode="edit"
         initialData={event}
+        categories={categories}
         submitAction={updateEvent.bind(null, id)}
         duplicateAction={duplicateEvent.bind(null, id)}
       />

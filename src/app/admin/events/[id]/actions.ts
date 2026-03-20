@@ -39,6 +39,7 @@ export async function updateEvent(
     location: data.get("location"),
     startDate: data.get("startDate"),
     endDate: data.get("endDate"),
+    categoryId: data.get("categoryId"),
     published: data.get("published") === "true",
   });
 
@@ -75,6 +76,7 @@ export async function updateEvent(
       location: parsed.data.location,
       startDate: parsed.data.startDate,
       endDate: parsed.data.endDate ?? null,
+      categoryId: parsed.data.categoryId ?? null,
       published: parsed.data.published,
     },
   });
@@ -108,6 +110,7 @@ export async function duplicateEvent(id: string): Promise<DuplicateEventResult> 
       location: true,
       startDate: true,
       endDate: true,
+      categoryId: true,
     },
   });
 
@@ -138,6 +141,7 @@ export async function duplicateEvent(id: string): Promise<DuplicateEventResult> 
       location: event.location,
       startDate: event.startDate,
       endDate: event.endDate,
+      categoryId: event.categoryId,
       published: false,
     },
     select: { id: true },
