@@ -14,6 +14,7 @@ const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
 
 function toExcerpt(content: string, maxLength = 160) {
   const plainText = content
+    .replace(/&nbsp;| /g, " ")
     .replace(/<[^>]*>/g, " ")
     .replace(/[#>*_`\-\[\]()]/g, " ")
     .replace(/\s+/g, " ")
@@ -80,8 +81,11 @@ export default async function ActualitesPage() {
 
               <Link
                 href={`/actualites/${featuredPost.slug}`}
-                className="relative block h-[320px] overflow-hidden sm:h-[400px]"
-              >
+                aria-label={`Lire ${featuredPost.title}`}
+                className="absolute inset-0 z-10"
+              />
+
+              <div className="relative h-[320px] overflow-hidden sm:h-[400px]">
                 {featuredPost.imageUrl ? (
                   <Image
                     src={featuredPost.imageUrl}
@@ -94,20 +98,30 @@ export default async function ActualitesPage() {
                   <div className="bg-muted h-full w-full" />
                 )}
 
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/25" />
 
-                <div className="absolute right-0 bottom-0 left-0 p-5 sm:p-8">
+                <div className="absolute right-0 bottom-0 left-0 z-20 flex flex-col gap-2 p-5 sm:gap-3 sm:p-8">
                   <p className="text-xs font-medium tracking-wide text-white/80 uppercase">
                     {dateFormatter.format(featuredPost.createdAt)}
                   </p>
-                  <h2 className="mt-2 text-2xl leading-tight font-semibold text-white sm:text-3xl">
+                  <h2 className="text-2xl leading-tight font-semibold text-white sm:text-3xl">
                     {featuredPost.title}
                   </h2>
-                  <p className="mt-3 line-clamp-2 max-w-3xl text-sm leading-relaxed text-white/90 sm:text-base">
-                    {toExcerpt(featuredPost.content, 220)}
+                  <p className="line-clamp-2 max-w-3xl text-sm leading-relaxed text-white/95 sm:text-base">
+                    {toExcerpt(featuredPost.content, 120)}
                   </p>
+                  <Button
+                    asChild
+                    size="sm"
+                    className="relative z-20 w-fit"
+                    variant="default"
+                  >
+                    <Link href={`/actualites/${featuredPost.slug}`}>
+                      Lire la suite
+                    </Link>
+                  </Button>
                 </div>
-              </Link>
+              </div>
             </article>
           ) : null}
 
