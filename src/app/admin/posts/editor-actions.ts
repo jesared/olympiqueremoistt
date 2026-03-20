@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { slugify } from "~/lib/slug";
-import { requireAdmin } from "~/server/auth/auth-helpers";
+import { requireAdminOrModerator } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
 
 export type SavePostResult = {
@@ -50,13 +50,17 @@ function revalidatePostPaths(id: string) {
   revalidatePath("/actualites");
 }
 
-export async function createPostAction(data: FormData): Promise<SavePostResult> {
-  const session = await requireAdmin();
+export async function createPostAction(
+  data: FormData,
+): Promise<SavePostResult> {
+  const session = await requireAdminOrModerator();
 
   const title = getStringValue(data, "title");
   const content = getStringValue(data, "content");
   const providedSlug = getStringValue(data, "slug");
-  const imageUrl = getStringValue(data, "imageUrl") || getStringValue(data, "image");
+  const imageUrl =
+    getStringValue(data, "imageUrl") || getStringValue(data, "image");
+  const categoryId = getStringValue(data, "categoryId");
   const published = data.get("published") === "on";
 
   if (!title || !content) {
@@ -71,6 +75,20 @@ export async function createPostAction(data: FormData): Promise<SavePostResult> 
     }
   }
 
+  let nextCategoryId: string | null = null;
+  if (categoryId) {
+    const category = await prisma.category.findUnique({
+      where: { id: categoryId },
+      select: { id: true },
+    });
+
+    if (!category) {
+      return { success: false, error: "unknown" };
+    }
+
+    nextCategoryId = category.id;
+  }
+
   const slug = providedSlug || (await generateUniqueSlug(title));
 
   try {
@@ -82,6 +100,7 @@ export async function createPostAction(data: FormData): Promise<SavePostResult> 
         imageUrl: imageUrl || null,
         published,
         authorId: session.user.id,
+        categoryId: nextCategoryId,
       },
       select: { id: true },
     });
@@ -103,13 +122,18 @@ export async function createPostAction(data: FormData): Promise<SavePostResult> 
   }
 }
 
-export async function updatePostAction(id: string, data: FormData): Promise<SavePostResult> {
-  await requireAdmin();
+export async function updatePostAction(
+  id: string,
+  data: FormData,
+): Promise<SavePostResult> {
+  await requireAdminOrModerator();
 
   const title = getStringValue(data, "title");
   const slug = getStringValue(data, "slug");
   const content = getStringValue(data, "content");
-  const imageUrl = getStringValue(data, "imageUrl") || getStringValue(data, "image");
+  const imageUrl =
+    getStringValue(data, "imageUrl") || getStringValue(data, "image");
+  const categoryId = getStringValue(data, "categoryId");
   const published = data.get("published") === "on";
 
   if (!title || !slug || !content) {
@@ -124,6 +148,20 @@ export async function updatePostAction(id: string, data: FormData): Promise<Save
     }
   }
 
+  let nextCategoryId: string | null = null;
+  if (categoryId) {
+    const category = await prisma.category.findUnique({
+      where: { id: categoryId },
+      select: { id: true },
+    });
+
+    if (!category) {
+      return { success: false, error: "unknown" };
+    }
+
+    nextCategoryId = category.id;
+  }
+
   try {
     await prisma.post.update({
       where: { id },
@@ -133,6 +171,7 @@ export async function updatePostAction(id: string, data: FormData): Promise<Save
         content,
         imageUrl: imageUrl || null,
         published,
+        categoryId: nextCategoryId,
       },
     });
   } catch (error) {

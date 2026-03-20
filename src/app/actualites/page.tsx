@@ -41,6 +41,11 @@ export default async function ActualitesPage() {
       imageUrl: true,
       content: true,
       createdAt: true,
+      category: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 
@@ -104,6 +109,11 @@ export default async function ActualitesPage() {
                   <p className="text-xs font-medium tracking-wide text-white/80 uppercase">
                     {dateFormatter.format(featuredPost.createdAt)}
                   </p>
+                  {featuredPost.category?.name ? (
+                    <p className="text-xs font-semibold tracking-wide text-white/90 uppercase">
+                      {featuredPost.category.name}
+                    </p>
+                  ) : null}
                   <h2 className="text-2xl leading-tight font-semibold text-white sm:text-3xl">
                     {featuredPost.title}
                   </h2>
@@ -166,6 +176,11 @@ export default async function ActualitesPage() {
                       <p className="text-muted-foreground/80 text-xs font-medium tracking-wide uppercase">
                         {dateFormatter.format(post.createdAt)}
                       </p>
+                      {post.category?.name ? (
+                        <p className="text-primary/90 text-xs font-semibold tracking-wide uppercase">
+                          {post.category.name}
+                        </p>
+                      ) : null}
                       <CardTitle className="text-base leading-snug sm:text-lg">
                         {post.title}
                       </CardTitle>

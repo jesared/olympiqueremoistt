@@ -2,11 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 
-import { requireAdmin } from "~/server/auth/auth-helpers";
+import { requireAdminOrModerator } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
 
 export async function deletePost(id: string) {
-  await requireAdmin();
+  await requireAdminOrModerator();
 
   if (!id) {
     throw new Error("Actualité invalide.");
@@ -24,7 +24,7 @@ export async function deletePost(id: string) {
 }
 
 export async function togglePublishPost(id: string) {
-  await requireAdmin();
+  await requireAdminOrModerator();
 
   if (!id) {
     throw new Error("Actualité invalide.");
