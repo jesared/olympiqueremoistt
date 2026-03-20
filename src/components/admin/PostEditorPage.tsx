@@ -287,7 +287,6 @@ export function PostEditorPage({
                 <Select
                   value={categoryId || "none"}
                   onValueChange={(value) =>
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                     setCategoryId(value === "none" ? "" : value)
                   }
                 >

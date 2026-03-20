@@ -1,32 +1,24 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-import { auth } from "~/server/auth";
-
-export default auth((req) => {
-  console.log("[middleware] req.auth:", req.auth);
-
-  const role = req.auth?.user?.role;
+export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (
-    pathname.startsWith("/admin") &&
-    role !== "ADMIN" &&
-    role !== "MODERATOR"
-  ) {
-    return NextResponse.redirect(new URL("/", req.url));
+  if (!pathname.startsWith("/admin")) {
+    return NextResponse.next();
   }
 
-  if (
-    pathname.startsWith("/organizer") &&
-    role !== "ORGANIZER" &&
-    role !== "ADMIN"
-  ) {
-    return NextResponse.redirect(new URL("/", req.url));
+  const token =
+    req.cookies.get("next-auth.session-token") ??
+    req.cookies.get("__Secure-next-auth.session-token");
+
+  if (!token) {
+    return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
-  matcher: ["/admin/:path*", "/organizer/:path*"],
+  matcher: ["/admin/:path*"],
 };
