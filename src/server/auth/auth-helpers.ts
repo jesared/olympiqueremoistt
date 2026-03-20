@@ -2,34 +2,57 @@ import "server-only";
 
 import { auth } from "~/server/auth";
 
-export async function requireAdmin() {
+/**
+ * Session sécurisée (non null + user complet)
+ */
+type AuthSession = {
+  user: {
+    id: string;
+    role: "ADMIN" | "MODERATOR" | "ORGANIZER" | "USER";
+  };
+};
+
+/**
+ * ADMIN uniquement
+ */
+export async function requireAdmin(): Promise<AuthSession> {
   const session = await auth();
 
   if (session?.user?.role !== "ADMIN") {
     throw new Error("Unauthorized: admin role required.");
   }
 
-  return session;
+  return session as AuthSession;
 }
 
-export async function requireAdminOrModerator() {
+/**
+ * ADMIN ou MODERATOR
+ */
+export async function requireAdminOrModerator(): Promise<AuthSession> {
   const session = await auth();
-  const role = session?.user?.role;
 
-  if (role !== "ADMIN" && role !== "MODERATOR") {
+  if (
+    !session?.user ||
+    (session.user.role !== "ADMIN" && session.user.role !== "MODERATOR")
+  ) {
     throw new Error("Unauthorized: admin or moderator role required.");
   }
 
-  return session;
+  return session as AuthSession;
 }
 
-export async function requireOrganizer() {
+/**
+ * ORGANIZER ou ADMIN
+ */
+export async function requireOrganizer(): Promise<AuthSession> {
   const session = await auth();
-  const role = session?.user?.role;
 
-  if (role !== "ORGANIZER" && role !== "ADMIN") {
+  if (
+    !session?.user ||
+    (session.user.role !== "ORGANIZER" && session.user.role !== "ADMIN")
+  ) {
     throw new Error("Unauthorized: organizer role required.");
   }
 
-  return session;
+  return session as AuthSession;
 }
