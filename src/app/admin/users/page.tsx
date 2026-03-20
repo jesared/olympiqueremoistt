@@ -17,17 +17,20 @@ type UserListItem = {
 };
 
 type AdminUsersPageProps = {
-  searchParams?: Promise<{ page?: string }> | { page?: string };
+  searchParams?: Promise<{ page?: string }>;
 };
 
 const PAGE_SIZE = 10;
 
-export default async function AdminUsersPage({ searchParams }: AdminUsersPageProps) {
+export default async function AdminUsersPage({
+  searchParams,
+}: AdminUsersPageProps) {
   const session = await requireAdmin();
 
-  const resolvedSearchParams = await Promise.resolve(searchParams);
-  const requestedPage = Number.parseInt(resolvedSearchParams?.page ?? "1", 10);
-  const currentPage = Number.isNaN(requestedPage) || requestedPage < 1 ? 1 : requestedPage;
+  const params = await searchParams;
+  const requestedPage = Number.parseInt(params?.page ?? "1", 10);
+  const currentPage =
+    Number.isNaN(requestedPage) || requestedPage < 1 ? 1 : requestedPage;
 
   const skip = (currentPage - 1) * PAGE_SIZE;
   const usersPage = (await prisma.user.findMany({
@@ -51,9 +54,14 @@ export default async function AdminUsersPage({ searchParams }: AdminUsersPagePro
 
         <CardContent className="space-y-4">
           {users.length === 0 ? (
-            <p className="text-muted-foreground text-sm">Aucun utilisateur trouvé.</p>
+            <p className="text-muted-foreground text-sm">
+              Aucun utilisateur trouvé.
+            </p>
           ) : (
-            <UsersTableWithFilters users={users} currentUserId={session.user.id} />
+            <UsersTableWithFilters
+              users={users}
+              currentUserId={session.user.id}
+            />
           )}
 
           <div className="flex items-center justify-between gap-2 border-t pt-4">
