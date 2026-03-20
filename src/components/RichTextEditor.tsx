@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -27,11 +27,12 @@ import {
   ListNode,
   INSERT_UNORDERED_LIST_COMMAND,
 } from "@lexical/list";
-import { Bold, Heading1, Heading2, Italic, Link2, List, Unlink } from "lucide-react";
+import { Bold, Heading1, Heading2, Italic, Link2, List } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 
 import { Button } from "./ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 type RichTextEditorProps = {
   value: string;
@@ -82,13 +83,67 @@ function LexicalToolbar() {
     return selectedUrl;
   };
 
-  const insertLink = () => {
-    const currentUrl = getSelectedLinkUrl() ?? "";
-    const url = prompt("Entrer une URL", currentUrl);
+  const LinkPopover = () => {
+    const [open, setOpen] = useState(false);
+    const [url, setUrl] = useState("");
+    const inputRef = useRef<HTMLInputElement>(null);
 
-    if (!url) return;
+    useEffect(() => {
+      if (!open) return;
 
-    editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
+      setUrl(getSelectedLinkUrl() ?? "");
+      inputRef.current?.focus();
+    }, [open]);
+
+    const handleAddLink = () => {
+      if (!url) return;
+
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
+      setUrl("");
+      setOpen(false);
+    };
+
+    const handleRemoveLink = () => {
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+      setUrl("");
+      setOpen(false);
+    };
+
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button type="button" size="sm" variant="outline" className="gap-1">
+            <Link2 className="h-4 w-4" aria-hidden="true" />
+            Lien
+          </Button>
+        </PopoverTrigger>
+
+        <PopoverContent className="w-64 space-y-2">
+          <input
+            ref={inputRef}
+            className="w-full rounded-md border px-2 py-1 text-sm"
+            placeholder="https://..."
+            value={url}
+            onChange={(event) => setUrl(event.target.value)}
+          />
+
+          <div className="flex gap-2">
+            <Button type="button" size="sm" onClick={handleAddLink}>
+              Valider
+            </Button>
+
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={handleRemoveLink}
+            >
+              Supprimer lien
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    );
   };
 
   return (
@@ -154,27 +209,7 @@ function LexicalToolbar() {
         Liste
       </Button>
 
-      <Button
-        type="button"
-        size="sm"
-        variant="outline"
-        className="gap-1"
-        onClick={insertLink}
-      >
-        <Link2 className="h-4 w-4" aria-hidden="true" />
-        Lien
-      </Button>
-
-      <Button
-        type="button"
-        size="sm"
-        variant="outline"
-        className="gap-1"
-        onClick={() => editor.dispatchCommand(TOGGLE_LINK_COMMAND, null)}
-      >
-        <Unlink className="h-4 w-4" aria-hidden="true" />
-        Supprimer lien
-      </Button>
+      <LinkPopover />
     </div>
   );
 }
