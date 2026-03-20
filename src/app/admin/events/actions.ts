@@ -13,10 +13,6 @@ type CreateEventActionState = {
   redirectTo?: string;
 };
 
-export const initialCreateEventState: CreateEventActionState = {
-  status: "idle",
-};
-
 export async function createEvent(
   _prevState: CreateEventActionState,
   data: FormData,

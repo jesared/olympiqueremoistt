@@ -7,7 +7,7 @@ import { CalendarClock, Loader2, MapPin } from "lucide-react";
 
 import {
   createEvent,
-  initialCreateEventState,
+  type CreateEventActionState,
 } from "~/app/admin/events/actions";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -80,6 +80,7 @@ function SubmitButtons({ pending }: { pending: boolean }) {
 
 export function EventForm() {
   const router = useRouter();
+  const initialCreateEventState: CreateEventActionState = { status: "idle" };
   const [state, formAction, pending] = useActionState(
     createEvent,
     initialCreateEventState,
