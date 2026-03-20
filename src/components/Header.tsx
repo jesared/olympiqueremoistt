@@ -2,7 +2,15 @@
 
 import type { Session } from "next-auth";
 
-import { CalendarDays, ChevronDown, Handshake, Home, Menu, Newspaper, Trophy, Users, User } from "lucide-react";
+import {
+  CalendarDays,
+  ChevronDown,
+  Home,
+  Menu,
+  Newspaper,
+  Trophy,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -27,9 +35,6 @@ const navItems: MobileNavItem[] = [
     href: "/club",
     icon: Users,
     children: [
-      { label: "Bénévolat", href: "/club/benevolat", icon: Handshake },
-      { label: "Sponsoring", href: "/club/sponsoring", icon: Handshake },
-      { label: "Joueur", href: "/club/joueur", icon: User },
       {
         label: "L'équipe dirigeante",
         href: "/club/lequipe-dirigeante",
@@ -134,7 +139,9 @@ export default function Header({ user }: HeaderProps) {
                         : "text-muted-foreground hover:bg-muted hover:text-foreground",
                     )}
                   >
-                    {item.icon && <item.icon className="size-4" aria-hidden="true" />}
+                    {item.icon && (
+                      <item.icon className="size-4" aria-hidden="true" />
+                    )}
                     <span>{item.label}</span>
                     {item.children && (
                       <ChevronDown
