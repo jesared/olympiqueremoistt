@@ -48,7 +48,7 @@ const schedule = [
 
 export default function TournoisPage() {
   return (
-    <main className="bg-slate-50 pb-12">
+    <main className="pb-12">
       <section className="px-4 py-12 sm:py-16">
         <div className="mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div>
