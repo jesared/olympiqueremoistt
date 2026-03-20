@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { getString } from "~/lib/form";
+import { eventSchema } from "~/lib/validations/event.schema";
 import { requireAdmin } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
 
@@ -23,62 +23,71 @@ export async function updateEvent(
 ): Promise<UpdateEventResult> {
   await requireAdmin();
 
-  const title = getString(data, "title").trim();
-  const slug = getString(data, "slug").trim();
-  const description = getString(data, "description").trim();
-  const location = getString(data, "location").trim();
-  const startDateValue = getString(data, "startDate");
-  const endDateValue = getString(data, "endDate");
-  const published = getString(data, "published") === "on";
+  const parsed = eventSchema.safeParse({
+    title: data.get("title"),
+    slug: data.get("slug"),
+    description: data.get("description"),
+    location: data.get("location"),
+    startDate: data.get("startDate"),
+    endDate: data.get("endDate"),
+    published: data.get("published") === "on",
+  });
 
-  if (!title || !slug || !description || !location || !startDateValue) {
-    return { success: false, error: "missing-fields" };
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+
+    if (fieldErrors.endDate?.length) {
+      return { success: false, error: "end-before-start" };
+    }
+
+    if (fieldErrors.startDate?.length) {
+      return { success: false, error: "invalid-start-date" };
+    }
+
+    if (
+      fieldErrors.title ||
+      fieldErrors.slug ||
+      fieldErrors.description ||
+      fieldErrors.location
+    ) {
+      return { success: false, error: "missing-fields" };
+    }
+
+    return { success: false, error: "unknown" };
   }
 
-  const startDate = new Date(startDateValue);
+  const existingSlug = await prisma.event.findFirst({
+    where: {
+      slug: parsed.data.slug,
+      NOT: { id },
+    },
+    select: { id: true },
+  });
 
-  if (Number.isNaN(startDate.getTime())) {
-    return { success: false, error: "invalid-start-date" };
-  }
-
-  const endDate = endDateValue ? new Date(endDateValue) : null;
-
-  if (endDate && Number.isNaN(endDate.getTime())) {
-    return { success: false, error: "invalid-end-date" };
-  }
-
-  if (endDate && endDate < startDate) {
-    return { success: false, error: "end-before-start" };
+  if (existingSlug) {
+    return { success: false, error: "slug-already-used" };
   }
 
   try {
     await prisma.event.update({
       where: { id },
       data: {
-        title,
-        slug,
-        description,
-        location,
-        startDate,
-        endDate,
-        published,
+        title: parsed.data.title,
+        slug: parsed.data.slug,
+        description: parsed.data.description,
+        location: parsed.data.location,
+        startDate: parsed.data.startDate,
+        endDate: parsed.data.endDate ?? null,
+        published: parsed.data.published,
       },
     });
-  } catch (error) {
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "code" in error &&
-      error.code === "P2002"
-    ) {
-      return { success: false, error: "slug-already-used" };
-    }
-
+  } catch {
     return { success: false, error: "unknown" };
   }
 
   revalidatePath("/admin/events");
   revalidatePath("/events");
+  revalidatePath(`/events/${parsed.data.slug}`);
   revalidatePath(`/admin/events/${id}`);
 
   return { success: true };

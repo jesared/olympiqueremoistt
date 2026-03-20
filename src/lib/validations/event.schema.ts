@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 const toDate = (value: unknown) => {
   if (!value || typeof value !== "string") {
     return undefined;
@@ -13,10 +15,18 @@ const toDate = (value: unknown) => {
   return parsed;
 };
 
-export const createEventSchema = z
+export const eventSchema = z
   .object({
     title: z.string().trim().min(1, "Le titre est requis."),
-    slug: z.string().trim().min(1, "Le slug est requis."),
+    slug: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .min(1, "Le slug est requis.")
+      .regex(
+        slugPattern,
+        "Le slug doit contenir uniquement des lettres minuscules, des chiffres et des tirets.",
+      ),
     description: z.string().trim().min(1, "La description est requise."),
     location: z.string().trim().min(1, "Le lieu est requis."),
     startDate: z.preprocess(
@@ -31,4 +41,4 @@ export const createEventSchema = z
     path: ["endDate"],
   });
 
-export type CreateEventSchemaInput = z.infer<typeof createEventSchema>;
+export type EventSchemaInput = z.infer<typeof eventSchema>;

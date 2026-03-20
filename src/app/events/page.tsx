@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { db as prisma } from "~/server/db";
 
@@ -13,6 +15,7 @@ export default async function EventsPage() {
     select: {
       id: true,
       title: true,
+      slug: true,
       startDate: true,
       location: true,
       description: true,
@@ -29,27 +32,35 @@ export default async function EventsPage() {
       </header>
 
       {events.length === 0 ? (
-        <p className="text-muted-foreground">Aucun événement publié pour le moment.</p>
+        <p className="text-muted-foreground">
+          Aucun événement publié pour le moment.
+        </p>
       ) : (
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {events.map((event) => (
-            <Card key={event.id} className="h-full">
-              <CardHeader>
-                <CardTitle className="text-xl">{event.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                <p>
-                  <span className="font-medium">Date :</span>{" "}
-                  {dateFormatter.format(event.startDate)}
-                </p>
-                <p>
-                  <span className="font-medium">Lieu :</span> {event.location}
-                </p>
-                <p className="text-muted-foreground leading-relaxed">
-                  {event.description}
-                </p>
-              </CardContent>
-            </Card>
+            <Link
+              key={event.id}
+              href={`/events/${event.slug}`}
+              className="block h-full"
+            >
+              <Card className="h-full transition-shadow hover:shadow-md">
+                <CardHeader>
+                  <CardTitle className="text-xl">{event.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm">
+                  <p>
+                    <span className="font-medium">Date :</span>{" "}
+                    {dateFormatter.format(event.startDate)}
+                  </p>
+                  <p>
+                    <span className="font-medium">Lieu :</span> {event.location}
+                  </p>
+                  <p className="text-muted-foreground line-clamp-4 leading-relaxed">
+                    {event.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </section>
       )}
