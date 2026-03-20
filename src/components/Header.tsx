@@ -2,7 +2,7 @@
 
 import type { Session } from "next-auth";
 
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, Trophy, X, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -20,13 +20,14 @@ type HeaderProps = {
 type NavItem = {
   label: string;
   href: string;
+  icon?: LucideIcon;
   children?: Array<{ label: string; href: string }>;
 };
 
 const navItems: NavItem[] = [
   { label: "Accueil", href: "/" },
   { label: "Actualités", href: "/actualites" },
-  { label: "Compétitions", href: "/competitions" },
+  { label: "Tournois", href: "/tournois", icon: Trophy },
   {
     label: "Club",
     href: "/club",
@@ -136,6 +137,7 @@ export default function Header({ user }: HeaderProps) {
                         : "text-muted-foreground hover:bg-muted hover:text-foreground",
                     )}
                   >
+                    {item.icon && <item.icon className="size-4" aria-hidden="true" />}
                     <span>{item.label}</span>
                     {item.children && (
                       <ChevronDown
@@ -251,7 +253,12 @@ export default function Header({ user }: HeaderProps) {
                       )}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      {item.label}
+                      <span className="inline-flex items-center gap-1.5">
+                        {item.icon && (
+                          <item.icon className="size-4" aria-hidden="true" />
+                        )}
+                        <span>{item.label}</span>
+                      </span>
                     </Link>
 
                     {item.children && (

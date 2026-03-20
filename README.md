@@ -68,7 +68,7 @@ Le socle technique est issu d’un bootstrap T3 (Next.js App Router + Prisma + N
 │   │   ├── dashboard/
 │   │   ├── actualites/
 │   │   ├── evenements/
-│   │   ├── competitions/
+│   │   ├── tournois/
 │   │   ├── club/
 │   │   └── api/
 │   ├── components/
