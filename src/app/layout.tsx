@@ -9,8 +9,8 @@ import { auth } from "~/server/auth";
 import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
-  title: "Club Sportif Olympique",
-  description: "Site officiel du club sportif Olympique",
+  title: "Olympique Rémois Tennis de Table",
+  description: "Site officiel du club sportif Olympique Rémois Tennis de Table",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
