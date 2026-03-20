@@ -70,7 +70,7 @@ export default async function ActualitesPage() {
                 <div className="absolute right-3 top-3 z-10">
                   <Button asChild size="icon-xs" variant="outline">
                     <Link
-                      href={`/admin/posts/${post.id}`}
+                      href={`/admin/posts/${post.id}/edit`}
                       aria-label={`Editer ${post.title}`}
                     >
                       <Pencil className="size-3.5" />
