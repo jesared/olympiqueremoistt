@@ -18,6 +18,8 @@ import {
 
 import type { Session } from "next-auth";
 
+import { getUserInitials } from "./user-initials";
+
 type UserMenuProps = {
   user?: Session["user"] | null;
 };
@@ -31,14 +33,7 @@ export function UserMenu({ user }: UserMenuProps) {
     );
   }
 
-  const initials =
-    user.name
-      ?.split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase() ??
-    user.email?.charAt(0).toUpperCase() ??
-    "U";
+  const initials = getUserInitials(user);
 
   const isAdmin = user.role === "ADMIN";
 
@@ -49,9 +44,9 @@ export function UserMenu({ user }: UserMenuProps) {
           className="focus:ring-ring rounded-full focus:ring-2 focus:outline-none"
           aria-label="Ouvrir le menu utilisateur"
         >
-          <Avatar className="size-9 cursor-pointer">
+          <Avatar className="size-9 shrink-0 cursor-pointer">
             <AvatarImage src={user.image ?? ""} alt={user.name ?? ""} />
-            <AvatarFallback>{initials}</AvatarFallback>
+            <AvatarFallback className="text-xs font-semibold">{initials}</AvatarFallback>
           </Avatar>
         </button>
       </DropdownMenuTrigger>
