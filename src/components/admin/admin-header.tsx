@@ -39,6 +39,11 @@ const headerConfigByPath: Record<string, HeaderConfig> = {
     title: "Paramètres",
     description: "Configuration de la plateforme organisateur.",
   },
+  "/admin/categories": {
+    title: "Catégories",
+    description: "Classez vos contenus et suivez leur utilisation.",
+    primaryAction: "Ajouter catégorie",
+  },
 };
 
 export function AdminHeader() {
