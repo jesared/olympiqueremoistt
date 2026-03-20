@@ -12,6 +12,17 @@ export async function requireAdmin() {
   return session;
 }
 
+export async function requireAdminOrModerator() {
+  const session = await auth();
+  const role = session?.user?.role;
+
+  if (role !== "ADMIN" && role !== "MODERATOR") {
+    throw new Error("Unauthorized: admin or moderator role required.");
+  }
+
+  return session;
+}
+
 export async function requireOrganizer() {
   const session = await auth();
   const role = session?.user?.role;

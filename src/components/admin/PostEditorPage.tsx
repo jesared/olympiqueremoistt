@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { type FormEvent, useMemo, useState, useTransition } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 
-import { createPostAction, updatePostAction } from "~/app/admin/posts/editor-actions";
+import {
+  createPostAction,
+  updatePostAction,
+} from "~/app/admin/posts/editor-actions";
 import RichTextEditor from "~/components/RichTextEditor";
 import { ImageUpload } from "~/components/ImageUpload";
 import { Badge } from "~/components/ui/badge";
@@ -13,6 +16,13 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { slugify } from "~/lib/slug";
 import { uploadImage } from "~/lib/supabase";
 
@@ -24,7 +34,9 @@ type PostEditorPageProps = {
     content: string;
     imageUrl?: string;
     published?: boolean;
+    categoryId?: string;
   };
+  categories: Array<{ id: string; name: string }>;
   mode: "create" | "edit";
 };
 
@@ -38,7 +50,11 @@ const ERROR_MESSAGES: Record<string, string> = {
   unknown: "Impossible de sauvegarder cette actualité.",
 };
 
-export function PostEditorPage({ initialData, mode }: PostEditorPageProps) {
+export function PostEditorPage({
+  initialData,
+  categories,
+  mode,
+}: PostEditorPageProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [viewMode, setViewMode] = useState<"edit" | "preview">("edit");
@@ -47,9 +63,11 @@ export function PostEditorPage({ initialData, mode }: PostEditorPageProps) {
   const [content, setContent] = useState(initialData?.content ?? "");
   const [imageUrl, setImageUrl] = useState(initialData?.imageUrl ?? "");
   const [published, setPublished] = useState(initialData?.published ?? false);
+  const [categoryId, setCategoryId] = useState(initialData?.categoryId ?? "");
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  const titleLabel = mode === "create" ? "Créer une actualité" : "Modifier une actualité";
+  const titleLabel =
+    mode === "create" ? "Créer une actualité" : "Modifier une actualité";
   const submitLabel = mode === "create" ? "Créer" : "Mettre à jour";
 
   const previewDate = useMemo(
@@ -89,7 +107,9 @@ export function PostEditorPage({ initialData, mode }: PostEditorPageProps) {
       <div className="flex flex-col gap-3 border-b pb-4 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-muted-foreground text-sm">Éditeur d’actualité</p>
-          <h1 className="text-2xl font-semibold tracking-tight">{titleLabel}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {titleLabel}
+          </h1>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -121,7 +141,11 @@ export function PostEditorPage({ initialData, mode }: PostEditorPageProps) {
           </Button>
 
           <Button type="submit" disabled={isPending}>
-            {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : submitLabel}
+            {isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              submitLabel
+            )}
           </Button>
         </div>
       </div>
@@ -134,7 +158,7 @@ export function PostEditorPage({ initialData, mode }: PostEditorPageProps) {
 
       <div className="flex flex-col gap-6 lg:flex-row">
         <div className="mx-auto w-full max-w-3xl flex-1 space-y-6">
-          <div className="relative overflow-hidden rounded-2xl border bg-muted/20">
+          <div className="bg-muted/20 relative overflow-hidden rounded-2xl border">
             <div className="aspect-video w-full">
               {imageUrl.trim() ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -158,7 +182,7 @@ export function PostEditorPage({ initialData, mode }: PostEditorPageProps) {
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             placeholder="Titre de votre actualité"
-            className="w-full bg-transparent text-3xl font-bold outline-none placeholder:text-muted-foreground/70"
+            className="placeholder:text-muted-foreground/70 w-full bg-transparent text-3xl font-bold outline-none"
           />
 
           {viewMode === "edit" ? (
@@ -177,7 +201,11 @@ export function PostEditorPage({ initialData, mode }: PostEditorPageProps) {
             <article className="prose dark:prose-invert max-w-none rounded-2xl border p-6 md:p-8">
               <p className="text-muted-foreground text-xs">{previewDate}</p>
               <h1>{title.trim() || "Titre de votre actualité"}</h1>
-              <div dangerouslySetInnerHTML={{ __html: content.trim() || FALLBACK_CONTENT }} />
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: content.trim() || FALLBACK_CONTENT,
+                }}
+              />
             </article>
           )}
         </div>
@@ -200,14 +228,20 @@ export function PostEditorPage({ initialData, mode }: PostEditorPageProps) {
                   <Checkbox
                     id="published"
                     checked={published}
-                    onCheckedChange={(checked) => setPublished(checked === true)}
+                    onCheckedChange={(checked) =>
+                      setPublished(checked === true)
+                    }
                   />
                   <label htmlFor="published" className="text-sm font-medium">
                     Publier maintenant
                   </label>
                 </div>
 
-                <input type="hidden" name="published" value={published ? "on" : "off"} />
+                <input
+                  type="hidden"
+                  name="published"
+                  value={published ? "on" : "off"}
+                />
 
                 <Button type="submit" className="w-full" disabled={isPending}>
                   {submitLabel}
@@ -242,10 +276,41 @@ export function PostEditorPage({ initialData, mode }: PostEditorPageProps) {
 
             <Card>
               <CardHeader>
+                <CardTitle>Catégorie</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Select
+                  value={categoryId || "none"}
+                  onValueChange={(value) =>
+                    setCategoryId(value === "none" ? "" : value)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionner une catégorie" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Aucune catégorie</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <input type="hidden" name="categoryId" value={categoryId} />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
                 <CardTitle>Image</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <ImageUpload value={imageUrl} uploadImage={uploadImage} onUploaded={setImageUrl} />
+                <ImageUpload
+                  value={imageUrl}
+                  uploadImage={uploadImage}
+                  onUploaded={setImageUrl}
+                />
                 <Input
                   id="image-url-input"
                   placeholder="https://..."

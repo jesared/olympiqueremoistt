@@ -19,6 +19,15 @@ export default async function AdminPostEditPage({
       content: true,
       imageUrl: true,
       published: true,
+      categoryId: true,
+    },
+  });
+
+  const categories = await prisma.category.findMany({
+    orderBy: { name: "asc" },
+    select: {
+      id: true,
+      name: true,
     },
   });
 
@@ -36,7 +45,9 @@ export default async function AdminPostEditPage({
         content: post.content,
         imageUrl: post.imageUrl ?? undefined,
         published: post.published,
+        categoryId: post.categoryId ?? undefined,
       }}
+      categories={categories}
     />
   );
 }
