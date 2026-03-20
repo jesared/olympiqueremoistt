@@ -29,16 +29,17 @@ export async function updatePost(
   const title = getStringValue(data, "title");
   const slug = getStringValue(data, "slug");
   const content = getStringValue(data, "content");
-  const image = getStringValue(data, "image");
+  const imageUrl =
+    getStringValue(data, "imageUrl") || getStringValue(data, "image");
   const published = data.get("published") === "on";
 
   if (!title || !slug || !content) {
     return { success: false, error: "missing-fields" };
   }
 
-  if (image) {
+  if (imageUrl) {
     try {
-      new URL(image);
+      new URL(imageUrl);
     } catch {
       return { success: false, error: "invalid-image" };
     }
@@ -51,7 +52,7 @@ export async function updatePost(
         title,
         slug,
         content,
-        image: image || null,
+        imageUrl: imageUrl || null,
         published,
       },
     });

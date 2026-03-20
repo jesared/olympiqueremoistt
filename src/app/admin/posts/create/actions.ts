@@ -32,17 +32,20 @@ export async function createPost(data: FormData) {
 
   const title = data.get("title")?.toString().trim() ?? "";
   const content = data.get("content")?.toString().trim() ?? "";
-  const url = data.get("image")?.toString().trim() ?? "";
+  const imageUrl =
+    data.get("imageUrl")?.toString().trim() ??
+    data.get("image")?.toString().trim() ??
+    "";
   const published = data.get("published") === "on";
 
   if (!title || !content) {
     redirect("/admin/posts/create?error=missing-fields");
   }
 
-  if (url) {
+  if (imageUrl) {
     try {
       // Validation simple pour éviter les URLs invalides.
-      new URL(url);
+      new URL(imageUrl);
     } catch {
       redirect("/admin/posts/create?error=invalid-image");
     }
@@ -55,7 +58,7 @@ export async function createPost(data: FormData) {
       title,
       slug,
       content,
-      image: url || null,
+      imageUrl: imageUrl || null,
       published,
       authorId: session.user.id,
     },

@@ -92,7 +92,7 @@ model Post {
   title     String
   slug      String   @unique
   content   String
-  image     String?
+  imageUrl  String?
   published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

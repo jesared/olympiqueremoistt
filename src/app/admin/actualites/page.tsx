@@ -9,7 +9,7 @@ export default async function AdminActualitesPage() {
       id: true,
       title: true,
       content: true,
-      image: true,
+      imageUrl: true,
       createdAt: true,
       published: true,
     },
@@ -20,7 +20,7 @@ export default async function AdminActualitesPage() {
     title: post.title,
     content: post.content,
     date: post.createdAt.toISOString().slice(0, 10),
-    image: post.image ?? "",
+    image: post.imageUrl ?? "",
     status: post.published ? "published" : "draft",
   }));
 

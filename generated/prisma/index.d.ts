@@ -7528,7 +7528,7 @@ export namespace Prisma {
     title: string | null
     slug: string | null
     content: string | null
-    image: string | null
+    imageUrl: string | null
     published: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7540,7 +7540,7 @@ export namespace Prisma {
     title: string | null
     slug: string | null
     content: string | null
-    image: string | null
+    imageUrl: string | null
     published: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7552,7 +7552,7 @@ export namespace Prisma {
     title: number
     slug: number
     content: number
-    image: number
+    imageUrl: number
     published: number
     createdAt: number
     updatedAt: number
@@ -7566,7 +7566,7 @@ export namespace Prisma {
     title?: true
     slug?: true
     content?: true
-    image?: true
+    imageUrl?: true
     published?: true
     createdAt?: true
     updatedAt?: true
@@ -7578,7 +7578,7 @@ export namespace Prisma {
     title?: true
     slug?: true
     content?: true
-    image?: true
+    imageUrl?: true
     published?: true
     createdAt?: true
     updatedAt?: true
@@ -7590,7 +7590,7 @@ export namespace Prisma {
     title?: true
     slug?: true
     content?: true
-    image?: true
+    imageUrl?: true
     published?: true
     createdAt?: true
     updatedAt?: true
@@ -7675,7 +7675,7 @@ export namespace Prisma {
     title: string
     slug: string
     content: string
-    image: string | null
+    imageUrl: string | null
     published: boolean
     createdAt: Date
     updatedAt: Date
@@ -7704,7 +7704,7 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     content?: boolean
-    image?: boolean
+    imageUrl?: boolean
     published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7717,7 +7717,7 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     content?: boolean
-    image?: boolean
+    imageUrl?: boolean
     published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7730,7 +7730,7 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     content?: boolean
-    image?: boolean
+    imageUrl?: boolean
     published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7743,14 +7743,14 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     content?: boolean
-    image?: boolean
+    imageUrl?: boolean
     published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     authorId?: boolean
   }
 
-  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "content" | "image" | "published" | "createdAt" | "updatedAt" | "authorId", ExtArgs["result"]["post"]>
+  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "content" | "imageUrl" | "published" | "createdAt" | "updatedAt" | "authorId", ExtArgs["result"]["post"]>
   export type PostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -7771,7 +7771,7 @@ export namespace Prisma {
       title: string
       slug: string
       content: string
-      image: string | null
+      imageUrl: string | null
       published: boolean
       createdAt: Date
       updatedAt: Date
@@ -8204,7 +8204,7 @@ export namespace Prisma {
     readonly title: FieldRef<"Post", 'String'>
     readonly slug: FieldRef<"Post", 'String'>
     readonly content: FieldRef<"Post", 'String'>
-    readonly image: FieldRef<"Post", 'String'>
+    readonly imageUrl: FieldRef<"Post", 'String'>
     readonly published: FieldRef<"Post", 'Boolean'>
     readonly createdAt: FieldRef<"Post", 'DateTime'>
     readonly updatedAt: FieldRef<"Post", 'DateTime'>
@@ -14204,7 +14204,7 @@ export namespace Prisma {
     title: 'title',
     slug: 'slug',
     content: 'content',
-    image: 'image',
+    imageUrl: 'imageUrl',
     published: 'published',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -14743,7 +14743,7 @@ export namespace Prisma {
     title?: StringFilter<"Post"> | string
     slug?: StringFilter<"Post"> | string
     content?: StringFilter<"Post"> | string
-    image?: StringNullableFilter<"Post"> | string | null
+    imageUrl?: StringNullableFilter<"Post"> | string | null
     published?: BoolFilter<"Post"> | boolean
     createdAt?: DateTimeFilter<"Post"> | Date | string
     updatedAt?: DateTimeFilter<"Post"> | Date | string
@@ -14756,7 +14756,7 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     content?: SortOrder
-    image?: SortOrderInput | SortOrder
+    imageUrl?: SortOrderInput | SortOrder
     published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14772,7 +14772,7 @@ export namespace Prisma {
     NOT?: PostWhereInput | PostWhereInput[]
     title?: StringFilter<"Post"> | string
     content?: StringFilter<"Post"> | string
-    image?: StringNullableFilter<"Post"> | string | null
+    imageUrl?: StringNullableFilter<"Post"> | string | null
     published?: BoolFilter<"Post"> | boolean
     createdAt?: DateTimeFilter<"Post"> | Date | string
     updatedAt?: DateTimeFilter<"Post"> | Date | string
@@ -14785,7 +14785,7 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     content?: SortOrder
-    image?: SortOrderInput | SortOrder
+    imageUrl?: SortOrderInput | SortOrder
     published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14803,7 +14803,7 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Post"> | string
     slug?: StringWithAggregatesFilter<"Post"> | string
     content?: StringWithAggregatesFilter<"Post"> | string
-    image?: StringNullableWithAggregatesFilter<"Post"> | string | null
+    imageUrl?: StringNullableWithAggregatesFilter<"Post"> | string | null
     published?: BoolWithAggregatesFilter<"Post"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
@@ -15508,7 +15508,7 @@ export namespace Prisma {
     title: string
     slug: string
     content: string
-    image?: string | null
+    imageUrl?: string | null
     published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15520,7 +15520,7 @@ export namespace Prisma {
     title: string
     slug: string
     content: string
-    image?: string | null
+    imageUrl?: string | null
     published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15532,7 +15532,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    image?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15544,7 +15544,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    image?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15556,7 +15556,7 @@ export namespace Prisma {
     title: string
     slug: string
     content: string
-    image?: string | null
+    imageUrl?: string | null
     published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15568,7 +15568,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    image?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15579,7 +15579,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    image?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16340,7 +16340,7 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     content?: SortOrder
-    image?: SortOrder
+    imageUrl?: SortOrder
     published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16352,7 +16352,7 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     content?: SortOrder
-    image?: SortOrder
+    imageUrl?: SortOrder
     published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16364,7 +16364,7 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     content?: SortOrder
-    image?: SortOrder
+    imageUrl?: SortOrder
     published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -17551,7 +17551,7 @@ export namespace Prisma {
     title: string
     slug: string
     content: string
-    image?: string | null
+    imageUrl?: string | null
     published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17562,7 +17562,7 @@ export namespace Prisma {
     title: string
     slug: string
     content: string
-    image?: string | null
+    imageUrl?: string | null
     published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17749,7 +17749,7 @@ export namespace Prisma {
     title?: StringFilter<"Post"> | string
     slug?: StringFilter<"Post"> | string
     content?: StringFilter<"Post"> | string
-    image?: StringNullableFilter<"Post"> | string | null
+    imageUrl?: StringNullableFilter<"Post"> | string | null
     published?: BoolFilter<"Post"> | boolean
     createdAt?: DateTimeFilter<"Post"> | Date | string
     updatedAt?: DateTimeFilter<"Post"> | Date | string
@@ -18684,7 +18684,7 @@ export namespace Prisma {
     title: string
     slug: string
     content: string
-    image?: string | null
+    imageUrl?: string | null
     published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18803,7 +18803,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    image?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18814,7 +18814,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    image?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18825,7 +18825,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    image?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

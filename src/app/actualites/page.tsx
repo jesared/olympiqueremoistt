@@ -31,7 +31,7 @@ export default async function ActualitesPage() {
       id: true,
       title: true,
       slug: true,
-      image: true,
+      imageUrl: true,
       content: true,
       createdAt: true,
     },
@@ -58,10 +58,10 @@ export default async function ActualitesPage() {
           {posts.map((post) => (
             <Link key={post.id} href={`/actualites/${post.slug}`} className="h-full">
               <Card className="h-full overflow-hidden border-border/70 p-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-                {post.image ? (
+                {post.imageUrl ? (
                   <div className="bg-muted relative mx-4 mt-4 aspect-[16/9] overflow-hidden rounded-xl">
                     <Image
-                      src={post.image}
+                      src={post.imageUrl}
                       alt={post.title}
                       fill
                       sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
