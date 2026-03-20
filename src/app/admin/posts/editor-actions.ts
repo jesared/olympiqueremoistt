@@ -2,16 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 
+import { type SavePostResult } from "~/app/admin/posts/action-types";
 import { getString } from "~/lib/form";
 import { slugify } from "~/lib/slug";
 import { requireAdminOrModerator } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
-
-export type SavePostResult = {
-  success: boolean;
-  error?: "missing-fields" | "invalid-image" | "slug-already-used" | "unknown";
-  id?: string;
-};
 
 async function generateUniqueSlug(title: string) {
   const baseSlug = slugify(title) || "actualite";
