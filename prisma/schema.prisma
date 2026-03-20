@@ -10,6 +10,7 @@ datasource db {
 
 enum Role {
   USER
+  MODERATOR
   ORGANIZER
   ADMIN
 }
@@ -88,18 +89,28 @@ model Page {
 }
 
 model Post {
-  id        String   @id @default(cuid())
-  title     String
-  slug      String   @unique
-  content   String
-  imageUrl  String?
-  published Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  id         String    @id @default(cuid())
+  title      String
+  slug       String    @unique
+  content    String
+  imageUrl   String?
+  published  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  authorId   String
+  categoryId String?
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   @@index([authorId])
+  @@index([categoryId])
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
+  posts Post[]
 }
 
 
