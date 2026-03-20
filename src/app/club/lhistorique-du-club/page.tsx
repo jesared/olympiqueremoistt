@@ -1,4 +1,11 @@
 import Image from "next/image";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Historique du club | ORTT Reims",
+  description:
+    "Découvrez l’histoire de l’Olympique Rémois Tennis de Table, ses origines, son évolution et ses moments marquants.",
+};
 
 type ClubHistoryItem = {
   year: string;
@@ -7,6 +14,14 @@ type ClubHistoryItem = {
 };
 
 const clubCreationYear = 1987;
+const currentYear = new Date().getFullYear();
+const yearsOfExistence = currentYear - clubCreationYear;
+
+const keyFigures = [
+  { label: "Licenciés", value: "140+" },
+  { label: "Équipes engagées", value: "9" },
+  { label: "Années d'existence", value: `${yearsOfExistence}` },
+] as const;
 
 const history: ClubHistoryItem[] = [
   {
@@ -51,6 +66,25 @@ const timelineImages = [
   },
 ] as const;
 
+const clubQuotes = [
+  {
+    quote:
+      "Notre ambition est de former des joueurs, mais surtout de faire grandir une vraie communauté autour du tennis de table.",
+    author: "Présidence ORTT Reims",
+  },
+  {
+    quote:
+      "À l’ORTT, la performance va de pair avec la convivialité : chacun trouve sa place, du loisir à la compétition.",
+    author: "Le club",
+  },
+] as const;
+
+const honors = [
+  "Montées successives de l’équipe fanion en divisions régionales.",
+  "Organisation régulière de tournois et d’événements ouverts au public.",
+  "Développement durable de la filière jeunes et de l’encadrement.",
+] as const;
+
 export default function ClubHistoryPage() {
   return (
     <section className="mx-auto w-full max-w-5xl space-y-14">
@@ -78,6 +112,32 @@ export default function ClubHistoryPage() {
           <p className="text-muted-foreground leading-relaxed">
             Créé en <span className="text-foreground font-medium">{clubCreationYear}</span>,
             il grandit avec ses licenciés, ses bénévoles et ses résultats.
+          </p>
+        </div>
+      </section>
+
+      <section
+        aria-labelledby="histoire-et-valeurs"
+        className="bg-card rounded-2xl border p-6 shadow-sm sm:p-8"
+      >
+        <h2
+          id="histoire-et-valeurs"
+          className="text-2xl font-semibold tracking-tight"
+        >
+          Histoire &amp; valeurs
+        </h2>
+        <div className="text-muted-foreground mt-4 max-w-3xl space-y-4 leading-relaxed">
+          <p>
+            Depuis ses débuts, l&apos;ORTT Reims s&apos;est construit autour d&apos;une
+            idée forte : faire du tennis de table un sport exigeant, mais
+            accessible à tous. Saison après saison, le club a grandi grâce à
+            l&apos;engagement de ses joueurs, de ses éducateurs et de ses bénévoles.
+          </p>
+          <p>
+            Notre identité repose sur des valeurs simples : le respect, l&apos;esprit
+            d&apos;équipe, la progression et le plaisir de jouer. Ces valeurs
+            accompagnent la formation des jeunes, la compétition des adultes et
+            la vie associative du club au quotidien.
           </p>
         </div>
       </section>
@@ -134,6 +194,56 @@ export default function ClubHistoryPage() {
             );
           })}
         </ol>
+      </section>
+
+      <section aria-labelledby="chiffres-cles" className="space-y-5">
+        <h2 id="chiffres-cles" className="text-2xl font-semibold tracking-tight">
+          Chiffres clés
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {keyFigures.map((figure) => (
+            <article
+              key={figure.label}
+              className="bg-card rounded-2xl border p-5 text-center shadow-sm"
+            >
+              <p className="text-2xl font-semibold">{figure.value}</p>
+              <p className="text-muted-foreground mt-1 text-sm">{figure.label}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="citations" className="space-y-5">
+        <h2 id="citations" className="text-2xl font-semibold tracking-tight">
+          Citations
+        </h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          {clubQuotes.map((item) => (
+            <blockquote
+              key={item.author}
+              className="bg-card rounded-2xl border p-5 shadow-sm"
+            >
+              <p className="leading-relaxed">“{item.quote}”</p>
+              <footer className="text-muted-foreground mt-3 text-sm">
+                — {item.author}
+              </footer>
+            </blockquote>
+          ))}
+        </div>
+      </section>
+
+      <section
+        aria-labelledby="palmares"
+        className="bg-card rounded-2xl border p-6 shadow-sm sm:p-8"
+      >
+        <h2 id="palmares" className="text-2xl font-semibold tracking-tight">
+          Palmarès
+        </h2>
+        <ul className="text-muted-foreground mt-4 max-w-3xl list-disc space-y-2 pl-5 leading-relaxed">
+          {honors.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
       </section>
 
       <section

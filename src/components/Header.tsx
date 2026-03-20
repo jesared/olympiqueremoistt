@@ -2,15 +2,7 @@
 
 import type { Session } from "next-auth";
 
-import {
-  CalendarDays,
-  ChevronDown,
-  Home,
-  Menu,
-  Newspaper,
-  Trophy,
-  Users,
-} from "lucide-react";
+import { CalendarDays, ChevronDown, Handshake, History, Home, Menu, Newspaper, Trophy, Users, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -39,6 +31,11 @@ const navItems: MobileNavItem[] = [
         label: "L'équipe dirigeante",
         href: "/club/lequipe-dirigeante",
         icon: Users,
+      },
+      {
+        label: "Historique du club",
+        href: "/club/lhistorique-du-club",
+        icon: History,
       },
     ],
   },
