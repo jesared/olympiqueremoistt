@@ -30,6 +30,11 @@ const navItems: MobileNavItem[] = [
       { label: "Bénévolat", href: "/club/benevolat", icon: Handshake },
       { label: "Sponsoring", href: "/club/sponsoring", icon: Handshake },
       { label: "Joueur", href: "/club/joueur", icon: User },
+      {
+        label: "L'équipe dirigeante",
+        href: "/club/lequipe-dirigeante",
+        icon: Users,
+      },
     ],
   },
   { label: "Événements", href: "/evenements", icon: CalendarDays },
