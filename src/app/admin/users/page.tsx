@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { requireAdmin } from "~/server/auth/auth-helpers";
+import { requireAdmin } from "~/lib/auth";
 import { db as prisma } from "~/server/db";
 
 import { type AppRole } from "./roles";

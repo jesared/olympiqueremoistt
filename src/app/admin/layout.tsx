@@ -1,21 +1,15 @@
 import type { ReactNode } from "react";
 
-import { redirect } from "next/navigation";
-
 import { AdminHeader } from "~/components/admin/admin-header";
 import { AdminSidebar } from "~/components/admin/admin-sidebar";
-import { auth } from "~/server/auth";
+import { requireAdmin } from "~/lib/auth";
 
 export default async function AdminLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  const session = await auth();
-
-  if (!session?.user) {
-    redirect("/api/auth/signin");
-  }
+  await requireAdmin();
 
   return (
     <div className="w-full lg:pl-64">
