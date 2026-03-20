@@ -2,12 +2,14 @@ import { Prisma } from "../../../../../generated/prisma";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import { normalizeHexColor } from "~/lib/color";
 import { slugify } from "~/lib/slug";
 import { db } from "~/server/db";
 
 const updateCategorySchema = z.object({
   name: z.string().trim().min(1, "Le nom est requis."),
   slug: z.string().trim().min(1, "Le slug est requis."),
+  color: z.string().trim().optional(),
 });
 
 type RouteContext = {
@@ -46,6 +48,7 @@ export async function PUT(request: Request, context: RouteContext) {
 
   const name = parsed.data.name.trim();
   const slug = slugify(parsed.data.slug);
+  const color = normalizeHexColor(parsed.data.color);
 
   if (!slug) {
     return NextResponse.json(
@@ -57,7 +60,7 @@ export async function PUT(request: Request, context: RouteContext) {
   try {
     const category = await db.category.update({
       where: { id },
-      data: { name, slug },
+      data: { name, slug, color },
     });
 
     return NextResponse.json(category);

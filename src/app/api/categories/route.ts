@@ -2,12 +2,14 @@ import { Prisma } from "../../../../generated/prisma";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import { normalizeHexColor } from "~/lib/color";
 import { slugify } from "~/lib/slug";
 import { db } from "~/server/db";
 
 const createCategorySchema = z.object({
   name: z.string().trim().min(1, "Le nom est requis."),
   slug: z.string().trim().optional(),
+  color: z.string().trim().optional(),
 });
 
 export async function GET() {
@@ -41,6 +43,7 @@ export async function POST(request: Request) {
 
   const name = parsed.data.name.trim();
   const trimmedSlug = parsed.data.slug?.trim();
+  const color = normalizeHexColor(parsed.data.color);
   const slug = slugify((trimmedSlug === "" ? undefined : trimmedSlug) ?? name);
 
   if (!slug) {
@@ -55,6 +58,7 @@ export async function POST(request: Request) {
       data: {
         name,
         slug,
+        color,
       },
     });
 

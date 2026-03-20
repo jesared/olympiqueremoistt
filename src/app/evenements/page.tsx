@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { CategoryBadge } from "~/components/category-badge";
 import { db as prisma } from "~/server/db";
 
 const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
@@ -33,6 +34,12 @@ export default async function EvenementsPage() {
       startDate: true,
       location: true,
       description: true,
+      category: {
+        select: {
+          name: true,
+          color: true,
+        },
+      },
     },
   });
 
@@ -67,6 +74,15 @@ export default async function EvenementsPage() {
                 <p>
                   <span className="font-medium">Lieu :</span> {event.location}
                 </p>
+                {event.category ? (
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">Catégorie :</span>
+                    <CategoryBadge
+                      name={event.category.name}
+                      color={event.category.color}
+                    />
+                  </div>
+                ) : null}
                 <p className="text-muted-foreground leading-relaxed">
                   {truncateDescription(event.description)}
                 </p>

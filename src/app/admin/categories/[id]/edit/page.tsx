@@ -29,6 +29,7 @@ export default async function AdminEditCategoryPage({
       id: true,
       name: true,
       slug: true,
+      color: true,
     },
   });
 
@@ -60,6 +61,7 @@ export default async function AdminEditCategoryPage({
             <CategoryFormFields
               initialName={category.name}
               initialSlug={category.slug}
+              initialColor={category.color}
               autoSlug={false}
             />
 
