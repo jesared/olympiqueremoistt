@@ -84,7 +84,7 @@ export function TournamentRegistrationForm({
 
       <Card>
         <CardHeader>
-          <CardTitle>Validation de l'inscription</CardTitle>
+          <CardTitle>Validation de l&apos;inscription</CardTitle>
           <CardDescription>
             Inscription rapide et paiement intégré prochainement.
           </CardDescription>

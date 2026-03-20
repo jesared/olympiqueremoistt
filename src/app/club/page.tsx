@@ -24,7 +24,7 @@ export default function ClubPage() {
     <main className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
       <PageHeader
         title="Le club ORTT"
-        description="L'Olympique Rémois Tennis de Table est un club familial et ambitieux qui accompagne les joueurs loisir et compétition toute l'année."
+        description="L&apos;Olympique Rémois Tennis de Table est un club familial et ambitieux qui accompagne les joueurs loisir et compétition toute l&apos;année."
       />
 
       <section className="grid gap-4 lg:grid-cols-3">
@@ -42,8 +42,8 @@ export default function ClubPage() {
               suivi en compétition.
             </p>
             <p>
-              La saison s'articule autour de séances encadrées, de stages
-              pendant les vacances et d'actions locales en lien avec les écoles
+              La saison s&apos;articule autour de séances encadrées, de stages
+              pendant les vacances et d&apos;actions locales en lien avec les écoles
               et associations sportives de la ville.
             </p>
             <Button variant="outline">Découvrir les adhésions</Button>
@@ -72,7 +72,7 @@ export default function ClubPage() {
           <CardHeader>
             <CardTitle>Bénévolat</CardTitle>
             <CardDescription>
-              Le club se développe grâce à l'engagement de ses bénévoles.
+              Le club se développe grâce à l&apos;engagement de ses bénévoles.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

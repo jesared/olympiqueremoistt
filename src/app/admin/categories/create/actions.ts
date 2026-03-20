@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { getString } from "~/lib/form";
 import { slugify } from "~/lib/slug";
 import { requireAdminOrModerator } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
@@ -10,8 +11,8 @@ import { db as prisma } from "~/server/db";
 export async function createCategory(data: FormData) {
   await requireAdminOrModerator();
 
-  const name = data.get("name")?.toString().trim() ?? "";
-  const rawSlug = data.get("slug")?.toString().trim() ?? "";
+  const name = getString(data, "name").trim();
+  const rawSlug = getString(data, "slug").trim();
   const slug = slugify(rawSlug || name);
 
   if (!name || !slug) {

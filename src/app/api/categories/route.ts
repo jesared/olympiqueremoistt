@@ -40,7 +40,8 @@ export async function POST(request: Request) {
   }
 
   const name = parsed.data.name.trim();
-  const slug = slugify(parsed.data.slug?.trim() || name);
+  const trimmedSlug = parsed.data.slug?.trim();
+  const slug = slugify((trimmedSlug === "" ? undefined : trimmedSlug) ?? name);
 
   if (!slug) {
     return NextResponse.json(
