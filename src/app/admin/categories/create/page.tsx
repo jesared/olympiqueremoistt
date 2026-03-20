@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
+import { CategoryFormFields } from "~/app/admin/categories/CategoryFormFields";
 
 import { createCategory } from "./actions";
 
@@ -34,22 +34,7 @@ export default async function AdminCreateCategoryPage({
               </p>
             ) : null}
 
-            <div className="grid gap-2">
-              <label htmlFor="name" className="text-sm font-medium">
-                Nom
-              </label>
-              <Input id="name" name="name" placeholder="Ex: Championnats" required />
-            </div>
-
-            <div className="grid gap-2">
-              <label htmlFor="slug" className="text-sm font-medium">
-                Slug
-              </label>
-              <Input id="slug" name="slug" placeholder="Ex: championnats" />
-              <p className="text-muted-foreground text-xs">
-                Optionnel : généré automatiquement depuis le nom si vide.
-              </p>
-            </div>
+            <CategoryFormFields autoSlug />
 
             <div className="flex flex-wrap gap-2">
               <Button type="submit">Créer</Button>
