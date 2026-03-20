@@ -6,8 +6,13 @@ import { type ChangeEvent, useState, useTransition } from "react";
 import { updateUserRole } from "~/app/admin/users/actions";
 import { APP_ROLES, type AppRole } from "~/app/admin/users/roles";
 import { Badge } from "~/components/ui/badge";
-import { Select, SelectItem } from "~/components/ui/select";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 type ToastState = {
   message: string;
   kind: "success" | "error";
@@ -65,17 +70,39 @@ export function UserRoleSelect({ userId, role }: UserRoleSelectProps) {
       </Badge>
 
       <Select
-        aria-label="Rôle utilisateur"
-        className="w-[160px]"
         value={selectedRole}
-        onChange={onRoleChange}
+        onValueChange={(value) => {
+          const previousRole = selectedRole;
+          const safeRole = value as AppRole;
+
+          setSelectedRole(safeRole);
+
+          startTransition(async () => {
+            try {
+              await updateUserRole(userId, safeRole);
+              showToast({ message: "Rôle mis à jour.", kind: "success" });
+            } catch {
+              setSelectedRole(previousRole);
+              showToast({
+                message: "Impossible de mettre à jour le rôle.",
+                kind: "error",
+              });
+            }
+          });
+        }}
         disabled={isPending}
       >
-        {APP_ROLES.map((appRole) => (
-          <SelectItem key={appRole} value={appRole}>
-            {appRole}
-          </SelectItem>
-        ))}
+        <SelectTrigger className="w-[160px]">
+          <SelectValue placeholder="Choisir un rôle" />
+        </SelectTrigger>
+
+        <SelectContent>
+          {APP_ROLES.map((appRole) => (
+            <SelectItem key={appRole} value={appRole}>
+              {appRole}
+            </SelectItem>
+          ))}
+        </SelectContent>
       </Select>
 
       {isPending ? (

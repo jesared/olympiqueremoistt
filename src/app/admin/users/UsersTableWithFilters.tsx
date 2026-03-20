@@ -3,7 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Input } from "~/components/ui/input";
-import { Select, SelectItem } from "~/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import {
   Table,
   TableBody,
@@ -91,16 +97,21 @@ export function UsersTableWithFilters({
 
         <Select
           value={roleFilter}
-          onChange={(event) => setRoleFilter(event.target.value as RoleFilter)}
-          className="w-full md:w-[180px]"
-          aria-label="Filtrer par rôle"
+          onValueChange={(value) => setRoleFilter(value as RoleFilter)}
         >
-          <SelectItem value="ALL">ALL</SelectItem>
-          {APP_ROLES.map((role) => (
-            <SelectItem key={role} value={role}>
-              {role}
-            </SelectItem>
-          ))}
+          <SelectTrigger className="w-full md:w-[180px]">
+            <SelectValue placeholder="Filtrer par rôle" />
+          </SelectTrigger>
+
+          <SelectContent>
+            <SelectItem value="ALL">Tous</SelectItem>
+
+            {APP_ROLES.map((role) => (
+              <SelectItem key={role} value={role}>
+                {role}
+              </SelectItem>
+            ))}
+          </SelectContent>
         </Select>
       </div>
 
