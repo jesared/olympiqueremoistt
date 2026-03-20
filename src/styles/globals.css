@@ -219,6 +219,11 @@
   .lexical a {
     color: hsl(var(--primary));
     text-decoration: underline;
+    transition: opacity 0.2s;
+  }
+
+  .lexical a:hover {
+    opacity: 0.8;
   }
 
   .content h1 {
