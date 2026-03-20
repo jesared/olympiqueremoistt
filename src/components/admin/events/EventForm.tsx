@@ -1,14 +1,12 @@
 "use client";
 
-import { useActionState, useEffect, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CalendarClock, Loader2, MapPin } from "lucide-react";
 
-import {
-  createEvent,
-  type CreateEventActionState,
-} from "~/app/admin/events/actions";
+import { createEvent, type CreateEventActionState } from "~/app/admin/events/actions";
+import { type DuplicateEventResult, type UpdateEventActionState } from "~/app/admin/events/[id]/actions";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -23,15 +21,38 @@ import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import { slugify } from "~/lib/slug";
 
+type EventFormState = CreateEventActionState | UpdateEventActionState;
+
+type EventFormData = {
+  id?: string;
+  title: string;
+  slug: string;
+  description: string;
+  location: string;
+  startDate: Date;
+  endDate: Date | null;
+  published: boolean;
+};
+
+type EventFormProps = {
+  mode?: "create" | "edit";
+  initialData?: EventFormData;
+  submitAction?: (state: EventFormState, formData: FormData) => Promise<EventFormState>;
+  duplicateAction?: () => Promise<DuplicateEventResult>;
+};
+
+function toDatetimeLocalValue(date: Date | null) {
+  if (!date) return "";
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60_000);
+  return localDate.toISOString().slice(0, 16);
+}
+
 function formatPreviewDate(startDate: string, endDate: string) {
-  if (!startDate) {
-    return "Date à définir";
-  }
+  if (!startDate) return "Date à définir";
 
   const start = new Date(startDate);
-  if (Number.isNaN(start.getTime())) {
-    return "Date invalide";
-  }
+  if (Number.isNaN(start.getTime())) return "Date invalide";
 
   const formatter = new Intl.DateTimeFormat("fr-FR", {
     weekday: "long",
@@ -43,58 +64,35 @@ function formatPreviewDate(startDate: string, endDate: string) {
   });
 
   const formattedStart = formatter.format(start);
-
-  if (!endDate) {
-    return formattedStart;
-  }
+  if (!endDate) return formattedStart;
 
   const end = new Date(endDate);
-  if (Number.isNaN(end.getTime())) {
-    return formattedStart;
-  }
+  if (Number.isNaN(end.getTime())) return formattedStart;
 
   return `${formattedStart} → ${formatter.format(end)}`;
 }
 
-function SubmitButtons({ pending }: { pending: boolean }) {
-  return (
-    <div className="flex flex-wrap gap-3">
-      <Button type="submit" name="intent" value="draft" disabled={pending}>
-        {pending ? <Loader2 className="size-4 animate-spin" /> : null}
-        Créer
-      </Button>
-
-      <Button
-        type="submit"
-        name="intent"
-        value="publish"
-        disabled={pending}
-        variant="secondary"
-      >
-        {pending ? <Loader2 className="size-4 animate-spin" /> : null}
-        Créer et publier
-      </Button>
-    </div>
-  );
-}
-
-export function EventForm() {
+export function EventForm({
+  mode = "create",
+  initialData,
+  submitAction,
+  duplicateAction,
+}: EventFormProps) {
   const router = useRouter();
-  const initialCreateEventState: CreateEventActionState = { status: "idle" };
-  const [state, formAction, pending] = useActionState(
-    createEvent,
-    initialCreateEventState,
-  );
+  const [isDuplicating, startDuplicating] = useTransition();
+  const initialState: EventFormState = { status: "idle" };
+  const resolvedSubmitAction = submitAction ?? createEvent;
+  const [state, formAction, pending] = useActionState(resolvedSubmitAction, initialState);
 
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [description, setDescription] = useState("");
-  const [location, setLocation] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [hasEndDate, setHasEndDate] = useState(false);
-  const [published, setPublished] = useState(false);
-  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+  const [title, setTitle] = useState(initialData?.title ?? "");
+  const [slug, setSlug] = useState(initialData?.slug ?? "");
+  const [description, setDescription] = useState(initialData?.description ?? "");
+  const [location, setLocation] = useState(initialData?.location ?? "");
+  const [startDate, setStartDate] = useState(toDatetimeLocalValue(initialData?.startDate ?? null));
+  const [endDate, setEndDate] = useState(toDatetimeLocalValue(initialData?.endDate ?? null));
+  const [hasEndDate, setHasEndDate] = useState(Boolean(initialData?.endDate));
+  const [published, setPublished] = useState(initialData?.published ?? false);
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(mode === "edit");
   const [toast, setToast] = useState<{
     kind: "success" | "error";
     message: string;
@@ -104,10 +102,13 @@ export function EventForm() {
     if (state.status === "success") {
       setToast({
         kind: "success",
-        message: state.message ?? "Événement créé.",
+        message:
+          state.message ?? (mode === "edit" ? "Événement mis à jour." : "Événement créé."),
       });
       const redirectTimer = window.setTimeout(() => {
-        router.push(state.redirectTo ?? "/admin/events");
+        if (state.redirectTo) {
+          router.push(state.redirectTo);
+        }
       }, 900);
 
       return () => window.clearTimeout(redirectTimer);
@@ -120,7 +121,7 @@ export function EventForm() {
     }
 
     return undefined;
-  }, [router, state]);
+  }, [mode, router, state]);
 
   const formattedDate = useMemo(
     () => formatPreviewDate(startDate, hasEndDate ? endDate : ""),
@@ -132,11 +133,9 @@ export function EventForm() {
       <form action={formAction} className="space-y-6">
         <div className="flex flex-col gap-3 border-b pb-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-muted-foreground text-sm">
-              Éditeur d&apos;événement
-            </p>
+            <p className="text-muted-foreground text-sm">Éditeur d&apos;événement</p>
             <h1 className="text-2xl font-semibold tracking-tight">
-              Créer un événement
+              {mode === "edit" ? "Modifier un événement" : "Créer un événement"}
             </h1>
           </div>
 
@@ -145,9 +144,37 @@ export function EventForm() {
               {published ? "Publié" : "Brouillon"}
             </Badge>
 
-            <Button asChild variant="outline" disabled={pending}>
-              <Link href="/admin/events">Retour</Link>
+            <Button asChild variant="outline" disabled={pending || isDuplicating}>
+              <Link href="/admin/events">Retour à la liste</Link>
             </Button>
+
+            {mode === "edit" && duplicateAction ? (
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={pending || isDuplicating}
+                onClick={() => {
+                  const confirmed = window.confirm(
+                    "Dupliquer cet événement ? Vous serez redirigé vers la copie.",
+                  );
+                  if (!confirmed) return;
+
+                  startDuplicating(async () => {
+                    const result = await duplicateAction();
+                    setToast({
+                      kind: result.status === "success" ? "success" : "error",
+                      message: result.message,
+                    });
+                    if (result.status === "success" && result.redirectTo) {
+                      router.push(result.redirectTo);
+                    }
+                  });
+                }}
+              >
+                {isDuplicating ? <Loader2 className="size-4 animate-spin" /> : null}
+                Dupliquer
+              </Button>
+            ) : null}
           </div>
         </div>
 
@@ -172,16 +199,12 @@ export function EventForm() {
                     onChange={(event) => {
                       const nextTitle = event.target.value;
                       setTitle(nextTitle);
-                      if (!slugManuallyEdited) {
-                        setSlug(slugify(nextTitle));
-                      }
+                      if (!slugManuallyEdited) setSlug(slugify(nextTitle));
                     }}
                     placeholder="Championnat régional U18"
                   />
                   {state.errors?.title ? (
-                    <p className="text-destructive text-xs">
-                      {state.errors.title[0]}
-                    </p>
+                    <p className="text-destructive text-xs">{state.errors.title[0]}</p>
                   ) : null}
                 </div>
 
@@ -200,9 +223,7 @@ export function EventForm() {
                     placeholder="championnat-regional-u18"
                   />
                   {state.errors?.slug ? (
-                    <p className="text-destructive text-xs">
-                      {state.errors.slug[0]}
-                    </p>
+                    <p className="text-destructive text-xs">{state.errors.slug[0]}</p>
                   ) : null}
                 </div>
 
@@ -219,9 +240,7 @@ export function EventForm() {
                     className="min-h-40"
                   />
                   {state.errors?.description ? (
-                    <p className="text-destructive text-xs">
-                      {state.errors.description[0]}
-                    </p>
+                    <p className="text-destructive text-xs">{state.errors.description[0]}</p>
                   ) : null}
                 </div>
               </CardContent>
@@ -249,9 +268,7 @@ export function EventForm() {
                     />
                   </div>
                   {state.errors?.location ? (
-                    <p className="text-destructive text-xs">
-                      {state.errors.location[0]}
-                    </p>
+                    <p className="text-destructive text-xs">{state.errors.location[0]}</p>
                   ) : null}
                 </div>
 
@@ -269,25 +286,19 @@ export function EventForm() {
                       onChange={(event) => {
                         const next = event.target.value;
                         setStartDate(next);
-                        if (!endDate && next && hasEndDate) {
-                          setEndDate(next);
-                        }
+                        if (!endDate && next && hasEndDate) setEndDate(next);
                       }}
                       className="pl-9"
                     />
                   </div>
                   {state.errors?.startDate ? (
-                    <p className="text-destructive text-xs">
-                      {state.errors.startDate[0]}
-                    </p>
+                    <p className="text-destructive text-xs">{state.errors.startDate[0]}</p>
                   ) : null}
                 </div>
 
                 <div className="flex items-center justify-between rounded-lg border p-3">
                   <div>
-                    <p className="text-sm font-medium">
-                      Ajouter une date de fin
-                    </p>
+                    <p className="text-sm font-medium">Ajouter une date de fin</p>
                     <p className="text-muted-foreground text-xs">
                       Optionnel pour les événements multi-jours.
                     </p>
@@ -318,9 +329,7 @@ export function EventForm() {
                       onChange={(event) => setEndDate(event.target.value)}
                     />
                     {state.errors?.endDate ? (
-                      <p className="text-destructive text-xs">
-                        {state.errors.endDate[0]}
-                      </p>
+                      <p className="text-destructive text-xs">{state.errors.endDate[0]}</p>
                     ) : null}
                   </div>
                 ) : (
@@ -329,16 +338,19 @@ export function EventForm() {
               </CardContent>
             </Card>
 
-            <SubmitButtons pending={pending} />
+            <div className="flex flex-wrap gap-3">
+              <Button type="submit" disabled={pending || isDuplicating}>
+                {pending ? <Loader2 className="size-4 animate-spin" /> : null}
+                {mode === "edit" ? "Mettre à jour" : "Créer"}
+              </Button>
+            </div>
           </div>
 
           <div className="space-y-6 lg:col-span-3">
             <Card>
               <CardHeader>
                 <CardTitle>Publication</CardTitle>
-                <CardDescription>
-                  Choisissez le statut de diffusion.
-                </CardDescription>
+                <CardDescription>Choisissez le statut de diffusion.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between rounded-lg border p-3">
@@ -350,11 +362,7 @@ export function EventForm() {
                   </div>
                   <Switch checked={published} onCheckedChange={setPublished} />
                 </div>
-                <input
-                  name="published"
-                  type="hidden"
-                  value={String(published)}
-                />
+                <input name="published" type="hidden" value={String(published)} />
               </CardContent>
             </Card>
 
@@ -369,16 +377,11 @@ export function EventForm() {
                 <Badge variant={published ? "default" : "secondary"}>
                   {published ? "Publié" : "Brouillon"}
                 </Badge>
-                <h3 className="text-base font-semibold">
-                  {title || "Titre de votre événement"}
-                </h3>
+                <h3 className="text-base font-semibold">{title || "Titre de votre événement"}</h3>
                 <p className="text-muted-foreground text-sm">{formattedDate}</p>
-                <p className="text-muted-foreground text-sm">
-                  {location || "Lieu à définir"}
-                </p>
+                <p className="text-muted-foreground text-sm">{location || "Lieu à définir"}</p>
                 <p className="line-clamp-4 text-sm">
-                  {description ||
-                    "La description apparaîtra ici en temps réel."}
+                  {description || "La description apparaîtra ici en temps réel."}
                 </p>
               </CardContent>
             </Card>

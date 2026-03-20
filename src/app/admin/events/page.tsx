@@ -70,7 +70,7 @@ export default async function AdminEventsPage() {
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button asChild size="sm" variant="outline">
-                          <Link href={`/admin/events/${event.id}`}>Modifier</Link>
+                          <Link href={`/admin/events/${event.id}/edit`}>Modifier</Link>
                         </Button>
                         <EventDeleteButton eventId={event.id} eventTitle={event.title} />
                       </div>
