@@ -9,6 +9,7 @@ import {
   Menu,
   Newspaper,
   Settings,
+  ShieldCheck,
   Tags,
   Trophy,
   UserCog,
@@ -58,6 +59,7 @@ const adminNavSections: AdminNavSection[] = [
       { href: "/admin/categories", label: "Catégories", icon: Tags },
       { href: "/admin/events", label: "Événements", icon: CalendarDays },
       { href: "/admin/users", label: "Users", icon: UserCog },
+      { href: "/admin/audit", label: "Audit", icon: ShieldCheck },
     ],
   },
 ];
