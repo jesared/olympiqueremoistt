@@ -112,7 +112,7 @@ export default async function ActualiteDetailPage({
         </div>
 
         <section
-          className="prose prose-zinc dark:prose-invert max-w-none"
+          className="content max-w-none"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>

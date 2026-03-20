@@ -100,7 +100,7 @@ export function PostEditorPanel({
             ) : null}
 
             <div
-              className="prose dark:prose-invert max-w-none"
+              className="content max-w-none"
               dangerouslySetInnerHTML={{
                 __html: content.trim() || FALLBACK_CONTENT,
               }}

@@ -187,6 +187,14 @@ export default function RichTextEditor({
                 const html = $generateHtmlFromNodes(editor, null);
                 if (html === lastEmittedHtmlRef.current) return;
                 lastEmittedHtmlRef.current = html;
+                if (process.env.NODE_ENV !== "production") {
+                  console.log("[RichTextEditor] Generated HTML:", html, {
+                    hasH1: html.includes("<h1"),
+                    hasH2: html.includes("<h2"),
+                    hasUl: html.includes("<ul"),
+                    hasLi: html.includes("<li"),
+                  });
+                }
                 onChange(html);
               });
             }}

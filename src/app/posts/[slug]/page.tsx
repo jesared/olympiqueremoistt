@@ -81,7 +81,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
         </header>
 
         <section
-          className="prose prose-zinc dark:prose-invert max-w-none"
+          className="content max-w-none"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>
