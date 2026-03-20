@@ -49,7 +49,7 @@ const schedule = [
 export default function TournoisPage() {
   return (
     <main className="bg-slate-50 pb-12">
-      <section className="bg-gradient-to-br from-white via-sky-50 to-slate-100 px-4 py-12 sm:py-16">
+      <section className="px-4 py-12 sm:py-16">
         <div className="mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div>
             <Badge
@@ -73,16 +73,22 @@ export default function TournoisPage() {
             </div>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild className="bg-emerald-600 text-white hover:bg-emerald-500">
+              <Button
+                asChild
+                className="bg-emerald-600 text-white hover:bg-emerald-500"
+              >
                 <a href="#inscriptions">S&apos;inscrire</a>
               </Button>
-              <Button asChild className="bg-blue-600 text-white hover:bg-blue-500">
+              <Button
+                asChild
+                className="bg-blue-600 text-white hover:bg-blue-500"
+              >
                 <a href="#inscrits">Voir les inscrits</a>
               </Button>
             </div>
           </div>
 
-          <div className="relative h-64 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:h-80">
+          <div className="relative h-64 overflow-hidden rounded-2xl shadow-sm sm:h-80">
             <div
               className="h-full w-full bg-cover bg-center"
               style={{
@@ -98,7 +104,7 @@ export default function TournoisPage() {
 
       <section
         id="inscrits"
-        className="mx-auto w-full max-w-6xl space-y-4 bg-white px-4 py-10 sm:px-6 lg:px-8"
+        className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8"
       >
         <h2 className="text-2xl font-semibold">Inscrits</h2>
         <Card>
@@ -109,7 +115,10 @@ export default function TournoisPage() {
         </Card>
       </section>
 
-      <section id="infos-cles" className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8">
+      <section
+        id="infos-cles"
+        className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8"
+      >
         <h2 className="text-2xl font-semibold">Infos clés</h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {keyInfos.map((item) => {
@@ -134,7 +143,7 @@ export default function TournoisPage() {
 
       <section
         id="inscriptions"
-        className="mx-auto w-full max-w-6xl space-y-4 bg-white px-4 py-10 sm:px-6 lg:px-8"
+        className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8"
       >
         <h2 className="text-2xl font-semibold">Inscriptions</h2>
         <p className="text-muted-foreground text-sm">
@@ -144,12 +153,18 @@ export default function TournoisPage() {
         <TournamentRegistrationForm tournament={featuredTournament} />
       </section>
 
-      <section id="programme" className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8">
+      <section
+        id="programme"
+        className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8"
+      >
         <h2 className="text-2xl font-semibold">Programme</h2>
         <Card>
           <CardContent className="space-y-3 pt-6">
             {schedule.map((item) => (
-              <p key={item} className="border-border text-sm not-last:border-b not-last:pb-3">
+              <p
+                key={item}
+                className="border-border text-sm not-last:border-b not-last:pb-3"
+              >
                 {item}
               </p>
             ))}
@@ -159,26 +174,27 @@ export default function TournoisPage() {
 
       <section
         id="infos-pratiques"
-        className="mx-auto w-full max-w-6xl space-y-4 bg-white px-4 py-10 sm:px-6 lg:px-8"
+        className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8"
       >
         <h2 className="text-2xl font-semibold">Infos pratiques</h2>
         <Card>
           <CardContent className="space-y-2 pt-6 text-sm">
-            <p>• Buvette et petite restauration disponibles toute la journée.</p>
+            <p>
+              • Buvette et petite restauration disponibles toute la journée.
+            </p>
             <p>
               • Parking gratuit à proximité du complexe et accès PMR à
               l&apos;entrée principale.
             </p>
             <p>
               • Clôture des inscriptions le{" "}
-              {new Date(featuredTournament.registrationDeadline).toLocaleDateString(
-                "fr-FR",
-                {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                },
-              )}
+              {new Date(
+                featuredTournament.registrationDeadline,
+              ).toLocaleDateString("fr-FR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
               .
             </p>
           </CardContent>
