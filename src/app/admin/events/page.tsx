@@ -22,11 +22,8 @@ const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
 export default async function AdminEventsPage() {
   const events = await prisma.event.findMany({
     orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      title: true,
-      startDate: true,
-      published: true,
+    include: {
+      category: true,
     },
   });
 
@@ -50,6 +47,7 @@ export default async function AdminEventsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Titre</TableHead>
+                  <TableHead>Catégorie</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Statut</TableHead>
                   <TableHead className="text-right">Action</TableHead>
@@ -59,6 +57,18 @@ export default async function AdminEventsPage() {
                 {events.map((event) => (
                   <TableRow key={event.id}>
                     <TableCell className="font-medium">{event.title}</TableCell>
+                    <TableCell>
+                      {event.category ? (
+                        <Badge
+                          variant="secondary"
+                          className="rounded-full border border-blue-200 bg-blue-100 px-2.5 py-1 font-semibold text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300"
+                        >
+                          {event.category.name}
+                        </Badge>
+                      ) : (
+                        "—"
+                      )}
+                    </TableCell>
                     <TableCell>
                       {dateFormatter.format(event.startDate)}
                     </TableCell>
