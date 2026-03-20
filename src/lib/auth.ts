@@ -29,6 +29,17 @@ export async function requireAdmin(options: RequireAdminOptions = {}) {
 
   const session = await auth();
   const role = session?.user?.role;
+  const normalizedRole = typeof role === "string" ? role.trim().toUpperCase() : undefined;
+
+  if (process.env.NODE_ENV !== "production") {
+    console.log("[auth] SESSION:", session);
+    console.log("[auth] ROLE:", role);
+    console.log("[auth] ALLOWED:", allowRoles);
+    console.log(
+      "[auth] INCLUDES:",
+      !!normalizedRole && allowRoles.includes(normalizedRole as AdminLikeRole),
+    );
+  }
 
   if (!session?.user) {
     if (logDeniedAccess) {
@@ -37,7 +48,7 @@ export async function requireAdmin(options: RequireAdminOptions = {}) {
     redirect(loginPath);
   }
 
-  if (!role || !allowRoles.includes(role as AdminLikeRole)) {
+  if (!normalizedRole || !allowRoles.includes(normalizedRole as AdminLikeRole)) {
     if (logDeniedAccess) {
       console.warn(`[auth] Accès admin refusé: rôle insuffisant (${role ?? "NONE"}).`);
     }
