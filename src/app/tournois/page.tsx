@@ -1,137 +1,144 @@
-import { Button } from "~/components/ui/button";
+import { CalendarDays, MapPin, Trophy, Users } from "lucide-react";
+
+import { TournamentRegistrationForm } from "~/components/tournaments/tournament-registration-form";
 import { Badge } from "~/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { PageHeader } from "~/components/page/page-header";
-import { competitions } from "~/data/content";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { featuredTournament } from "~/data/tournaments";
+
+const keyInfos = [
+  {
+    title: "Date",
+    value: new Date(featuredTournament.date).toLocaleDateString("fr-FR", {
+      weekday: "long",
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    }),
+    icon: CalendarDays,
+  },
+  {
+    title: "Lieu",
+    value: `${featuredTournament.venue}, ${featuredTournament.city}`,
+    icon: MapPin,
+  },
+  {
+    title: "Organisateur",
+    value: featuredTournament.organizer,
+    icon: Trophy,
+  },
+  {
+    title: "Capacité",
+    value: `${featuredTournament.categories.reduce(
+      (sum, category) => sum + category.slotsLeft,
+      0,
+    )} places restantes`,
+    icon: Users,
+  },
+];
+
+const schedule = [
+  "08h15 · Accueil des joueurs et pointage",
+  "09h00 · Début Tableau Senior A",
+  "11h00 · Début Tableau Senior B",
+  "14h00 · Début Tableau Loisir",
+  "16h30 · Lancement du tableau Double",
+  "19h00 · Finales et remise des récompenses",
+];
 
 export default function TournoisPage() {
-  const today = new Date();
-  const upcomingTournaments = competitions.filter(
-    (competition) => new Date(competition.date) >= today,
-  );
-  const pastTournaments = competitions.filter(
-    (competition) => new Date(competition.date) < today,
-  );
-
   return (
-    <main className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
-      <PageHeader
-        title="Tournois"
-        description="Retrouvez les prochains tournois ORTT, suivez les inscriptions et accédez rapidement aux informations importantes."
-        actions={
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline">Voir les inscrits</Button>
-            <Button>S&apos;inscrire</Button>
-          </div>
-        }
-      />
+    <main className="mx-auto w-full max-w-6xl space-y-12 px-4 py-8 sm:px-6 lg:px-8">
+      <section className="from-primary/15 to-primary/5 rounded-2xl bg-gradient-to-r p-8 sm:p-10">
+        <Badge className="mb-4" variant="secondary">
+          Tournoi annuel du club
+        </Badge>
+        <h1 className="max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">
+          {featuredTournament.name}
+        </h1>
+        <p className="text-muted-foreground mt-4 max-w-2xl text-base sm:text-lg">
+          Une journée de compétition, de convivialité et de performance ouverte
+          aux licenciés et passionnés de tennis de table.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Button asChild>
+            <a href="#inscriptions">Je m&apos;inscris</a>
+          </Button>
+          <Button asChild variant="outline">
+            <a href="#programme">Voir le programme</a>
+          </Button>
+        </div>
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>📅 Tournois à venir</CardTitle>
-          <CardDescription>
-            Inscriptions ouvertes, dates de compétition et lieux d’accueil.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {upcomingTournaments.map((competition) => (
-              <article
-                key={competition.id}
-                className="bg-card ring-border/50 hover:ring-primary/40 group relative flex h-full flex-col justify-between rounded-xl border p-5 ring-1 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="text-base leading-tight font-semibold">
-                      {competition.name}
-                    </h3>
-                    <Badge className="shrink-0">Tournoi</Badge>
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    {new Date(competition.date).toLocaleDateString("fr-FR", {
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </p>
-                  <p className="text-sm">{competition.location}</p>
-                </div>
-                <Button className="mt-5 w-full">Voir le tournoi</Button>
-              </article>
+      <section id="infos-cles" className="space-y-4">
+        <h2 className="text-2xl font-semibold">Infos clés</h2>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {keyInfos.map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <Card key={item.title}>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
+                    <Icon className="size-4" />
+                    {item.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm font-semibold">{item.value}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </section>
+
+      <section id="inscriptions" className="space-y-4">
+        <h2 className="text-2xl font-semibold">Inscriptions</h2>
+        <p className="text-muted-foreground text-sm">
+          Choisissez vos tableaux, validez votre participation et recevez une
+          confirmation de l&apos;équipe organisatrice.
+        </p>
+        <TournamentRegistrationForm tournament={featuredTournament} />
+      </section>
+
+      <section id="programme" className="space-y-4">
+        <h2 className="text-2xl font-semibold">Programme</h2>
+        <Card>
+          <CardContent className="space-y-3 pt-6">
+            {schedule.map((item) => (
+              <p key={item} className="border-border text-sm not-last:pb-3 not-last:border-b">
+                {item}
+              </p>
             ))}
-          </div>
+          </CardContent>
+        </Card>
+      </section>
 
-          {upcomingTournaments.length === 0 && (
-            <p className="text-muted-foreground text-sm">
-              Aucun tournoi à venir pour le moment.
+      <section id="infos-pratiques" className="space-y-4">
+        <h2 className="text-2xl font-semibold">Infos pratiques</h2>
+        <Card>
+          <CardContent className="space-y-2 pt-6 text-sm">
+            <p>• Buvette et petite restauration disponibles toute la journée.</p>
+            <p>
+              • Parking gratuit à proximité du complexe et accès PMR à
+              l&apos;entrée principale.
             </p>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>📊 Tournois passés</CardTitle>
-          <CardDescription>
-            Historique des tournois récemment joués par le club.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {pastTournaments.length > 0 ? (
-            <ul className="space-y-2 text-sm">
-              {pastTournaments.map((competition) => (
-                <li
-                  key={competition.id}
-                  className="border-border rounded-md border p-3"
-                >
-                  <p className="font-medium">{competition.name}</p>
-                  <p className="text-muted-foreground">
-                    {new Date(competition.date).toLocaleDateString("fr-FR", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })}{" "}
-                    · {competition.location}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-muted-foreground text-sm">
-              Aucun tournoi passé n&apos;est disponible.
+            <p>
+              • Clôture des inscriptions le{" "}
+              {new Date(featuredTournament.registrationDeadline).toLocaleDateString(
+                "fr-FR",
+                {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                },
+              )}
+              .
             </p>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>📍 Infos pratiques</CardTitle>
-          <CardDescription>
-            Tout ce qu’il faut savoir avant votre inscription.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2 text-sm">
-          <p>
-            • Les inscriptions ferment généralement 72h avant la date du
-            tournoi.
-          </p>
-          <p>
-            • Merci de vérifier votre licence et votre certificat avant de
-            valider votre participation.
-          </p>
-          <p>
-            • Pour toute question logistique, contactez l&apos;équipe ORTT via
-            l&apos;espace club.
-          </p>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </section>
     </main>
   );
 }
