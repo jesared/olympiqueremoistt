@@ -107,12 +107,14 @@ model Post {
 }
 
 model Category {
-  id   String @id @default(cuid())
-  name String
-  slug String @unique
-  posts Post[]
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+  events    Event[]
 }
-
 
 model Event {
   id          String    @id @default(cuid())
@@ -125,8 +127,11 @@ model Event {
   published   Boolean   @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-}
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
 
+  @@index([categoryId])
+}
 
 model Tournament {
   id            String            @id @default(cuid())
