@@ -6,9 +6,11 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
+import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import {
   $createParagraphNode,
   $getRoot,
@@ -25,7 +27,7 @@ import {
   ListNode,
   INSERT_UNORDERED_LIST_COMMAND,
 } from "@lexical/list";
-import { Bold, Heading1, Heading2, Italic, List } from "lucide-react";
+import { Bold, Heading1, Heading2, Italic, Link2, List, Unlink } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 
@@ -55,6 +57,38 @@ function LexicalToolbar() {
       if (!$isRangeSelection(selection)) return;
       $setBlocksType(selection, () => $createParagraphNode());
     });
+  };
+
+  const getSelectedLinkUrl = () => {
+    let selectedUrl: string | null = null;
+
+    editor.getEditorState().read(() => {
+      const selection = $getSelection();
+      if (!$isRangeSelection(selection)) return;
+
+      const node = selection.anchor.getNode();
+      const parent = node.getParent();
+
+      if ($isLinkNode(node)) {
+        selectedUrl = node.getURL();
+        return;
+      }
+
+      if (parent && $isLinkNode(parent)) {
+        selectedUrl = parent.getURL();
+      }
+    });
+
+    return selectedUrl;
+  };
+
+  const insertLink = () => {
+    const currentUrl = getSelectedLinkUrl() ?? "";
+    const url = prompt("Entrer une URL", currentUrl);
+
+    if (!url) return;
+
+    editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
   };
 
   return (
@@ -118,6 +152,28 @@ function LexicalToolbar() {
       >
         <List className="h-4 w-4" aria-hidden="true" />
         Liste
+      </Button>
+
+      <Button
+        type="button"
+        size="sm"
+        variant="outline"
+        className="gap-1"
+        onClick={insertLink}
+      >
+        <Link2 className="h-4 w-4" aria-hidden="true" />
+        Lien
+      </Button>
+
+      <Button
+        type="button"
+        size="sm"
+        variant="outline"
+        className="gap-1"
+        onClick={() => editor.dispatchCommand(TOGGLE_LINK_COMMAND, null)}
+      >
+        <Unlink className="h-4 w-4" aria-hidden="true" />
+        Supprimer lien
       </Button>
     </div>
   );
@@ -200,7 +256,7 @@ export default function RichTextEditor({
   const initialConfig = useMemo(
     () => ({
       namespace: "RichTextEditor",
-      nodes: [HeadingNode, ListNode, ListItemNode],
+      nodes: [HeadingNode, ListNode, ListItemNode, LinkNode],
       onError(error: Error) {
         console.error(error);
       },
@@ -237,6 +293,7 @@ export default function RichTextEditor({
           />
           <HistoryPlugin />
           <ListPlugin />
+          <LinkPlugin />
           <EnterKeyFixPlugin />
           <OnChangePlugin
             onChange={(editorState, editor) => {

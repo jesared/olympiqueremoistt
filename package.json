@@ -23,6 +23,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.2",
     "@lexical/html": "^0.42.0",
+    "@lexical/link": "0.42.0",
     "@lexical/list": "^0.42.0",
     "@lexical/react": "^0.42.0",
     "@lexical/rich-text": "^0.42.0",
