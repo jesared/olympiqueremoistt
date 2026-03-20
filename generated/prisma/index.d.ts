@@ -1971,10 +1971,12 @@ export namespace Prisma {
 
   export type CategoryCountOutputType = {
     posts: number
+    events: number
   }
 
   export type CategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | CategoryCountOutputTypeCountPostsArgs
+    events?: boolean | CategoryCountOutputTypeCountEventsArgs
   }
 
   // Custom InputTypes
@@ -1993,6 +1995,13 @@ export namespace Prisma {
    */
   export type CategoryCountOutputTypeCountPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PostWhereInput
+  }
+
+  /**
+   * CategoryCountOutputType without action
+   */
+  export type CategoryCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EventWhereInput
   }
 
 
@@ -8800,18 +8809,24 @@ export namespace Prisma {
     id: string | null
     name: string | null
     slug: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type CategoryMaxAggregateOutputType = {
     id: string | null
     name: string | null
     slug: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type CategoryCountAggregateOutputType = {
     id: number
     name: number
     slug: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -8820,18 +8835,24 @@ export namespace Prisma {
     id?: true
     name?: true
     slug?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type CategoryMaxAggregateInputType = {
     id?: true
     name?: true
     slug?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type CategoryCountAggregateInputType = {
     id?: true
     name?: true
     slug?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -8911,6 +8932,8 @@ export namespace Prisma {
     id: string
     name: string
     slug: string
+    createdAt: Date
+    updatedAt: Date
     _count: CategoryCountAggregateOutputType | null
     _min: CategoryMinAggregateOutputType | null
     _max: CategoryMaxAggregateOutputType | null
@@ -8934,7 +8957,10 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     slug?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     posts?: boolean | Category$postsArgs<ExtArgs>
+    events?: boolean | Category$eventsArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["category"]>
 
@@ -8942,23 +8968,30 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     slug?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["category"]>
 
   export type CategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     slug?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["category"]>
 
   export type CategorySelectScalar = {
     id?: boolean
     name?: boolean
     slug?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug", ExtArgs["result"]["category"]>
+  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | Category$postsArgs<ExtArgs>
+    events?: boolean | Category$eventsArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -8968,11 +9001,14 @@ export namespace Prisma {
     name: "Category"
     objects: {
       posts: Prisma.$PostPayload<ExtArgs>[]
+      events: Prisma.$EventPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
       slug: string
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["category"]>
     composites: {}
   }
@@ -9368,6 +9404,7 @@ export namespace Prisma {
   export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     posts<T extends Category$postsArgs<ExtArgs> = {}>(args?: Subset<T, Category$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    events<T extends Category$eventsArgs<ExtArgs> = {}>(args?: Subset<T, Category$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9400,6 +9437,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Category", 'String'>
     readonly name: FieldRef<"Category", 'String'>
     readonly slug: FieldRef<"Category", 'String'>
+    readonly createdAt: FieldRef<"Category", 'DateTime'>
+    readonly updatedAt: FieldRef<"Category", 'DateTime'>
   }
     
 
@@ -9812,6 +9851,30 @@ export namespace Prisma {
   }
 
   /**
+   * Category.events
+   */
+  export type Category$eventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Event
+     */
+    select?: EventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Event
+     */
+    omit?: EventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
+    where?: EventWhereInput
+    orderBy?: EventOrderByWithRelationInput | EventOrderByWithRelationInput[]
+    cursor?: EventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EventScalarFieldEnum | EventScalarFieldEnum[]
+  }
+
+  /**
    * Category without action
    */
   export type CategoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9851,6 +9914,7 @@ export namespace Prisma {
     published: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    categoryId: string | null
   }
 
   export type EventMaxAggregateOutputType = {
@@ -9864,6 +9928,7 @@ export namespace Prisma {
     published: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    categoryId: string | null
   }
 
   export type EventCountAggregateOutputType = {
@@ -9877,6 +9942,7 @@ export namespace Prisma {
     published: number
     createdAt: number
     updatedAt: number
+    categoryId: number
     _all: number
   }
 
@@ -9892,6 +9958,7 @@ export namespace Prisma {
     published?: true
     createdAt?: true
     updatedAt?: true
+    categoryId?: true
   }
 
   export type EventMaxAggregateInputType = {
@@ -9905,6 +9972,7 @@ export namespace Prisma {
     published?: true
     createdAt?: true
     updatedAt?: true
+    categoryId?: true
   }
 
   export type EventCountAggregateInputType = {
@@ -9918,6 +9986,7 @@ export namespace Prisma {
     published?: true
     createdAt?: true
     updatedAt?: true
+    categoryId?: true
     _all?: true
   }
 
@@ -10004,6 +10073,7 @@ export namespace Prisma {
     published: boolean
     createdAt: Date
     updatedAt: Date
+    categoryId: string | null
     _count: EventCountAggregateOutputType | null
     _min: EventMinAggregateOutputType | null
     _max: EventMaxAggregateOutputType | null
@@ -10034,6 +10104,8 @@ export namespace Prisma {
     published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    categoryId?: boolean
+    category?: boolean | Event$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
 
   export type EventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10047,6 +10119,8 @@ export namespace Prisma {
     published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    categoryId?: boolean
+    category?: boolean | Event$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
 
   export type EventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10060,6 +10134,8 @@ export namespace Prisma {
     published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    categoryId?: boolean
+    category?: boolean | Event$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
 
   export type EventSelectScalar = {
@@ -10073,13 +10149,25 @@ export namespace Prisma {
     published?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    categoryId?: boolean
   }
 
-  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "location" | "startDate" | "endDate" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
+  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "location" | "startDate" | "endDate" | "published" | "createdAt" | "updatedAt" | "categoryId", ExtArgs["result"]["event"]>
+  export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | Event$categoryArgs<ExtArgs>
+  }
+  export type EventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | Event$categoryArgs<ExtArgs>
+  }
+  export type EventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | Event$categoryArgs<ExtArgs>
+  }
 
   export type $EventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Event"
-    objects: {}
+    objects: {
+      category: Prisma.$CategoryPayload<ExtArgs> | null
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       title: string
@@ -10091,6 +10179,7 @@ export namespace Prisma {
       published: boolean
       createdAt: Date
       updatedAt: Date
+      categoryId: string | null
     }, ExtArgs["result"]["event"]>
     composites: {}
   }
@@ -10485,6 +10574,7 @@ export namespace Prisma {
    */
   export interface Prisma__EventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    category<T extends Event$categoryArgs<ExtArgs> = {}>(args?: Subset<T, Event$categoryArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10524,6 +10614,7 @@ export namespace Prisma {
     readonly published: FieldRef<"Event", 'Boolean'>
     readonly createdAt: FieldRef<"Event", 'DateTime'>
     readonly updatedAt: FieldRef<"Event", 'DateTime'>
+    readonly categoryId: FieldRef<"Event", 'String'>
   }
     
 
@@ -10540,6 +10631,10 @@ export namespace Prisma {
      * Omit specific fields from the Event
      */
     omit?: EventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
     /**
      * Filter, which Event to fetch.
      */
@@ -10559,6 +10654,10 @@ export namespace Prisma {
      */
     omit?: EventOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
+    /**
      * Filter, which Event to fetch.
      */
     where: EventWhereUniqueInput
@@ -10576,6 +10675,10 @@ export namespace Prisma {
      * Omit specific fields from the Event
      */
     omit?: EventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
     /**
      * Filter, which Event to fetch.
      */
@@ -10625,6 +10728,10 @@ export namespace Prisma {
      */
     omit?: EventOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
+    /**
      * Filter, which Event to fetch.
      */
     where?: EventWhereInput
@@ -10673,6 +10780,10 @@ export namespace Prisma {
      */
     omit?: EventOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
+    /**
      * Filter, which Events to fetch.
      */
     where?: EventWhereInput
@@ -10716,6 +10827,10 @@ export namespace Prisma {
      */
     omit?: EventOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
+    /**
      * The data needed to create a Event.
      */
     data: XOR<EventCreateInput, EventUncheckedCreateInput>
@@ -10749,6 +10864,10 @@ export namespace Prisma {
      */
     data: EventCreateManyInput | EventCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -10763,6 +10882,10 @@ export namespace Prisma {
      * Omit specific fields from the Event
      */
     omit?: EventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
     /**
      * The data needed to update a Event.
      */
@@ -10815,6 +10938,10 @@ export namespace Prisma {
      * Limit how many Events to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -10829,6 +10956,10 @@ export namespace Prisma {
      * Omit specific fields from the Event
      */
     omit?: EventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
     /**
      * The filter to search for the Event to update in case it exists.
      */
@@ -10856,6 +10987,10 @@ export namespace Prisma {
      */
     omit?: EventOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
+    /**
      * Filter which Event to delete.
      */
     where: EventWhereUniqueInput
@@ -10876,6 +11011,25 @@ export namespace Prisma {
   }
 
   /**
+   * Event.category
+   */
+  export type Event$categoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Category
+     */
+    omit?: CategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    where?: CategoryWhereInput
+  }
+
+  /**
    * Event without action
    */
   export type EventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10887,6 +11041,10 @@ export namespace Prisma {
      * Omit specific fields from the Event
      */
     omit?: EventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
   }
 
 
@@ -15425,7 +15583,9 @@ export namespace Prisma {
   export const CategoryScalarFieldEnum: {
     id: 'id',
     name: 'name',
-    slug: 'slug'
+    slug: 'slug',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
@@ -15441,7 +15601,8 @@ export namespace Prisma {
     endDate: 'endDate',
     published: 'published',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    categoryId: 'categoryId'
   };
 
   export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
@@ -16042,14 +16203,20 @@ export namespace Prisma {
     id?: StringFilter<"Category"> | string
     name?: StringFilter<"Category"> | string
     slug?: StringFilter<"Category"> | string
+    createdAt?: DateTimeFilter<"Category"> | Date | string
+    updatedAt?: DateTimeFilter<"Category"> | Date | string
     posts?: PostListRelationFilter
+    events?: EventListRelationFilter
   }
 
   export type CategoryOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     posts?: PostOrderByRelationAggregateInput
+    events?: EventOrderByRelationAggregateInput
   }
 
   export type CategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -16059,13 +16226,18 @@ export namespace Prisma {
     OR?: CategoryWhereInput[]
     NOT?: CategoryWhereInput | CategoryWhereInput[]
     name?: StringFilter<"Category"> | string
+    createdAt?: DateTimeFilter<"Category"> | Date | string
+    updatedAt?: DateTimeFilter<"Category"> | Date | string
     posts?: PostListRelationFilter
+    events?: EventListRelationFilter
   }, "id" | "slug">
 
   export type CategoryOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: CategoryCountOrderByAggregateInput
     _max?: CategoryMaxOrderByAggregateInput
     _min?: CategoryMinOrderByAggregateInput
@@ -16078,6 +16250,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Category"> | string
     name?: StringWithAggregatesFilter<"Category"> | string
     slug?: StringWithAggregatesFilter<"Category"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Category"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Category"> | Date | string
   }
 
   export type EventWhereInput = {
@@ -16094,6 +16268,8 @@ export namespace Prisma {
     published?: BoolFilter<"Event"> | boolean
     createdAt?: DateTimeFilter<"Event"> | Date | string
     updatedAt?: DateTimeFilter<"Event"> | Date | string
+    categoryId?: StringNullableFilter<"Event"> | string | null
+    category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
   }
 
   export type EventOrderByWithRelationInput = {
@@ -16107,6 +16283,8 @@ export namespace Prisma {
     published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    categoryId?: SortOrderInput | SortOrder
+    category?: CategoryOrderByWithRelationInput
   }
 
   export type EventWhereUniqueInput = Prisma.AtLeast<{
@@ -16123,6 +16301,8 @@ export namespace Prisma {
     published?: BoolFilter<"Event"> | boolean
     createdAt?: DateTimeFilter<"Event"> | Date | string
     updatedAt?: DateTimeFilter<"Event"> | Date | string
+    categoryId?: StringNullableFilter<"Event"> | string | null
+    category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
   }, "id" | "slug">
 
   export type EventOrderByWithAggregationInput = {
@@ -16136,6 +16316,7 @@ export namespace Prisma {
     published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    categoryId?: SortOrderInput | SortOrder
     _count?: EventCountOrderByAggregateInput
     _max?: EventMaxOrderByAggregateInput
     _min?: EventMinOrderByAggregateInput
@@ -16155,6 +16336,7 @@ export namespace Prisma {
     published?: BoolWithAggregatesFilter<"Event"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
+    categoryId?: StringNullableWithAggregatesFilter<"Event"> | string | null
   }
 
   export type TournamentWhereInput = {
@@ -16866,46 +17048,64 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     posts?: PostCreateNestedManyWithoutCategoryInput
+    events?: EventCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUncheckedCreateInput = {
     id?: string
     name: string
     slug: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     posts?: PostUncheckedCreateNestedManyWithoutCategoryInput
+    events?: EventUncheckedCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     posts?: PostUpdateManyWithoutCategoryNestedInput
+    events?: EventUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     posts?: PostUncheckedUpdateManyWithoutCategoryNestedInput
+    events?: EventUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryCreateManyInput = {
     id?: string
     name: string
     slug: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type CategoryUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CategoryUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EventCreateInput = {
@@ -16919,6 +17119,7 @@ export namespace Prisma {
     published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    category?: CategoryCreateNestedOneWithoutEventsInput
   }
 
   export type EventUncheckedCreateInput = {
@@ -16932,6 +17133,7 @@ export namespace Prisma {
     published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    categoryId?: string | null
   }
 
   export type EventUpdateInput = {
@@ -16945,6 +17147,7 @@ export namespace Prisma {
     published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: CategoryUpdateOneWithoutEventsNestedInput
   }
 
   export type EventUncheckedUpdateInput = {
@@ -16958,6 +17161,7 @@ export namespace Prisma {
     published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EventCreateManyInput = {
@@ -16971,6 +17175,7 @@ export namespace Prisma {
     published?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    categoryId?: string | null
   }
 
   export type EventUpdateManyMutationInput = {
@@ -16997,6 +17202,7 @@ export namespace Prisma {
     published?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TournamentCreateInput = {
@@ -17701,22 +17907,38 @@ export namespace Prisma {
     categoryId?: SortOrder
   }
 
+  export type EventListRelationFilter = {
+    every?: EventWhereInput
+    some?: EventWhereInput
+    none?: EventWhereInput
+  }
+
+  export type EventOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type CategoryCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type CategoryMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type CategoryMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type EventCountOrderByAggregateInput = {
@@ -17730,6 +17952,7 @@ export namespace Prisma {
     published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    categoryId?: SortOrder
   }
 
   export type EventMaxOrderByAggregateInput = {
@@ -17743,6 +17966,7 @@ export namespace Prisma {
     published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    categoryId?: SortOrder
   }
 
   export type EventMinOrderByAggregateInput = {
@@ -17756,6 +17980,7 @@ export namespace Prisma {
     published?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    categoryId?: SortOrder
   }
 
   export type TournamentEventListRelationFilter = {
@@ -18326,11 +18551,25 @@ export namespace Prisma {
     connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
   }
 
+  export type EventCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<EventCreateWithoutCategoryInput, EventUncheckedCreateWithoutCategoryInput> | EventCreateWithoutCategoryInput[] | EventUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: EventCreateOrConnectWithoutCategoryInput | EventCreateOrConnectWithoutCategoryInput[]
+    createMany?: EventCreateManyCategoryInputEnvelope
+    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
+  }
+
   export type PostUncheckedCreateNestedManyWithoutCategoryInput = {
     create?: XOR<PostCreateWithoutCategoryInput, PostUncheckedCreateWithoutCategoryInput> | PostCreateWithoutCategoryInput[] | PostUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: PostCreateOrConnectWithoutCategoryInput | PostCreateOrConnectWithoutCategoryInput[]
     createMany?: PostCreateManyCategoryInputEnvelope
     connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+  }
+
+  export type EventUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<EventCreateWithoutCategoryInput, EventUncheckedCreateWithoutCategoryInput> | EventCreateWithoutCategoryInput[] | EventUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: EventCreateOrConnectWithoutCategoryInput | EventCreateOrConnectWithoutCategoryInput[]
+    createMany?: EventCreateManyCategoryInputEnvelope
+    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
   }
 
   export type PostUpdateManyWithoutCategoryNestedInput = {
@@ -18347,6 +18586,20 @@ export namespace Prisma {
     deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
   }
 
+  export type EventUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<EventCreateWithoutCategoryInput, EventUncheckedCreateWithoutCategoryInput> | EventCreateWithoutCategoryInput[] | EventUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: EventCreateOrConnectWithoutCategoryInput | EventCreateOrConnectWithoutCategoryInput[]
+    upsert?: EventUpsertWithWhereUniqueWithoutCategoryInput | EventUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: EventCreateManyCategoryInputEnvelope
+    set?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    disconnect?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    delete?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    update?: EventUpdateWithWhereUniqueWithoutCategoryInput | EventUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: EventUpdateManyWithWhereWithoutCategoryInput | EventUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: EventScalarWhereInput | EventScalarWhereInput[]
+  }
+
   export type PostUncheckedUpdateManyWithoutCategoryNestedInput = {
     create?: XOR<PostCreateWithoutCategoryInput, PostUncheckedCreateWithoutCategoryInput> | PostCreateWithoutCategoryInput[] | PostUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: PostCreateOrConnectWithoutCategoryInput | PostCreateOrConnectWithoutCategoryInput[]
@@ -18359,6 +18612,36 @@ export namespace Prisma {
     update?: PostUpdateWithWhereUniqueWithoutCategoryInput | PostUpdateWithWhereUniqueWithoutCategoryInput[]
     updateMany?: PostUpdateManyWithWhereWithoutCategoryInput | PostUpdateManyWithWhereWithoutCategoryInput[]
     deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
+  }
+
+  export type EventUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<EventCreateWithoutCategoryInput, EventUncheckedCreateWithoutCategoryInput> | EventCreateWithoutCategoryInput[] | EventUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: EventCreateOrConnectWithoutCategoryInput | EventCreateOrConnectWithoutCategoryInput[]
+    upsert?: EventUpsertWithWhereUniqueWithoutCategoryInput | EventUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: EventCreateManyCategoryInputEnvelope
+    set?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    disconnect?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    delete?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    update?: EventUpdateWithWhereUniqueWithoutCategoryInput | EventUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: EventUpdateManyWithWhereWithoutCategoryInput | EventUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: EventScalarWhereInput | EventScalarWhereInput[]
+  }
+
+  export type CategoryCreateNestedOneWithoutEventsInput = {
+    create?: XOR<CategoryCreateWithoutEventsInput, CategoryUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutEventsInput
+    connect?: CategoryWhereUniqueInput
+  }
+
+  export type CategoryUpdateOneWithoutEventsNestedInput = {
+    create?: XOR<CategoryCreateWithoutEventsInput, CategoryUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutEventsInput
+    upsert?: CategoryUpsertWithoutEventsInput
+    disconnect?: CategoryWhereInput | boolean
+    delete?: CategoryWhereInput | boolean
+    connect?: CategoryWhereUniqueInput
+    update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutEventsInput, CategoryUpdateWithoutEventsInput>, CategoryUncheckedUpdateWithoutEventsInput>
   }
 
   export type UserCreateNestedOneWithoutOrganizedTournamentsInput = {
@@ -19473,12 +19756,18 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: EventCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUncheckedCreateWithoutPostsInput = {
     id?: string
     name: string
     slug: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: EventUncheckedCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryCreateOrConnectWithoutPostsInput = {
@@ -19540,12 +19829,18 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: EventUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryUncheckedUpdateWithoutPostsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: EventUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type PostCreateWithoutCategoryInput = {
@@ -19582,6 +19877,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type EventCreateWithoutCategoryInput = {
+    id?: string
+    title: string
+    slug: string
+    description: string
+    location: string
+    startDate: Date | string
+    endDate?: Date | string | null
+    published?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EventUncheckedCreateWithoutCategoryInput = {
+    id?: string
+    title: string
+    slug: string
+    description: string
+    location: string
+    startDate: Date | string
+    endDate?: Date | string | null
+    published?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EventCreateOrConnectWithoutCategoryInput = {
+    where: EventWhereUniqueInput
+    create: XOR<EventCreateWithoutCategoryInput, EventUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type EventCreateManyCategoryInputEnvelope = {
+    data: EventCreateManyCategoryInput | EventCreateManyCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PostUpsertWithWhereUniqueWithoutCategoryInput = {
     where: PostWhereUniqueInput
     update: XOR<PostUpdateWithoutCategoryInput, PostUncheckedUpdateWithoutCategoryInput>
@@ -19596,6 +19927,91 @@ export namespace Prisma {
   export type PostUpdateManyWithWhereWithoutCategoryInput = {
     where: PostScalarWhereInput
     data: XOR<PostUpdateManyMutationInput, PostUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type EventUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: EventWhereUniqueInput
+    update: XOR<EventUpdateWithoutCategoryInput, EventUncheckedUpdateWithoutCategoryInput>
+    create: XOR<EventCreateWithoutCategoryInput, EventUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type EventUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: EventWhereUniqueInput
+    data: XOR<EventUpdateWithoutCategoryInput, EventUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type EventUpdateManyWithWhereWithoutCategoryInput = {
+    where: EventScalarWhereInput
+    data: XOR<EventUpdateManyMutationInput, EventUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type EventScalarWhereInput = {
+    AND?: EventScalarWhereInput | EventScalarWhereInput[]
+    OR?: EventScalarWhereInput[]
+    NOT?: EventScalarWhereInput | EventScalarWhereInput[]
+    id?: StringFilter<"Event"> | string
+    title?: StringFilter<"Event"> | string
+    slug?: StringFilter<"Event"> | string
+    description?: StringFilter<"Event"> | string
+    location?: StringFilter<"Event"> | string
+    startDate?: DateTimeFilter<"Event"> | Date | string
+    endDate?: DateTimeNullableFilter<"Event"> | Date | string | null
+    published?: BoolFilter<"Event"> | boolean
+    createdAt?: DateTimeFilter<"Event"> | Date | string
+    updatedAt?: DateTimeFilter<"Event"> | Date | string
+    categoryId?: StringNullableFilter<"Event"> | string | null
+  }
+
+  export type CategoryCreateWithoutEventsInput = {
+    id?: string
+    name: string
+    slug: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    posts?: PostCreateNestedManyWithoutCategoryInput
+  }
+
+  export type CategoryUncheckedCreateWithoutEventsInput = {
+    id?: string
+    name: string
+    slug: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    posts?: PostUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type CategoryCreateOrConnectWithoutEventsInput = {
+    where: CategoryWhereUniqueInput
+    create: XOR<CategoryCreateWithoutEventsInput, CategoryUncheckedCreateWithoutEventsInput>
+  }
+
+  export type CategoryUpsertWithoutEventsInput = {
+    update: XOR<CategoryUpdateWithoutEventsInput, CategoryUncheckedUpdateWithoutEventsInput>
+    create: XOR<CategoryCreateWithoutEventsInput, CategoryUncheckedCreateWithoutEventsInput>
+    where?: CategoryWhereInput
+  }
+
+  export type CategoryUpdateToOneWithWhereWithoutEventsInput = {
+    where?: CategoryWhereInput
+    data: XOR<CategoryUpdateWithoutEventsInput, CategoryUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type CategoryUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    posts?: PostUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type CategoryUncheckedUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    posts?: PostUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type UserCreateWithoutOrganizedTournamentsInput = {
@@ -20397,6 +20813,19 @@ export namespace Prisma {
     authorId: string
   }
 
+  export type EventCreateManyCategoryInput = {
+    id?: string
+    title: string
+    slug: string
+    description: string
+    location: string
+    startDate: Date | string
+    endDate?: Date | string | null
+    published?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type PostUpdateWithoutCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -20431,6 +20860,45 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     authorId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type EventUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    published?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EventUncheckedUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    published?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EventUncheckedUpdateManyWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    published?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TournamentEventCreateManyTournamentInput = {

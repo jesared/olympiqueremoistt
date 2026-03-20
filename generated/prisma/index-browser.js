@@ -186,7 +186,9 @@ exports.Prisma.PostScalarFieldEnum = {
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  slug: 'slug'
+  slug: 'slug',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.EventScalarFieldEnum = {
@@ -199,7 +201,8 @@ exports.Prisma.EventScalarFieldEnum = {
   endDate: 'endDate',
   published: 'published',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  categoryId: 'categoryId'
 };
 
 exports.Prisma.TournamentScalarFieldEnum = {
