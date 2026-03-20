@@ -43,6 +43,8 @@ export default async function ActualitesPage() {
     },
   });
 
+  const [featuredPost, ...otherPosts] = posts;
+
   return (
     <main className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
       <header className="space-y-2">
@@ -60,18 +62,15 @@ export default async function ActualitesPage() {
           Aucune actualité publiée pour le moment.
         </p>
       ) : (
-        <section className="mx-auto grid max-w-6xl gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {posts.map((post) => (
-            <Card
-              key={post.id}
-              className="group border-border/70 relative h-full overflow-hidden p-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
-            >
+        <section className="mx-auto flex max-w-6xl flex-col gap-8">
+          {featuredPost ? (
+            <article className="group border-border/70 relative overflow-hidden rounded-xl border shadow-sm transition-all duration-300 hover:shadow-xl">
               {isAdmin ? (
-                <div className="absolute top-3 right-3 z-10">
-                  <Button asChild size="icon-xs" variant="outline">
+                <div className="absolute top-4 right-4 z-20">
+                  <Button asChild size="icon-xs" variant="secondary">
                     <Link
-                      href={`/admin/posts/${post.id}/edit`}
-                      aria-label={`Editer ${post.title}`}
+                      href={`/admin/posts/${featuredPost.id}/edit`}
+                      aria-label={`Editer ${featuredPost.title}`}
                     >
                       <Pencil className="size-3.5" />
                     </Link>
@@ -80,39 +79,94 @@ export default async function ActualitesPage() {
               ) : null}
 
               <Link
-                href={`/actualites/${post.slug}`}
-                className="flex h-full flex-col gap-3 p-3 sm:p-4"
+                href={`/actualites/${featuredPost.slug}`}
+                className="relative block h-[320px] overflow-hidden sm:h-[400px]"
               >
-                {post.imageUrl ? (
-                  <div className="bg-muted relative aspect-[16/10] overflow-hidden rounded-lg">
-                    <Image
-                      src={post.imageUrl}
-                      alt={post.title}
-                      fill
-                      sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-                  </div>
-                ) : null}
+                {featuredPost.imageUrl ? (
+                  <Image
+                    src={featuredPost.imageUrl}
+                    alt={featuredPost.title}
+                    fill
+                    sizes="100vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="bg-muted h-full w-full" />
+                )}
 
-                <CardHeader className="space-y-1 p-0">
-                  <p className="text-muted-foreground/80 text-xs font-medium tracking-wide uppercase">
-                    {dateFormatter.format(post.createdAt)}
-                  </p>
-                  <CardTitle className="text-base leading-snug sm:text-lg">
-                    {post.title}
-                  </CardTitle>
-                </CardHeader>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
 
-                <CardContent className="mt-auto p-0">
-                  <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
-                    {toExcerpt(post.content)}
+                <div className="absolute right-0 bottom-0 left-0 p-5 sm:p-8">
+                  <p className="text-xs font-medium tracking-wide text-white/80 uppercase">
+                    {dateFormatter.format(featuredPost.createdAt)}
                   </p>
-                </CardContent>
+                  <h2 className="mt-2 text-2xl leading-tight font-semibold text-white sm:text-3xl">
+                    {featuredPost.title}
+                  </h2>
+                  <p className="mt-3 line-clamp-2 max-w-3xl text-sm leading-relaxed text-white/90 sm:text-base">
+                    {toExcerpt(featuredPost.content, 220)}
+                  </p>
+                </div>
               </Link>
-            </Card>
-          ))}
+            </article>
+          ) : null}
+
+          {otherPosts.length > 0 ? (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {otherPosts.map((post) => (
+                <Card
+                  key={post.id}
+                  className="group border-border/70 relative h-full overflow-hidden p-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+                >
+                  {isAdmin ? (
+                    <div className="absolute top-3 right-3 z-10">
+                      <Button asChild size="icon-xs" variant="outline">
+                        <Link
+                          href={`/admin/posts/${post.id}/edit`}
+                          aria-label={`Editer ${post.title}`}
+                        >
+                          <Pencil className="size-3.5" />
+                        </Link>
+                      </Button>
+                    </div>
+                  ) : null}
+
+                  <Link
+                    href={`/actualites/${post.slug}`}
+                    className="flex h-full flex-col gap-3 p-3 sm:p-4"
+                  >
+                    {post.imageUrl ? (
+                      <div className="bg-muted relative aspect-[16/10] overflow-hidden rounded-lg">
+                        <Image
+                          src={post.imageUrl}
+                          alt={post.title}
+                          fill
+                          sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                      </div>
+                    ) : null}
+
+                    <CardHeader className="space-y-1 p-0">
+                      <p className="text-muted-foreground/80 text-xs font-medium tracking-wide uppercase">
+                        {dateFormatter.format(post.createdAt)}
+                      </p>
+                      <CardTitle className="text-base leading-snug sm:text-lg">
+                        {post.title}
+                      </CardTitle>
+                    </CardHeader>
+
+                    <CardContent className="mt-auto p-0">
+                      <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
+                        {toExcerpt(post.content)}
+                      </p>
+                    </CardContent>
+                  </Link>
+                </Card>
+              ))}
+            </div>
+          ) : null}
         </section>
       )}
     </main>
