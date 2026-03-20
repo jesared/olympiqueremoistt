@@ -1,0 +1,124 @@
+type ClubMilestone = {
+  year: string;
+  title: string;
+  description: string;
+};
+
+const clubCreationYear = 1987;
+
+const milestones: ClubMilestone[] = [
+  {
+    year: "1987",
+    title: "Création du club",
+    description:
+      "L’Olympique Rémois Tennis de Table naît avec l’ambition de rendre le tennis de table accessible à tous à Reims.",
+  },
+  {
+    year: "1998",
+    title: "Première montée en division régionale",
+    description:
+      "L’équipe fanion valide une montée importante, marquant un tournant sportif dans l’histoire du club.",
+  },
+  {
+    year: "2009",
+    title: "Événements marquants et ouverture locale",
+    description:
+      "Le club renforce sa présence locale à travers des tournois, stages jeunes et actions avec les écoles.",
+  },
+  {
+    year: "2018",
+    title: "Développement structuré du club",
+    description:
+      "Modernisation de l’encadrement, montée en qualité des entraînements et consolidation de la filière jeunes.",
+  },
+  {
+    year: "2024",
+    title: "Nouvelle dynamique sportive",
+    description:
+      "Le club poursuit sa progression avec une pratique loisir-compétition équilibrée et une vie associative active.",
+  },
+];
+
+export default function ClubHistoryPage() {
+  return (
+    <section className="mx-auto w-full max-w-6xl space-y-12">
+      <header className="space-y-3">
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          L&apos;historique du club
+        </h1>
+        <p className="text-muted-foreground max-w-3xl text-sm leading-relaxed sm:text-base">
+          Découvrez les grandes étapes qui ont façonné l&apos;Olympique Rémois
+          Tennis de Table, de sa création à son développement actuel.
+        </p>
+      </header>
+
+      <section
+        aria-labelledby="introduction"
+        className="bg-card rounded-2xl border p-6 shadow-sm sm:p-8"
+      >
+        <h2 id="introduction" className="text-2xl font-semibold tracking-tight">
+          Introduction
+        </h2>
+        <div className="mt-4 space-y-3">
+          <p className="text-muted-foreground leading-relaxed">
+            L&apos;Olympique Rémois Tennis de Table est un club tourné vers la
+            progression sportive, la convivialité et la transmission.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            Créé en <span className="text-foreground font-medium">{clubCreationYear}</span>,
+            le club a grandi au rythme de ses licenciés, de ses bénévoles et de
+            ses résultats.
+          </p>
+        </div>
+      </section>
+
+      <section aria-labelledby="timeline" className="space-y-6">
+        <h2 id="timeline" className="text-2xl font-semibold tracking-tight">
+          Timeline
+        </h2>
+        <ol className="relative space-y-6">
+          <span
+            aria-hidden
+            className="bg-border absolute bottom-0 left-20 top-0 hidden w-px md:block"
+          />
+          {milestones.map((milestone) => (
+            <li
+              key={milestone.year}
+              className="grid gap-3 md:grid-cols-[70px_1fr] md:gap-6"
+            >
+              <p className="text-primary text-sm font-semibold md:pt-1">
+                {milestone.year}
+              </p>
+              <div className="relative">
+                <span
+                  aria-hidden
+                  className="bg-primary absolute -left-5 top-5 hidden h-3.5 w-3.5 rounded-full md:block"
+                />
+                <div className="bg-card rounded-xl border p-4 sm:p-5">
+                  <h3 className="text-lg font-semibold">{milestone.title}</h3>
+                  <p className="text-muted-foreground mt-2 text-sm leading-relaxed sm:text-base">
+                    {milestone.description}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section
+        aria-labelledby="aujourdhui"
+        className="bg-muted/40 rounded-2xl border p-6 sm:p-8"
+      >
+        <h2 id="aujourdhui" className="text-2xl font-semibold tracking-tight">
+          Aujourd&apos;hui
+        </h2>
+        <p className="text-muted-foreground mt-4 leading-relaxed">
+          Aujourd&apos;hui, le club réunit des joueurs de tous niveaux, propose des
+          créneaux adaptés aux jeunes et aux adultes, et continue de développer
+          son projet sportif et associatif avec ambition.
+        </p>
+      </section>
+    </section>
+  );
+}
