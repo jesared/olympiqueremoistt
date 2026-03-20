@@ -5,6 +5,7 @@ import { Badge } from "~/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
 import { generateAuditReport } from "~/lib/audit";
+import { requireAdmin } from "~/lib/auth";
 
 function scoreVariant(score: number): "success" | "warning" | "destructive" {
   if (score >= 80) return "success";
@@ -13,6 +14,7 @@ function scoreVariant(score: number): "success" | "warning" | "destructive" {
 }
 
 export default async function AdminAuditPage() {
+  await requireAdmin();
   const report = await generateAuditReport();
 
   return (

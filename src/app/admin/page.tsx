@@ -18,7 +18,7 @@ import {
 } from "~/components/ui/table";
 import { adminStats, registrations } from "~/data/admin";
 import { canEditTournament } from "~/lib/permissions";
-import { requireAdmin } from "~/server/auth/auth-helpers";
+import { requireAdmin } from "~/lib/auth";
 
 const icons = [CheckCircle2, Hourglass, AlertCircle];
 
