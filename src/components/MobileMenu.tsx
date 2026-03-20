@@ -5,6 +5,7 @@ import type { Session } from "next-auth";
 import {
   CalendarDays,
   Handshake,
+  History,
   Home,
   LayoutDashboard,
   LogOut,
@@ -68,6 +69,7 @@ const iconMap: Record<string, LucideIcon> = {
   "/club/sponsoring": Handshake,
   "/club/joueur": UserIcon,
   "/club/lequipe-dirigeante": Users,
+  "/club/lhistorique-du-club": History,
   "/evenements": CalendarDays,
 };
 
