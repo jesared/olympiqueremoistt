@@ -42,7 +42,9 @@ export default function Header({ user }: HeaderProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDesktopMenu, setOpenDesktopMenu] = useState<string | null>(null);
-  const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(null);
+  const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(
+    null,
+  );
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -102,13 +104,17 @@ export default function Header({ user }: HeaderProps) {
                 <li
                   key={item.href}
                   className="relative"
-                  onMouseEnter={() => item.children && handleDesktopOpen(item.href)}
+                  onMouseEnter={() =>
+                    item.children && handleDesktopOpen(item.href)
+                  }
                   onMouseLeave={() => item.children && handleDesktopClose()}
                   onFocus={() => item.children && handleDesktopOpen(item.href)}
                   onBlur={(event) => {
                     if (
                       item.children &&
-                      !event.currentTarget.contains(event.relatedTarget as Node | null)
+                      !event.currentTarget.contains(
+                        event.relatedTarget as Node | null,
+                      )
                     ) {
                       handleDesktopClose();
                     }
@@ -124,7 +130,7 @@ export default function Header({ user }: HeaderProps) {
                     aria-expanded={item.children ? isOpen : undefined}
                     aria-controls={item.children ? submenuId : undefined}
                     className={cn(
-                      "flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2",
+                      "focus-visible:ring-primary/60 flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
                       isActive
                         ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -145,7 +151,7 @@ export default function Header({ user }: HeaderProps) {
                   {item.children && (
                     <div
                       className={cn(
-                        "absolute left-0 top-full z-[70] pt-2",
+                        "absolute top-full left-0 z-[70] pt-2",
                         "transition-all duration-200",
                         isOpen
                           ? "visible translate-y-0 opacity-100"
@@ -167,7 +173,7 @@ export default function Header({ user }: HeaderProps) {
                               href={sub.href}
                               role="menuitem"
                               className={cn(
-                                "block rounded-md px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2",
+                                "focus-visible:ring-primary/60 block rounded-md px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
                                 isSubActive
                                   ? "bg-muted text-foreground"
                                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -191,7 +197,6 @@ export default function Header({ user }: HeaderProps) {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <UserMenu user={user} />
 
           <Button
@@ -203,8 +208,13 @@ export default function Header({ user }: HeaderProps) {
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-navigation"
           >
-            {isMobileMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+            {isMobileMenuOpen ? (
+              <X aria-hidden="true" />
+            ) : (
+              <Menu aria-hidden="true" />
+            )}
           </Button>
+          <ThemeToggle />
         </div>
       </div>
 
@@ -234,7 +244,7 @@ export default function Header({ user }: HeaderProps) {
                     <Link
                       href={item.href}
                       className={cn(
-                        "block flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2",
+                        "focus-visible:ring-primary/60 block flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
                         isActive
                           ? "bg-primary text-primary-foreground"
                           : "hover:bg-muted",
@@ -275,10 +285,12 @@ export default function Header({ user }: HeaderProps) {
                       id={mobileSubmenuId}
                       className={cn(
                         "grid overflow-hidden pl-3 transition-all duration-200",
-                        isSubmenuOpen ? "mt-1 grid-rows-[1fr]" : "grid-rows-[0fr]",
+                        isSubmenuOpen
+                          ? "mt-1 grid-rows-[1fr]"
+                          : "grid-rows-[0fr]",
                       )}
                     >
-                      <div className="flex min-h-0 flex-col gap-1 border-l border-border/70 py-1">
+                      <div className="border-border/70 flex min-h-0 flex-col gap-1 border-l py-1">
                         {item.children.map((sub) => {
                           const isSubActive = pathname.startsWith(sub.href);
 
@@ -287,7 +299,7 @@ export default function Header({ user }: HeaderProps) {
                               key={sub.href}
                               href={sub.href}
                               className={cn(
-                                "text-muted-foreground hover:bg-muted hover:text-foreground block rounded-md px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2",
+                                "text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-primary/60 block rounded-md px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
                                 isSubActive && "bg-muted text-foreground",
                               )}
                               onClick={() => setIsMobileMenuOpen(false)}

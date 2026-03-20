@@ -97,7 +97,7 @@ export function UserMenu({ user }: UserMenuProps) {
 
         <DropdownMenuItem
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="text-destructive focus:text-destructive flex cursor-pointer items-center gap-2"
+          className="flex cursor-pointer items-center gap-2"
           aria-label="Se déconnecter"
         >
           <LogOut className="size-4" aria-hidden="true" />

@@ -13,7 +13,7 @@ importers:
     dependencies:
       '@auth/prisma-adapter':
         specifier: ^2.7.2
-        version: 2.11.1(@prisma/client@6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3))
+        version: 2.11.1(@prisma/client@6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3))(nodemailer@8.0.3)
       '@lexical/html':
         specifier: ^0.42.0
         version: 0.42.0
@@ -76,7 +76,10 @@ importers:
         version: 15.5.14(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next-auth:
         specifier: 5.0.0-beta.25
-        version: 5.0.0-beta.25(next@15.5.14(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+        version: 5.0.0-beta.25(next@15.5.14(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(nodemailer@8.0.3)(react@19.2.4)
+      nodemailer:
+        specifier: ^8.0.3
+        version: 8.0.3
       radix-ui:
         specifier: ^1.4.3
         version: 1.4.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -3348,6 +3351,10 @@ packages:
   node-releases@2.0.36:
     resolution: {integrity: sha512-TdC8FSgHz8Mwtw9g5L4gR/Sh9XhSP/0DEkQxfEFXOpiul5IiHgHan2VhYYb6agDSfp4KuvltmGApc8HMgUrIkA==}
 
+  nodemailer@8.0.3:
+    resolution: {integrity: sha512-JQNBqvK+bj3NMhUFR3wmCl3SYcOeMotDiwDBvIoCuQdF0PvlIY0BH+FJ2CG7u4cXKPChplE78oowlH/Otsc4ZQ==}
+    engines: {node: '>=6.0.0'}
+
   npm-run-path@4.0.1:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
     engines: {node: '>=8'}
@@ -4268,17 +4275,19 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@auth/core@0.41.1':
+  '@auth/core@0.41.1(nodemailer@8.0.3)':
     dependencies:
       '@panva/hkdf': 1.2.1
       jose: 6.2.2
       oauth4webapi: 3.8.5
       preact: 10.24.3
       preact-render-to-string: 6.5.11(preact@10.24.3)
+    optionalDependencies:
+      nodemailer: 8.0.3
 
-  '@auth/prisma-adapter@2.11.1(@prisma/client@6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3))':
+  '@auth/prisma-adapter@2.11.1(@prisma/client@6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3))(nodemailer@8.0.3)':
     dependencies:
-      '@auth/core': 0.41.1
+      '@auth/core': 0.41.1(nodemailer@8.0.3)
       '@prisma/client': 6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3)
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
@@ -7586,11 +7595,13 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  next-auth@5.0.0-beta.25(next@15.5.14(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4):
+  next-auth@5.0.0-beta.25(next@15.5.14(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(nodemailer@8.0.3)(react@19.2.4):
     dependencies:
-      '@auth/core': 0.41.1
+      '@auth/core': 0.41.1(nodemailer@8.0.3)
       next: 15.5.14(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4
+    optionalDependencies:
+      nodemailer: 8.0.3
 
   next@15.5.14(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
@@ -7633,6 +7644,8 @@ snapshots:
       formdata-polyfill: 4.0.10
 
   node-releases@2.0.36: {}
+
+  nodemailer@8.0.3: {}
 
   npm-run-path@4.0.1:
     dependencies:

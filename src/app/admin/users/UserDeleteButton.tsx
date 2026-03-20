@@ -62,9 +62,10 @@ export function UserDeleteButton({
           <Button
             type="button"
             size="sm"
-            variant="destructive"
+            variant="outline"
             disabled={disabled || isPending}
             aria-label={`Supprimer ${userLabel}`}
+            className="cursor-pointer"
           >
             <Trash2 className="size-4" />
             <span>Supprimer</span>
@@ -75,8 +76,8 @@ export function UserDeleteButton({
           <DialogHeader>
             <DialogTitle>Confirmer la suppression</DialogTitle>
             <DialogDescription>
-              Voulez-vous vraiment supprimer <strong>{userLabel}</strong> ? Cette
-              action est irréversible.
+              Voulez-vous vraiment supprimer <strong>{userLabel}</strong> ?
+              Cette action est irréversible.
             </DialogDescription>
           </DialogHeader>
 
