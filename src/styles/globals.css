@@ -162,4 +162,54 @@
     pointer-events: none;
     @apply text-muted-foreground;
   }
+
+  /* Tiptap: styles minimum (Tailwind reset neutralise h*/lists par défaut). */
+  .tiptap h1 {
+    @apply mt-4 mb-2 text-3xl font-semibold leading-tight tracking-tight;
+  }
+
+  .tiptap h2 {
+    @apply mt-4 mb-2 text-2xl font-semibold leading-tight tracking-tight;
+  }
+
+  .tiptap p {
+    @apply my-2;
+  }
+
+  .tiptap ul {
+    @apply my-2 list-disc pl-6;
+  }
+
+  .tiptap ol {
+    @apply my-2 list-decimal pl-6;
+  }
+
+  .tiptap li {
+    @apply my-1;
+  }
+
+  /* Lexical: même rendu que .tiptap. */
+  .lexical h1 {
+    @apply mt-4 mb-2 text-3xl font-semibold leading-tight tracking-tight;
+  }
+
+  .lexical h2 {
+    @apply mt-4 mb-2 text-2xl font-semibold leading-tight tracking-tight;
+  }
+
+  .lexical p {
+    @apply my-2;
+  }
+
+  .lexical ul {
+    @apply my-2 list-disc pl-6;
+  }
+
+  .lexical ol {
+    @apply my-2 list-decimal pl-6;
+  }
+
+  .lexical li {
+    @apply my-1;
+  }
 }

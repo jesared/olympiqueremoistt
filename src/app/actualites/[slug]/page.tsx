@@ -12,7 +12,7 @@ const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
 });
 
 type ActualiteDetailPageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 async function getPostBySlug(slug: string) {
@@ -34,7 +34,8 @@ async function getPostBySlug(slug: string) {
 export async function generateMetadata({
   params,
 }: ActualiteDetailPageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return {
@@ -50,7 +51,8 @@ export async function generateMetadata({
 export default async function ActualiteDetailPage({
   params,
 }: ActualiteDetailPageProps) {
-  const requestedSlug = decodeURIComponent(params.slug);
+  const { slug } = await params;
+  const requestedSlug = decodeURIComponent(slug);
   const post = await getPostBySlug(requestedSlug);
 
   if (!post) {
@@ -93,7 +95,7 @@ export default async function ActualiteDetailPage({
           </h1>
         </header>
 
-        <div className="bg-muted border-border/70 relative aspect-[16/9] w-full overflow-hidden rounded-lg border">
+        <div className="bg-muted border-border/70 relative aspect-video w-full overflow-hidden rounded-lg border">
           {post.imageUrl ? (
             <Image
               src={post.imageUrl}

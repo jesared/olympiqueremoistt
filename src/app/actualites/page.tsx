@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
 import { db as prisma } from "~/server/db";
+import { auth } from "~/server/auth";
+import { Pencil } from "lucide-react";
 
 const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
   day: "2-digit",
@@ -24,6 +27,9 @@ function toExcerpt(content: string, maxLength = 160) {
 }
 
 export default async function ActualitesPage() {
+  const session = await auth();
+  const isAdmin = session?.user?.role === "ADMIN";
+
   const posts = await prisma.post.findMany({
     where: { published: true },
     orderBy: { createdAt: "desc" },
@@ -56,10 +62,26 @@ export default async function ActualitesPage() {
       ) : (
         <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {posts.map((post) => (
-            <Link key={post.id} href={`/actualites/${post.slug}`} className="h-full">
-              <Card className="h-full overflow-hidden border-border/70 p-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+            <Card
+              key={post.id}
+              className="relative h-full overflow-hidden border-border/70 p-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+            >
+              {isAdmin ? (
+                <div className="absolute right-3 top-3 z-10">
+                  <Button asChild size="icon-xs" variant="outline">
+                    <Link
+                      href={`/admin/posts/${post.id}`}
+                      aria-label={`Editer ${post.title}`}
+                    >
+                      <Pencil className="size-3.5" />
+                    </Link>
+                  </Button>
+                </div>
+              ) : null}
+
+              <Link href={`/actualites/${post.slug}`} className="block h-full">
                 {post.imageUrl ? (
-                  <div className="bg-muted relative mx-4 mt-4 aspect-[16/9] overflow-hidden rounded-xl">
+                  <div className="bg-muted relative mx-4 mt-4 aspect-video overflow-hidden rounded-xl">
                     <Image
                       src={post.imageUrl}
                       alt={post.title}
@@ -84,8 +106,8 @@ export default async function ActualitesPage() {
                     {toExcerpt(post.content)}
                   </p>
                 </CardContent>
-              </Card>
-            </Link>
+              </Link>
+            </Card>
           ))}
         </section>
       )}
