@@ -8809,6 +8809,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     slug: string | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8817,6 +8818,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     slug: string | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8825,6 +8827,7 @@ export namespace Prisma {
     id: number
     name: number
     slug: number
+    color: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -8835,6 +8838,7 @@ export namespace Prisma {
     id?: true
     name?: true
     slug?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8843,6 +8847,7 @@ export namespace Prisma {
     id?: true
     name?: true
     slug?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8851,6 +8856,7 @@ export namespace Prisma {
     id?: true
     name?: true
     slug?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8932,6 +8938,7 @@ export namespace Prisma {
     id: string
     name: string
     slug: string
+    color: string | null
     createdAt: Date
     updatedAt: Date
     _count: CategoryCountAggregateOutputType | null
@@ -8957,6 +8964,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     slug?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     posts?: boolean | Category$postsArgs<ExtArgs>
@@ -8968,6 +8976,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     slug?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["category"]>
@@ -8976,6 +8985,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     slug?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["category"]>
@@ -8984,11 +8994,12 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     slug?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
+  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | Category$postsArgs<ExtArgs>
     events?: boolean | Category$eventsArgs<ExtArgs>
@@ -9007,6 +9018,7 @@ export namespace Prisma {
       id: string
       name: string
       slug: string
+      color: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["category"]>
@@ -9437,6 +9449,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Category", 'String'>
     readonly name: FieldRef<"Category", 'String'>
     readonly slug: FieldRef<"Category", 'String'>
+    readonly color: FieldRef<"Category", 'String'>
     readonly createdAt: FieldRef<"Category", 'DateTime'>
     readonly updatedAt: FieldRef<"Category", 'DateTime'>
   }
@@ -15584,6 +15597,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     slug: 'slug',
+    color: 'color',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -16203,6 +16217,7 @@ export namespace Prisma {
     id?: StringFilter<"Category"> | string
     name?: StringFilter<"Category"> | string
     slug?: StringFilter<"Category"> | string
+    color?: StringNullableFilter<"Category"> | string | null
     createdAt?: DateTimeFilter<"Category"> | Date | string
     updatedAt?: DateTimeFilter<"Category"> | Date | string
     posts?: PostListRelationFilter
@@ -16213,6 +16228,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
+    color?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     posts?: PostOrderByRelationAggregateInput
@@ -16226,6 +16242,7 @@ export namespace Prisma {
     OR?: CategoryWhereInput[]
     NOT?: CategoryWhereInput | CategoryWhereInput[]
     name?: StringFilter<"Category"> | string
+    color?: StringNullableFilter<"Category"> | string | null
     createdAt?: DateTimeFilter<"Category"> | Date | string
     updatedAt?: DateTimeFilter<"Category"> | Date | string
     posts?: PostListRelationFilter
@@ -16236,6 +16253,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
+    color?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CategoryCountOrderByAggregateInput
@@ -16250,6 +16268,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Category"> | string
     name?: StringWithAggregatesFilter<"Category"> | string
     slug?: StringWithAggregatesFilter<"Category"> | string
+    color?: StringNullableWithAggregatesFilter<"Category"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Category"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Category"> | Date | string
   }
@@ -17048,6 +17067,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     posts?: PostCreateNestedManyWithoutCategoryInput
@@ -17058,6 +17078,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     posts?: PostUncheckedCreateNestedManyWithoutCategoryInput
@@ -17068,6 +17089,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     posts?: PostUpdateManyWithoutCategoryNestedInput
@@ -17078,6 +17100,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     posts?: PostUncheckedUpdateManyWithoutCategoryNestedInput
@@ -17088,6 +17111,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17096,6 +17120,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17104,6 +17129,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17921,6 +17947,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17929,6 +17956,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17937,6 +17965,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19756,6 +19785,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     events?: EventCreateNestedManyWithoutCategoryInput
@@ -19765,6 +19795,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutCategoryInput
@@ -19829,6 +19860,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutCategoryNestedInput
@@ -19838,6 +19870,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutCategoryNestedInput
@@ -19966,6 +19999,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     posts?: PostCreateNestedManyWithoutCategoryInput
@@ -19975,6 +20009,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     posts?: PostUncheckedCreateNestedManyWithoutCategoryInput
@@ -20000,6 +20035,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     posts?: PostUpdateManyWithoutCategoryNestedInput
@@ -20009,6 +20045,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     posts?: PostUncheckedUpdateManyWithoutCategoryNestedInput

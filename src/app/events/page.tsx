@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { CategoryBadge } from "~/components/category-badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { db as prisma } from "~/server/db";
@@ -23,6 +24,7 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
       id: true,
       name: true,
       slug: true,
+      color: true,
     },
   });
 
@@ -33,6 +35,7 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
           id: true,
           name: true,
           slug: true,
+          color: true,
         },
       })
     : null;
@@ -58,6 +61,7 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
         select: {
           name: true,
           slug: true,
+          color: true,
         },
       },
     },
@@ -71,12 +75,17 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
           Découvrez les prochains événements publics du club.
         </p>
         {categorySlug ? (
-          <p className="text-sm">
+          <div className="flex items-center gap-2 text-sm">
             Catégorie active :{" "}
-            <span className="font-medium">
-              {activeCategory?.name ?? "Inconnue"}
-            </span>
-          </p>
+            {activeCategory ? (
+              <CategoryBadge
+                name={activeCategory.name}
+                color={activeCategory.color}
+              />
+            ) : (
+              <span className="font-medium">Inconnue</span>
+            )}
+          </div>
         ) : null}
       </header>
 
@@ -91,7 +100,9 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
             variant={categorySlug === category.slug ? "default" : "outline"}
             size="sm"
           >
-            <Link href={`/events?category=${category.slug}`}>{category.name}</Link>
+            <Link href={`/events?category=${category.slug}`}>
+              <CategoryBadge name={category.name} color={category.color} />
+            </Link>
           </Button>
         ))}
       </section>
@@ -121,10 +132,13 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
                     <span className="font-medium">Lieu :</span> {event.location}
                   </p>
                   {event.category?.name ? (
-                    <p>
+                    <div className="flex items-center gap-2">
                       <span className="font-medium">Catégorie :</span>{" "}
-                      {event.category.name}
-                    </p>
+                      <CategoryBadge
+                        name={event.category.name}
+                        color={event.category.color}
+                      />
+                    </div>
                   ) : null}
                   <p className="text-muted-foreground line-clamp-4 leading-relaxed">
                     {event.description}
