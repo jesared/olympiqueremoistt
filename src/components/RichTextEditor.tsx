@@ -39,9 +39,11 @@ type RichTextEditorProps = {
   onChange: (html: string) => void;
   placeholder?: string;
   className?: string;
+  toolbarClassName?: string;
+  contentClassName?: string;
 };
 
-function LexicalToolbar() {
+function LexicalToolbar({ className }: { className?: string }) {
   const [editor] = useLexicalComposerContext();
 
   const applyHeading = (level: 1 | 2) => {
@@ -147,7 +149,12 @@ function LexicalToolbar() {
   };
 
   return (
-    <div className="border-input bg-muted/50 flex flex-wrap gap-2 rounded-t-md border p-2">
+    <div
+      className={cn(
+        "border-input bg-muted/50 flex flex-wrap gap-2 rounded-t-md border p-2",
+        className,
+      )}
+    >
       <Button type="button" size="sm" variant="outline" onClick={setParagraph}>
         Paragraphe
       </Button>
@@ -283,6 +290,8 @@ export default function RichTextEditor({
   onChange,
   placeholder,
   className,
+  toolbarClassName,
+  contentClassName,
 }: RichTextEditorProps) {
   const placeholderText = placeholder ?? "Écrivez votre contenu...";
   const initialHtml = value || "<p></p>";
@@ -309,13 +318,16 @@ export default function RichTextEditor({
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div className={cn("rounded-md", className)}>
-        <LexicalToolbar />
+        <LexicalToolbar className={toolbarClassName} />
         <div className="border-input bg-background relative rounded-b-md border border-t-0">
           <RichTextPlugin
             contentEditable={
               <ContentEditable
                 id="content-editor"
-                className="lexical min-h-48 px-3 py-2 text-sm focus-visible:outline-none"
+                className={cn(
+                  "lexical min-h-48 px-3 py-2 text-sm focus-visible:outline-none",
+                  contentClassName,
+                )}
                 aria-label={placeholderText}
               />
             }
