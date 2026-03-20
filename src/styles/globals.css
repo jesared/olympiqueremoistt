@@ -163,13 +163,13 @@
     @apply text-muted-foreground;
   }
 
-  /* Tiptap: styles minimum (Tailwind reset neutralise h*/lists par défaut). */
+  /* Tiptap: styles minimum (Tailwind reset neutralise headings et listes par défaut) */
   .tiptap h1 {
-    @apply mt-4 mb-2 text-3xl font-semibold leading-tight tracking-tight;
+    @apply mt-4 mb-2 text-3xl leading-tight font-semibold tracking-tight;
   }
 
   .tiptap h2 {
-    @apply mt-4 mb-2 text-2xl font-semibold leading-tight tracking-tight;
+    @apply mt-4 mb-2 text-2xl leading-tight font-semibold tracking-tight;
   }
 
   .tiptap p {
@@ -185,31 +185,6 @@
   }
 
   .tiptap li {
-    @apply my-1;
-  }
-
-  /* Lexical: même rendu que .tiptap. */
-  .lexical h1 {
-    @apply mt-4 mb-2 text-3xl font-semibold leading-tight tracking-tight;
-  }
-
-  .lexical h2 {
-    @apply mt-4 mb-2 text-2xl font-semibold leading-tight tracking-tight;
-  }
-
-  .lexical p {
-    @apply my-2;
-  }
-
-  .lexical ul {
-    @apply my-2 list-disc pl-6;
-  }
-
-  .lexical ol {
-    @apply my-2 list-decimal pl-6;
-  }
-
-  .lexical li {
     @apply my-1;
   }
 }
