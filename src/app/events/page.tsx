@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { db as prisma } from "~/server/db";
 
@@ -8,9 +9,43 @@ const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
   timeStyle: "short",
 });
 
-export default async function EventsPage() {
+type EventsPageProps = {
+  searchParams?: Promise<{ category?: string }>;
+};
+
+export default async function EventsPage({ searchParams }: EventsPageProps) {
+  const params = await searchParams;
+  const categorySlug = params?.category?.trim();
+
+  const categories = await prisma.category.findMany({
+    orderBy: { name: "asc" },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+    },
+  });
+
+  const activeCategory = categorySlug
+    ? await prisma.category.findUnique({
+        where: { slug: categorySlug },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      })
+    : null;
+
   const events = await prisma.event.findMany({
-    where: { published: true },
+    where: {
+      published: true,
+      ...(categorySlug
+        ? activeCategory
+          ? { category: { slug: activeCategory.slug } }
+          : { id: "__unknown_category__" }
+        : {}),
+    },
     orderBy: { startDate: "asc" },
     select: {
       id: true,
@@ -19,6 +54,12 @@ export default async function EventsPage() {
       startDate: true,
       location: true,
       description: true,
+      category: {
+        select: {
+          name: true,
+          slug: true,
+        },
+      },
     },
   });
 
@@ -29,7 +70,31 @@ export default async function EventsPage() {
         <p className="text-muted-foreground text-sm sm:text-base">
           Découvrez les prochains événements publics du club.
         </p>
+        {categorySlug ? (
+          <p className="text-sm">
+            Catégorie active :{" "}
+            <span className="font-medium">
+              {activeCategory?.name ?? "Inconnue"}
+            </span>
+          </p>
+        ) : null}
       </header>
+
+      <section className="flex flex-wrap gap-2">
+        <Button asChild variant={categorySlug ? "outline" : "default"} size="sm">
+          <Link href="/events">Toutes</Link>
+        </Button>
+        {categories.map((category) => (
+          <Button
+            key={category.id}
+            asChild
+            variant={categorySlug === category.slug ? "default" : "outline"}
+            size="sm"
+          >
+            <Link href={`/events?category=${category.slug}`}>{category.name}</Link>
+          </Button>
+        ))}
+      </section>
 
       {events.length === 0 ? (
         <p className="text-muted-foreground">
@@ -55,6 +120,12 @@ export default async function EventsPage() {
                   <p>
                     <span className="font-medium">Lieu :</span> {event.location}
                   </p>
+                  {event.category?.name ? (
+                    <p>
+                      <span className="font-medium">Catégorie :</span>{" "}
+                      {event.category.name}
+                    </p>
+                  ) : null}
                   <p className="text-muted-foreground line-clamp-4 leading-relaxed">
                     {event.description}
                   </p>
