@@ -53,7 +53,7 @@ export default function TournoisPage() {
         <div className="mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div>
             <Badge
-              className="mb-4 border-sky-200 bg-sky-100 text-sky-800 hover:bg-sky-200"
+              className="mb-4 text-sky-800 hover:bg-sky-200"
               variant="outline"
             >
               Tournoi annuel du club
