@@ -60,14 +60,14 @@ export default async function ActualitesPage() {
           Aucune actualité publiée pour le moment.
         </p>
       ) : (
-        <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        <section className="mx-auto grid max-w-6xl gap-6 md:grid-cols-2 xl:grid-cols-3">
           {posts.map((post) => (
             <Card
               key={post.id}
-              className="relative h-full overflow-hidden border-border/70 p-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+              className="group border-border/70 relative h-full overflow-hidden p-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
             >
               {isAdmin ? (
-                <div className="absolute right-3 top-3 z-10">
+                <div className="absolute top-3 right-3 z-10">
                   <Button asChild size="icon-xs" variant="outline">
                     <Link
                       href={`/admin/posts/${post.id}/edit`}
@@ -79,31 +79,34 @@ export default async function ActualitesPage() {
                 </div>
               ) : null}
 
-              <Link href={`/actualites/${post.slug}`} className="block h-full">
+              <Link
+                href={`/actualites/${post.slug}`}
+                className="flex h-full flex-col gap-3 p-3 sm:p-4"
+              >
                 {post.imageUrl ? (
-                  <div className="bg-muted relative mx-4 mt-4 h-[260px] overflow-hidden rounded-xl sm:h-[320px] lg:h-[420px]">
+                  <div className="bg-muted relative aspect-[16/10] overflow-hidden rounded-lg">
                     <Image
                       src={post.imageUrl}
                       alt={post.title}
                       fill
                       sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
                   </div>
                 ) : null}
 
-                <CardHeader className="space-y-2 px-5 pt-5">
-                  <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                <CardHeader className="space-y-1 p-0">
+                  <p className="text-muted-foreground/80 text-xs font-medium tracking-wide uppercase">
                     {dateFormatter.format(post.createdAt)}
                   </p>
-                  <CardTitle className="text-lg leading-snug sm:text-xl">
+                  <CardTitle className="text-base leading-snug sm:text-lg">
                     {post.title}
                   </CardTitle>
                 </CardHeader>
 
-                <CardContent className="mt-auto px-5 pb-5">
-                  <p className="text-muted-foreground text-sm leading-relaxed">
+                <CardContent className="mt-auto p-0">
+                  <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
                     {toExcerpt(post.content)}
                   </p>
                 </CardContent>
