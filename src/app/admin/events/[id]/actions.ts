@@ -3,16 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { Prisma } from "../../../../../generated/prisma";
 
+import {
+  type DuplicateEventResult,
+  type UpdateEventActionState,
+} from "~/app/admin/events/action-types";
 import { eventSchema } from "~/lib/validations/event.schema";
 import { requireAdmin } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
-
-export type UpdateEventActionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: Record<string, string[]>;
-  redirectTo?: string;
-};
 
 export async function updateEvent(
   id: string,
@@ -121,12 +118,6 @@ export async function updateEvent(
     redirectTo: `/admin/events/${id}/edit`,
   };
 }
-
-export type DuplicateEventResult = {
-  status: "success" | "error";
-  message: string;
-  redirectTo?: string;
-};
 
 export async function duplicateEvent(id: string): Promise<DuplicateEventResult> {
   await requireAdmin();

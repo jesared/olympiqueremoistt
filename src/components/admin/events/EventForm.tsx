@@ -5,8 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CalendarClock, Loader2, MapPin } from "lucide-react";
 
-import { createEvent, type CreateEventActionState } from "~/app/admin/events/actions";
-import { type DuplicateEventResult, type UpdateEventActionState } from "~/app/admin/events/[id]/actions";
+import {
+  type CreateEventActionState,
+  type DuplicateEventResult,
+  type UpdateEventActionState,
+} from "~/app/admin/events/action-types";
+import { createEvent } from "~/app/admin/events/actions";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {

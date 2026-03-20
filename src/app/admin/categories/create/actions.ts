@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { getString } from "~/lib/form";
+import { normalizeHexColor } from "~/lib/color";
 import { slugify } from "~/lib/slug";
 import { requireAdminOrModerator } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
@@ -13,6 +14,7 @@ export async function createCategory(data: FormData) {
 
   const name = getString(data, "name").trim();
   const rawSlug = getString(data, "slug").trim();
+  const color = normalizeHexColor(getString(data, "color"));
   const slug = slugify(rawSlug || name);
 
   if (!name || !slug) {
@@ -32,6 +34,7 @@ export async function createCategory(data: FormData) {
     data: {
       name,
       slug,
+      color,
     },
   });
 

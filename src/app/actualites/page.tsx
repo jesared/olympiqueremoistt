@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CategoryBadge } from "~/components/category-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { db as prisma } from "~/server/db";
@@ -44,6 +45,7 @@ export default async function ActualitesPage() {
       category: {
         select: {
           name: true,
+          color: true,
         },
       },
     },
@@ -110,9 +112,11 @@ export default async function ActualitesPage() {
                     {dateFormatter.format(featuredPost.createdAt)}
                   </p>
                   {featuredPost.category?.name ? (
-                    <p className="text-xs font-semibold tracking-wide text-white/90 uppercase">
-                      {featuredPost.category.name}
-                    </p>
+                    <CategoryBadge
+                      name={featuredPost.category.name}
+                      color={featuredPost.category.color}
+                      className="w-fit text-[11px] tracking-wide uppercase"
+                    />
                   ) : null}
                   <h2 className="text-2xl leading-tight font-semibold text-white sm:text-3xl">
                     {featuredPost.title}
@@ -177,9 +181,11 @@ export default async function ActualitesPage() {
                         {dateFormatter.format(post.createdAt)}
                       </p>
                       {post.category?.name ? (
-                        <p className="text-primary/90 text-xs font-semibold tracking-wide uppercase">
-                          {post.category.name}
-                        </p>
+                        <CategoryBadge
+                          name={post.category.name}
+                          color={post.category.color}
+                          className="w-fit text-[11px] tracking-wide uppercase"
+                        />
                       ) : null}
                       <CardTitle className="text-base leading-snug sm:text-lg">
                         {post.title}

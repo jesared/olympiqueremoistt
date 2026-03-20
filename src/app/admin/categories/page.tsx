@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { CategoryDeleteButton } from "~/app/admin/categories/CategoryDeleteButton";
+import { CategoryBadge } from "~/components/category-badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -20,6 +21,7 @@ export default async function AdminCategoriesPage() {
       id: true,
       name: true,
       slug: true,
+      color: true,
     },
   });
 
@@ -41,6 +43,7 @@ export default async function AdminCategoriesPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Nom</TableHead>
+                  <TableHead>Aperçu</TableHead>
                   <TableHead>Slug</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -49,6 +52,9 @@ export default async function AdminCategoriesPage() {
                 {categories.map((category) => (
                   <TableRow key={category.id}>
                     <TableCell className="font-medium">{category.name}</TableCell>
+                    <TableCell>
+                      <CategoryBadge name={category.name} color={category.color} />
+                    </TableCell>
                     <TableCell>{category.slug}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
