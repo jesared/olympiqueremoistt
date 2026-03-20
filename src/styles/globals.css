@@ -216,6 +216,11 @@
     margin: 0.25rem 0;
   }
 
+  .lexical a {
+    color: hsl(var(--primary));
+    text-decoration: underline;
+  }
+
   .content h1 {
     font-size: 2rem;
     font-weight: 700;
@@ -246,5 +251,10 @@
 
   .content p {
     margin: 0.5rem 0;
+  }
+
+  .content a {
+    color: hsl(var(--primary));
+    text-decoration: underline;
   }
 }
