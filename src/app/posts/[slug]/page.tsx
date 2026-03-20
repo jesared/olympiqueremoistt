@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { db as prisma } from "~/server/db";
@@ -64,14 +65,18 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
             {post.title}
           </h1>
 
-          <div className="bg-muted border-border/70 relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-xl border shadow-sm transition-all duration-300">
+          <div className="bg-muted border-border/70 relative mt-4 h-[260px] w-full overflow-hidden rounded-xl border shadow-sm transition-all duration-300 sm:h-[320px] lg:h-[420px]">
             {post.imageUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={post.imageUrl}
-                alt={post.title}
-                className="h-full w-full object-cover"
-              />
+              <>
+                <Image
+                  src={post.imageUrl}
+                  alt={post.title}
+                  fill
+                  sizes="(min-width: 1024px) 896px, (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2rem)"
+                  className="object-cover"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+              </>
             ) : (
               <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
                 Aucune image pour cet article
