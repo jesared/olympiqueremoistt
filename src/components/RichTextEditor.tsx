@@ -9,7 +9,15 @@ import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
-import { $getRoot, $getSelection, $isRangeSelection, FORMAT_TEXT_COMMAND } from "lexical";
+import {
+  $createParagraphNode,
+  $getRoot,
+  $getSelection,
+  $isRangeSelection,
+  COMMAND_PRIORITY_LOW,
+  FORMAT_TEXT_COMMAND,
+  KEY_ENTER_COMMAND,
+} from "lexical";
 import { HeadingNode, $createHeadingNode } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
 import {
@@ -41,8 +49,20 @@ function LexicalToolbar() {
     });
   };
 
+  const setParagraph = () => {
+    editor.update(() => {
+      const selection = $getSelection();
+      if (!$isRangeSelection(selection)) return;
+      $setBlocksType(selection, () => $createParagraphNode());
+    });
+  };
+
   return (
     <div className="border-input bg-muted/50 flex flex-wrap gap-2 rounded-t-md border p-2">
+      <Button type="button" size="sm" variant="outline" onClick={setParagraph}>
+        Paragraphe
+      </Button>
+
       <Button
         type="button"
         size="sm"
@@ -92,7 +112,9 @@ function LexicalToolbar() {
         size="sm"
         variant="outline"
         className="gap-1"
-        onClick={() => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)}
+        onClick={() =>
+          editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)
+        }
       >
         <List className="h-4 w-4" aria-hidden="true" />
         Liste
@@ -127,6 +149,40 @@ function LexicalHtmlSyncPlugin({
       root.selectEnd();
     });
   }, [editor, html, placeholderText]);
+
+  return null;
+}
+
+function EnterKeyFixPlugin() {
+  const [editor] = useLexicalComposerContext();
+
+  useEffect(() => {
+    return editor.registerCommand(
+      KEY_ENTER_COMMAND,
+      (event: KeyboardEvent | null) => {
+        let handled = false;
+
+        editor.update(() => {
+          const selection = $getSelection();
+          if (!$isRangeSelection(selection)) return;
+
+          const anchorNode = selection.anchor.getNode();
+          const topLevel = anchorNode.getTopLevelElementOrThrow();
+
+          if (topLevel.getType() !== "heading") return;
+
+          event?.preventDefault();
+          const paragraph = $createParagraphNode();
+          topLevel.insertAfter(paragraph);
+          paragraph.select();
+          handled = true;
+        });
+
+        return handled;
+      },
+      COMMAND_PRIORITY_LOW,
+    );
+  }, [editor]);
 
   return null;
 }
@@ -181,6 +237,7 @@ export default function RichTextEditor({
           />
           <HistoryPlugin />
           <ListPlugin />
+          <EnterKeyFixPlugin />
           <OnChangePlugin
             onChange={(editorState, editor) => {
               editorState.read(() => {
@@ -199,7 +256,10 @@ export default function RichTextEditor({
               });
             }}
           />
-          <LexicalHtmlSyncPlugin html={value} placeholderText={placeholderText} />
+          <LexicalHtmlSyncPlugin
+            html={value}
+            placeholderText={placeholderText}
+          />
         </div>
       </div>
     </LexicalComposer>
