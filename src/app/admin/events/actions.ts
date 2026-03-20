@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Prisma } from "../../../../generated/prisma";
 
 import { eventSchema } from "~/lib/validations/event.schema";
 import { requireAdmin } from "~/server/auth/auth-helpers";
@@ -54,18 +55,47 @@ export async function createEvent(
     };
   }
 
-  await prisma.event.create({
-    data: {
-      title: parsed.data.title,
-      slug: parsed.data.slug,
-      description: parsed.data.description,
-      location: parsed.data.location,
-      startDate: parsed.data.startDate,
-      endDate: parsed.data.endDate ?? null,
-      categoryId: parsed.data.categoryId ?? null,
-      published: shouldPublish,
-    },
-  });
+  if (parsed.data.categoryId) {
+    const existingCategory = await prisma.category.findUnique({
+      where: { id: parsed.data.categoryId },
+      select: { id: true },
+    });
+
+    if (!existingCategory) {
+      return {
+        status: "error",
+        message: "La catégorie sélectionnée est introuvable.",
+        errors: { categoryId: ["La catégorie sélectionnée est introuvable."] },
+      };
+    }
+  }
+
+  try {
+    await prisma.event.create({
+      data: {
+        title: parsed.data.title,
+        slug: parsed.data.slug,
+        description: parsed.data.description,
+        location: parsed.data.location,
+        startDate: parsed.data.startDate,
+        endDate: parsed.data.endDate ?? null,
+        categoryId: parsed.data.categoryId ?? null,
+        published: shouldPublish,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return {
+        status: "error",
+        message: "Impossible d'enregistrer l'événement. Vérifiez les données envoyées.",
+      };
+    }
+
+    return {
+      status: "error",
+      message: "Une erreur inattendue est survenue lors de la création.",
+    };
+  }
 
   revalidatePath("/events");
   revalidatePath("/admin/events");
