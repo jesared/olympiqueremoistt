@@ -179,7 +179,14 @@ exports.Prisma.PostScalarFieldEnum = {
   published: 'published',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  authorId: 'authorId'
+  authorId: 'authorId',
+  categoryId: 'categoryId'
+};
+
+exports.Prisma.CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug'
 };
 
 exports.Prisma.EventScalarFieldEnum = {
@@ -245,6 +252,7 @@ exports.Prisma.NullsOrder = {
 };
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
+  MODERATOR: 'MODERATOR',
   ORGANIZER: 'ORGANIZER',
   ADMIN: 'ADMIN'
 };
@@ -262,6 +270,7 @@ exports.Prisma.ModelName = {
   VerificationToken: 'VerificationToken',
   Page: 'Page',
   Post: 'Post',
+  Category: 'Category',
   Event: 'Event',
   Tournament: 'Tournament',
   TournamentEvent: 'TournamentEvent',
