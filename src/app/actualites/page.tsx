@@ -81,14 +81,15 @@ export default async function ActualitesPage() {
 
               <Link href={`/actualites/${post.slug}`} className="block h-full">
                 {post.imageUrl ? (
-                  <div className="bg-muted relative mx-4 mt-4 aspect-video overflow-hidden rounded-xl">
+                  <div className="bg-muted relative mx-4 mt-4 h-[260px] overflow-hidden rounded-xl sm:h-[320px] lg:h-[420px]">
                     <Image
                       src={post.imageUrl}
                       alt={post.title}
                       fill
                       sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="rounded-xl object-cover"
+                      className="object-cover"
                     />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
                   </div>
                 ) : null}
 

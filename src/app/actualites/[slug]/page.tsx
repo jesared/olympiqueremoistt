@@ -95,15 +95,18 @@ export default async function ActualiteDetailPage({
           </h1>
         </header>
 
-        <div className="bg-muted border-border/70 relative aspect-video w-full overflow-hidden rounded-lg border">
+        <div className="bg-muted border-border/70 relative h-[260px] w-full overflow-hidden rounded-xl border sm:h-[320px] lg:h-[420px]">
           {post.imageUrl ? (
-            <Image
-              src={post.imageUrl}
-              alt={post.title}
-              width={1200}
-              height={600}
-              className="rounded-xl object-cover"
-            />
+            <>
+              <Image
+                src={post.imageUrl}
+                alt={post.title}
+                fill
+                sizes="(min-width: 1024px) 896px, (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2rem)"
+                className="object-cover"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+            </>
           ) : (
             <div className="text-muted-foreground/90 flex h-full items-center justify-center text-sm">
               Image indisponible
