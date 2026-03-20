@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 
-import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import { db as prisma } from "~/server/db";
 
 import { PostEditForm } from "./PostEditForm";
@@ -21,6 +20,13 @@ export default async function AdminPostEditPage({
       content: true,
       imageUrl: true,
       published: true,
+      createdAt: true,
+      updatedAt: true,
+      author: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 
@@ -28,15 +34,5 @@ export default async function AdminPostEditPage({
     notFound();
   }
 
-  return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Modifier une actualité</CardTitle>
-        </CardHeader>
-
-        <PostEditForm post={post} />
-      </Card>
-    </div>
-  );
+  return <PostEditForm post={post} />;
 }
