@@ -49,58 +49,49 @@ const schedule = [
 export default function TournoisPage() {
   return (
     <main className="bg-slate-50 pb-12">
-      <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-white via-sky-50 to-emerald-50 px-4 py-8">
-        <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
-          <Badge
-            className="mb-6 border-sky-200 bg-sky-100 text-sky-800 hover:bg-sky-200"
-            variant="outline"
-          >
-            Tournoi annuel du club
-          </Badge>
+      <section className="bg-gradient-to-br from-white via-sky-50 to-slate-100 px-4 py-12 sm:py-16">
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2 lg:gap-12">
+          <div>
+            <Badge
+              className="mb-4 border-sky-200 bg-sky-100 text-sky-800 hover:bg-sky-200"
+              variant="outline"
+            >
+              Tournoi annuel du club
+            </Badge>
 
-          <h1 className="text-4xl font-black tracking-[0.08em] uppercase text-slate-900 sm:text-6xl lg:text-7xl">
-            Grand Prix de la Ville de Reims
-          </h1>
+            <p className="text-sm font-semibold tracking-wide text-slate-600 uppercase">
+              Grand Prix de la Ville de Reims
+            </p>
+            <h1 className="mt-2 text-4xl font-bold text-slate-900 sm:text-5xl">
+              Tournoi National de Pâques
+            </h1>
 
-          <p className="mt-4 text-xl font-semibold tracking-[0.22em] uppercase text-slate-700 sm:text-2xl">
-            34e Tournoi National
-          </p>
+            <div className="mt-6 space-y-3 text-slate-700">
+              <p className="text-base font-medium">📅 14 mai 2026</p>
+              <p className="text-base font-medium">📍 Complexe René Tys</p>
+              <p className="text-base font-medium">🏓 60 tables</p>
+            </div>
 
-          <div className="mt-8 grid w-full max-w-3xl gap-3 text-left sm:grid-cols-3">
-            <p className="rounded-lg border border-sky-100 bg-white px-4 py-3 text-sm font-medium text-slate-800 shadow-sm sm:text-base">
-              📅 Jeudi 14 mai 2026
-            </p>
-            <p className="rounded-lg border border-sky-100 bg-white px-4 py-3 text-sm font-medium text-slate-800 shadow-sm sm:text-base">
-              📍 Complexe sportif René Tys, Reims
-            </p>
-            <p className="rounded-lg border border-sky-100 bg-white px-4 py-3 text-sm font-medium text-slate-800 shadow-sm sm:text-base">
-              🏓 60 tables
-            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button asChild className="bg-emerald-600 text-white hover:bg-emerald-500">
+                <a href="#inscriptions">S&apos;inscrire</a>
+              </Button>
+              <Button asChild className="bg-blue-600 text-white hover:bg-blue-500">
+                <a href="#inscrits">Voir les inscrits</a>
+              </Button>
+            </div>
           </div>
 
-          <p className="mt-4 text-sm text-slate-600 sm:text-base">
-            (près du parc Léo Lagrange)
-          </p>
-
-          <div className="mt-8 flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center">
-            <Button asChild className="w-full bg-blue-600 text-white hover:bg-blue-500 sm:w-auto">
-              <a href="#inscrits">Voir les inscrits</a>
-            </Button>
-            <Button asChild className="w-full bg-emerald-600 text-white hover:bg-emerald-500 sm:w-auto">
-              <a href="#inscriptions">S&apos;inscrire au tournoi</a>
-            </Button>
-          </div>
-
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-            <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold tracking-wide uppercase text-slate-700 shadow-sm sm:text-sm">
-              Ville de Reims
-            </span>
-            <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold tracking-wide uppercase text-slate-700 shadow-sm sm:text-sm">
-              Grand Est
-            </span>
-            <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold tracking-wide uppercase text-slate-700 shadow-sm sm:text-sm">
-              Département Marne
-            </span>
+          <div className="relative h-64 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:h-80">
+            <div
+              className="h-full w-full bg-cover bg-center"
+              style={{
+                backgroundImage:
+                  "url('https://images.unsplash.com/photo-1534158914592-062992fbe900?auto=format&fit=crop&w=1200&q=80')",
+              }}
+              role="img"
+              aria-label="Photo ambiance tournoi de tennis de table"
+            />
           </div>
         </div>
       </section>
