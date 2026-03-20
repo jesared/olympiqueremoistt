@@ -1,55 +1,85 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
-import { getString } from "~/lib/form";
+import { createEventSchema } from "./event.schema";
+
 import { requireAdmin } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
 
-export async function createEvent(data: FormData) {
+type CreateEventActionState = {
+  status: "idle" | "success" | "error";
+  message?: string;
+  errors?: Record<string, string[]>;
+  redirectTo?: string;
+};
+
+export const initialCreateEventState: CreateEventActionState = {
+  status: "idle",
+};
+
+export async function createEventAction(
+  _prevState: CreateEventActionState,
+  data: FormData,
+): Promise<CreateEventActionState> {
   await requireAdmin();
 
-  const title = getString(data, "title").trim();
-  const slug = getString(data, "slug").trim();
-  const description = getString(data, "description").trim();
-  const location = getString(data, "location").trim();
-  const startDateValue = getString(data, "startDate");
-  const endDateValue = getString(data, "endDate");
-  const published = getString(data, "published") === "on";
+  const parsed = createEventSchema.safeParse({
+    title: data.get("title"),
+    slug: data.get("slug"),
+    description: data.get("description"),
+    location: data.get("location"),
+    startDate: data.get("startDate"),
+    endDate: data.get("endDate"),
+    published: data.get("published") === "true",
+  });
 
-  if (!title || !slug || !description || !location || !startDateValue) {
-    redirect("/admin/events/create?error=missing-fields");
+  if (!parsed.success) {
+    return {
+      status: "error",
+      message: "Le formulaire contient des erreurs.",
+      errors: parsed.error.flatten().fieldErrors,
+    };
   }
 
-  const startDate = new Date(startDateValue);
+  const intent = data.get("intent");
+  const shouldPublish = intent === "publish" ? true : parsed.data.published;
 
-  if (Number.isNaN(startDate.getTime())) {
-    redirect("/admin/events/create?error=invalid-start-date");
-  }
+  const existingEvent = await prisma.event.findUnique({
+    where: { slug: parsed.data.slug },
+    select: { id: true },
+  });
 
-  const endDate = endDateValue ? new Date(endDateValue) : null;
-
-  if (endDate && Number.isNaN(endDate.getTime())) {
-    redirect("/admin/events/create?error=invalid-end-date");
-  }
-
-  if (endDate && endDate < startDate) {
-    redirect("/admin/events/create?error=end-before-start");
+  if (existingEvent) {
+    return {
+      status: "error",
+      message: "Ce slug est déjà utilisé.",
+      errors: { slug: ["Ce slug est déjà utilisé."] },
+    };
   }
 
   await prisma.event.create({
     data: {
-      title,
-      slug,
-      description,
-      location,
-      startDate,
-      endDate,
-      published,
+      title: parsed.data.title,
+      slug: parsed.data.slug,
+      description: parsed.data.description,
+      location: parsed.data.location,
+      startDate: parsed.data.startDate,
+      endDate: parsed.data.endDate ?? null,
+      published: shouldPublish,
     },
   });
 
   revalidatePath("/events");
-  redirect("/admin/events");
+  revalidatePath("/admin/events");
+
+  return {
+    status: "success",
+    message: shouldPublish
+      ? "Événement créé et publié avec succès."
+      : "Événement créé en brouillon.",
+    redirectTo: "/admin/events",
+  };
 }
+
+export type { CreateEventActionState };
