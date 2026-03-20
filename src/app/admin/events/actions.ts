@@ -3,16 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { Prisma } from "../../../../generated/prisma";
 
+import { type CreateEventActionState } from "~/app/admin/events/action-types";
 import { eventSchema } from "~/lib/validations/event.schema";
 import { requireAdmin } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
-
-type CreateEventActionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: Record<string, string[]>;
-  redirectTo?: string;
-};
 
 export async function createEvent(
   _prevState: CreateEventActionState,
@@ -126,5 +120,3 @@ export async function deleteEvent(id: string) {
 
   return { ok: true };
 }
-
-export type { CreateEventActionState };
