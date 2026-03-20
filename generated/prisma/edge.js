@@ -264,7 +264,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/workspace/olympiqueremoistt/generated/prisma",
+      "value": "C:\\Users\\User\\Documents\\Web\\olympiqueremoistt\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -273,16 +273,17 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "debian-openssl-3.0.x",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/workspace/olympiqueremoistt/prisma/schema.prisma",
+    "sourceFilePath": "C:\\Users\\User\\Documents\\Web\\olympiqueremoistt\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.19.2",
@@ -291,7 +292,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

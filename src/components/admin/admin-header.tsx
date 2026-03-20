@@ -42,7 +42,6 @@ const headerConfigByPath: Record<string, HeaderConfig> = {
   "/admin/categories": {
     title: "Catégories",
     description: "Classez vos contenus et suivez leur utilisation.",
-    primaryAction: "Ajouter catégorie",
   },
 };
 
