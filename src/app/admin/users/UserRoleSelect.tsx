@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
-import { type ChangeEvent, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 
 import { updateUserRole } from "~/app/admin/users/actions";
 import { APP_ROLES, type AppRole } from "~/app/admin/users/roles";
@@ -41,26 +41,6 @@ export function UserRoleSelect({ userId, role }: UserRoleSelectProps) {
   const showToast = (nextToast: ToastState) => {
     setToast(nextToast);
     window.setTimeout(() => setToast(null), 2500);
-  };
-
-  const onRoleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const previousRole = selectedRole;
-    const safeRole = event.target.value as AppRole;
-
-    setSelectedRole(safeRole);
-
-    startTransition(async () => {
-      try {
-        await updateUserRole(userId, safeRole);
-        showToast({ message: "Rôle mis à jour.", kind: "success" });
-      } catch {
-        setSelectedRole(previousRole);
-        showToast({
-          message: "Impossible de mettre à jour le rôle.",
-          kind: "error",
-        });
-      }
-    });
   };
 
   return (

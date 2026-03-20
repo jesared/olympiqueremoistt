@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
+import { getString } from "~/lib/form";
 import { slugify } from "~/lib/slug";
 import { requireAdminOrModerator } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
@@ -11,16 +12,6 @@ export type SavePostResult = {
   error?: "missing-fields" | "invalid-image" | "slug-already-used" | "unknown";
   id?: string;
 };
-
-function getStringValue(data: FormData, key: string) {
-  const value = data.get(key);
-
-  if (typeof value !== "string") {
-    return "";
-  }
-
-  return value.trim();
-}
 
 async function generateUniqueSlug(title: string) {
   const baseSlug = slugify(title) || "actualite";
@@ -55,13 +46,13 @@ export async function createPostAction(
 ): Promise<SavePostResult> {
   const session = await requireAdminOrModerator();
 
-  const title = getStringValue(data, "title");
-  const content = getStringValue(data, "content");
-  const providedSlug = getStringValue(data, "slug");
+  const title = getString(data, "title").trim();
+  const content = getString(data, "content").trim();
+  const providedSlug = getString(data, "slug").trim();
   const imageUrl =
-    getStringValue(data, "imageUrl") || getStringValue(data, "image");
-  const categoryId = getStringValue(data, "categoryId");
-  const published = data.get("published") === "on";
+    getString(data, "imageUrl").trim() || getString(data, "image").trim();
+  const categoryId = getString(data, "categoryId").trim();
+  const published = getString(data, "published") === "on";
 
   if (!title || !content) {
     return { success: false, error: "missing-fields" };
@@ -128,13 +119,13 @@ export async function updatePostAction(
 ): Promise<SavePostResult> {
   await requireAdminOrModerator();
 
-  const title = getStringValue(data, "title");
-  const slug = getStringValue(data, "slug");
-  const content = getStringValue(data, "content");
+  const title = getString(data, "title").trim();
+  const slug = getString(data, "slug").trim();
+  const content = getString(data, "content").trim();
   const imageUrl =
-    getStringValue(data, "imageUrl") || getStringValue(data, "image");
-  const categoryId = getStringValue(data, "categoryId");
-  const published = data.get("published") === "on";
+    getString(data, "imageUrl").trim() || getString(data, "image").trim();
+  const categoryId = getString(data, "categoryId").trim();
+  const published = getString(data, "published") === "on";
 
   if (!title || !slug || !content) {
     return { success: false, error: "missing-fields" };

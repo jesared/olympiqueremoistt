@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
+import { getString } from "~/lib/form";
 import { requireAdmin } from "~/server/auth/auth-helpers";
 import { db as prisma } from "~/server/db";
 
@@ -22,13 +23,13 @@ export async function updateEvent(
 ): Promise<UpdateEventResult> {
   await requireAdmin();
 
-  const title = data.get("title")?.toString().trim() ?? "";
-  const slug = data.get("slug")?.toString().trim() ?? "";
-  const description = data.get("description")?.toString().trim() ?? "";
-  const location = data.get("location")?.toString().trim() ?? "";
-  const startDateValue = data.get("startDate")?.toString() ?? "";
-  const endDateValue = data.get("endDate")?.toString() ?? "";
-  const published = data.get("published") === "on";
+  const title = getString(data, "title").trim();
+  const slug = getString(data, "slug").trim();
+  const description = getString(data, "description").trim();
+  const location = getString(data, "location").trim();
+  const startDateValue = getString(data, "startDate");
+  const endDateValue = getString(data, "endDate");
+  const published = getString(data, "published") === "on";
 
   if (!title || !slug || !description || !location || !startDateValue) {
     return { success: false, error: "missing-fields" };

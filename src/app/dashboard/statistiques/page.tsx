@@ -36,11 +36,11 @@ export default function DashboardStatsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Évolutions suggérées</CardTitle>
-          <CardDescription>Préparer l'ouverture vers un dashboard admin et FFTT.</CardDescription>
+          <CardDescription>Préparer l&apos;ouverture vers un dashboard admin et FFTT.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           <p className="bg-muted/40 rounded-lg p-3">Connexion FFTT API pour importer classement officiel.</p>
-          <p className="bg-muted/40 rounded-lg p-3">Module admin pour gérer les convocations d'équipe.</p>
+          <p className="bg-muted/40 rounded-lg p-3">Module admin pour gérer les convocations d&apos;équipe.</p>
           <p className="bg-muted/40 rounded-lg p-3">Comparateur saison N / N-1 (points, victoires, assiduité).</p>
           <p className="bg-muted/40 rounded-lg p-3">Alertes automatiques de changement de planning.</p>
         </CardContent>
