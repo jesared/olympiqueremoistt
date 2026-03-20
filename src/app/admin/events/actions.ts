@@ -26,6 +26,7 @@ export async function createEvent(
     location: data.get("location"),
     startDate: data.get("startDate"),
     endDate: data.get("endDate"),
+    categoryId: data.get("categoryId"),
     published: data.get("published") === "true",
   });
 
@@ -61,6 +62,7 @@ export async function createEvent(
       location: parsed.data.location,
       startDate: parsed.data.startDate,
       endDate: parsed.data.endDate ?? null,
+      categoryId: parsed.data.categoryId ?? null,
       published: shouldPublish,
     },
   });

@@ -15,6 +15,12 @@ const toDate = (value: unknown) => {
   return parsed;
 };
 
+const toOptionalString = (value: unknown) => {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  return trimmed === "" ? undefined : trimmed;
+};
+
 export const eventSchema = z
   .object({
     title: z.string().trim().min(1, "Le titre est requis."),
@@ -34,6 +40,7 @@ export const eventSchema = z
       z.date({ required_error: "La date de début est requise." }),
     ),
     endDate: z.preprocess(toDate, z.date().optional()),
+    categoryId: z.preprocess(toOptionalString, z.string().optional()),
     published: z.boolean().default(false),
   })
   .refine((values) => !values.endDate || values.endDate >= values.startDate, {

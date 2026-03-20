@@ -17,6 +17,13 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import { slugify } from "~/lib/slug";
@@ -32,11 +39,18 @@ type EventFormData = {
   startDate: Date;
   endDate: Date | null;
   published: boolean;
+  categoryId?: string | null;
+};
+
+type CategoryOption = {
+  id: string;
+  name: string;
 };
 
 type EventFormProps = {
   mode?: "create" | "edit";
   initialData?: EventFormData;
+  categories?: CategoryOption[];
   submitAction?: (state: EventFormState, formData: FormData) => Promise<EventFormState>;
   duplicateAction?: () => Promise<DuplicateEventResult>;
 };
@@ -75,6 +89,7 @@ function formatPreviewDate(startDate: string, endDate: string) {
 export function EventForm({
   mode = "create",
   initialData,
+  categories = [],
   submitAction,
   duplicateAction,
 }: EventFormProps) {
@@ -92,6 +107,7 @@ export function EventForm({
   const [endDate, setEndDate] = useState(toDatetimeLocalValue(initialData?.endDate ?? null));
   const [hasEndDate, setHasEndDate] = useState(Boolean(initialData?.endDate));
   const [published, setPublished] = useState(initialData?.published ?? false);
+  const [categoryId, setCategoryId] = useState(initialData?.categoryId ?? "");
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(mode === "edit");
   const [toast, setToast] = useState<{
     kind: "success" | "error";
@@ -252,6 +268,29 @@ export function EventForm({
                 <CardDescription>Date, lieu et durée.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">Catégorie</label>
+                  <Select
+                    value={categoryId || "none"}
+                    onValueChange={(value) =>
+                      setCategoryId(value === "none" ? "" : value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choisir une catégorie" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Aucune catégorie</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <input type="hidden" name="categoryId" value={categoryId} />
+                </div>
+
                 <div className="grid gap-2">
                   <label className="text-sm font-medium" htmlFor="location">
                     Lieu
