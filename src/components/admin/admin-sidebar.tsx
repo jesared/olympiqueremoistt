@@ -9,6 +9,7 @@ import {
   Menu,
   Newspaper,
   Settings,
+  Tags,
   Trophy,
   UserCog,
   Users,
@@ -54,6 +55,7 @@ const adminNavSections: AdminNavSection[] = [
       { href: "/admin/pages", label: "Pages", icon: FileText },
 
       { href: "/admin/posts", label: "Posts", icon: Newspaper },
+      { href: "/admin/categories", label: "Catégories", icon: Tags },
       { href: "/admin/events", label: "Événements", icon: CalendarDays },
       { href: "/admin/users", label: "Users", icon: UserCog },
     ],
