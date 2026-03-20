@@ -19,7 +19,7 @@ type PostCreateFormProps = {
 export function PostCreateForm({ action }: PostCreateFormProps) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [image, setImage] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [published, setPublished] = useState(false);
 
   useEffect(() => {
@@ -33,13 +33,13 @@ export function PostCreateForm({ action }: PostCreateFormProps) {
       const parsedDraft = JSON.parse(rawDraft) as {
         title?: string;
         content?: string;
-        image?: string;
+        imageUrl?: string;
         published?: boolean;
       };
 
       setTitle(parsedDraft.title ?? "");
       setContent(parsedDraft.content ?? "");
-      setImage(parsedDraft.image ?? "");
+      setImageUrl(parsedDraft.imageUrl ?? "");
       setPublished(parsedDraft.published ?? false);
     } catch {
       localStorage.removeItem(DRAFT_KEY);
@@ -53,14 +53,14 @@ export function PostCreateForm({ action }: PostCreateFormProps) {
         JSON.stringify({
           title,
           content,
-          image,
+          imageUrl,
           published,
         }),
       );
     }, 250);
 
     return () => window.clearTimeout(timeout);
-  }, [title, content, image, published]);
+  }, [title, content, imageUrl, published]);
 
   const onPublishedChange = (checked: boolean | "indeterminate") => {
     setPublished(checked === true);
@@ -88,11 +88,11 @@ export function PostCreateForm({ action }: PostCreateFormProps) {
       <div className="grid gap-2">
         <label className="text-sm font-medium">Image</label>
         <ImageUpload
-          value={image}
+          value={imageUrl}
           uploadImage={uploadImage}
-          onUploaded={setImage}
+          onUploaded={setImageUrl}
         />
-        <input type="hidden" name="image" value={image} />
+        <input type="hidden" name="imageUrl" value={imageUrl} />
       </div>
 
       <div className="grid gap-2">
@@ -102,7 +102,7 @@ export function PostCreateForm({ action }: PostCreateFormProps) {
         <input type="hidden" name="content" value={content} required />
         <PostEditorPanel
           title={title}
-          image={image}
+          image={imageUrl}
           content={content}
           onContentChange={setContent}
         />

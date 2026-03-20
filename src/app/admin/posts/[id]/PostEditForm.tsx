@@ -4,10 +4,12 @@ import Link from "next/link";
 import { type FormEvent, useState, useTransition } from "react";
 
 import { PostEditorPanel } from "~/components/admin/post-editor-panel";
+import { ImageUpload } from "~/components/ImageUpload";
 import { Button } from "~/components/ui/button";
 import { CardContent } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
+import { uploadImage } from "~/lib/supabase";
 
 import { updatePost } from "./actions";
 
@@ -17,7 +19,7 @@ type PostEditFormProps = {
     title: string;
     slug: string;
     content: string;
-    image: string | null;
+    imageUrl: string | null;
     published: boolean;
   };
 };
@@ -39,7 +41,7 @@ export function PostEditForm({ post }: PostEditFormProps) {
   const [isPending, startTransition] = useTransition();
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
-  const [image, setImage] = useState(post.image ?? "");
+  const [imageUrl, setImageUrl] = useState(post.imageUrl ?? "");
   const [published, setPublished] = useState(post.published);
 
   const showToast = (nextToast: ToastState) => {
@@ -95,28 +97,25 @@ export function PostEditForm({ post }: PostEditFormProps) {
         </div>
 
         <div className="grid gap-2">
+          <label className="text-sm font-medium">Image</label>
+          <ImageUpload
+            value={imageUrl}
+            uploadImage={uploadImage}
+            onUploaded={(url) => setImageUrl(url)}
+          />
+          <input type="hidden" name="imageUrl" value={imageUrl} />
+        </div>
+
+        <div className="grid gap-2">
           <label htmlFor="content-editor" className="text-sm font-medium">
             Contenu
           </label>
           <input type="hidden" name="content" value={content} required />
           <PostEditorPanel
             title={title}
-            image={image}
+            image={imageUrl}
             content={content}
             onContentChange={setContent}
-          />
-        </div>
-
-        <div className="grid gap-2">
-          <label htmlFor="image" className="text-sm font-medium">
-            Image (URL)
-          </label>
-          <Input
-            id="image"
-            name="image"
-            type="url"
-            value={image}
-            onChange={(event) => setImage(event.target.value)}
           />
         </div>
 

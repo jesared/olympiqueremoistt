@@ -22,6 +22,7 @@ async function getPostBySlug(slug: string) {
     select: {
       title: true,
       content: true,
+      imageUrl: true,
       createdAt: true,
     },
   });
@@ -62,6 +63,21 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
             {post.title}
           </h1>
+
+          <div className="bg-muted border-border/70 relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-xl border shadow-sm transition-all duration-300">
+            {post.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={post.imageUrl}
+                alt={post.title}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
+                Aucune image pour cet article
+              </div>
+            )}
+          </div>
         </header>
 
         <section

@@ -19,7 +19,7 @@ export default async function AdminPostEditPage({
       title: true,
       slug: true,
       content: true,
-      image: true,
+      imageUrl: true,
       published: true,
     },
   });

@@ -23,7 +23,7 @@ async function getPostBySlug(slug: string) {
     },
     select: {
       title: true,
-      image: true,
+      imageUrl: true,
       content: true,
       createdAt: true,
       slug: true,
@@ -94,9 +94,9 @@ export default async function ActualiteDetailPage({
         </header>
 
         <div className="bg-muted border-border/70 relative aspect-[16/9] w-full overflow-hidden rounded-lg border">
-          {post.image ? (
+          {post.imageUrl ? (
             <Image
-              src={post.image}
+              src={post.imageUrl}
               alt={post.title}
               width={1200}
               height={600}
