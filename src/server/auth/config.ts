@@ -4,7 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { db } from "~/server/db";
 
-type SessionUserRole = "USER" | "ORGANIZER" | "ADMIN" | null;
+type SessionUserRole = "USER" | "MODERATOR" | "ORGANIZER" | "ADMIN" | null;
 
 type TokenWithRole = {
   role?: SessionUserRole;
