@@ -13,11 +13,9 @@ import { $getRoot, $getSelection, $isRangeSelection, FORMAT_TEXT_COMMAND } from 
 import { HeadingNode, $createHeadingNode } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
 import {
-  $isListNode,
   ListItemNode,
   ListNode,
   INSERT_UNORDERED_LIST_COMMAND,
-  REMOVE_LIST_COMMAND,
 } from "@lexical/list";
 import { Bold, Heading1, Heading2, Italic, List } from "lucide-react";
 
@@ -40,22 +38,6 @@ function LexicalToolbar() {
       const selection = $getSelection();
       if (!$isRangeSelection(selection)) return;
       $setBlocksType(selection, () => $createHeadingNode(`h${level}`));
-    });
-  };
-
-  const toggleBulletList = () => {
-    editor.update(() => {
-      const selection = $getSelection();
-      if (!$isRangeSelection(selection)) return;
-
-      const anchorNode = selection.anchor.getNode();
-      const top = anchorNode.getTopLevelElementOrThrow();
-
-      if ($isListNode(top)) {
-        editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
-      } else {
-        editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
-      }
     });
   };
 
@@ -110,7 +92,7 @@ function LexicalToolbar() {
         size="sm"
         variant="outline"
         className="gap-1"
-        onClick={toggleBulletList}
+        onClick={() => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)}
       >
         <List className="h-4 w-4" aria-hidden="true" />
         Liste
@@ -186,9 +168,7 @@ export default function RichTextEditor({
             contentEditable={
               <ContentEditable
                 id="content-editor"
-                className={cn(
-                  "lexical prose prose-zinc dark:prose-invert min-h-48 max-w-none px-3 py-2 text-sm focus-visible:outline-none",
-                )}
+                className="lexical min-h-48 px-3 py-2 text-sm focus-visible:outline-none"
                 aria-label={placeholderText}
               />
             }
