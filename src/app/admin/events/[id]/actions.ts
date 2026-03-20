@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Prisma } from "../../../../../generated/prisma";
 
 import { eventSchema } from "~/lib/validations/event.schema";
 import { requireAdmin } from "~/server/auth/auth-helpers";
@@ -67,19 +68,48 @@ export async function updateEvent(
     };
   }
 
-  await prisma.event.update({
-    where: { id },
-    data: {
-      title: parsed.data.title,
-      slug: parsed.data.slug,
-      description: parsed.data.description,
-      location: parsed.data.location,
-      startDate: parsed.data.startDate,
-      endDate: parsed.data.endDate ?? null,
-      categoryId: parsed.data.categoryId ?? null,
-      published: parsed.data.published,
-    },
-  });
+  if (parsed.data.categoryId) {
+    const existingCategory = await prisma.category.findUnique({
+      where: { id: parsed.data.categoryId },
+      select: { id: true },
+    });
+
+    if (!existingCategory) {
+      return {
+        status: "error",
+        message: "La catégorie sélectionnée est introuvable.",
+        errors: { categoryId: ["La catégorie sélectionnée est introuvable."] },
+      };
+    }
+  }
+
+  try {
+    await prisma.event.update({
+      where: { id },
+      data: {
+        title: parsed.data.title,
+        slug: parsed.data.slug,
+        description: parsed.data.description,
+        location: parsed.data.location,
+        startDate: parsed.data.startDate,
+        endDate: parsed.data.endDate ?? null,
+        categoryId: parsed.data.categoryId ?? null,
+        published: parsed.data.published,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return {
+        status: "error",
+        message: "Impossible d'enregistrer l'événement. Vérifiez les données envoyées.",
+      };
+    }
+
+    return {
+      status: "error",
+      message: "Une erreur inattendue est survenue lors de la mise à jour.",
+    };
+  }
 
   revalidatePath("/admin/events");
   revalidatePath(`/events/${existingEvent.slug}`);
