@@ -27,9 +27,6 @@ const navItems: MobileNavItem[] = [
     href: "/club",
     icon: Users,
     children: [
-      { label: "Bénévolat", href: "/club/benevolat", icon: Handshake },
-      { label: "Sponsoring", href: "/club/sponsoring", icon: Handshake },
-      { label: "Joueur", href: "/club/joueur", icon: User },
       {
         label: "L'équipe dirigeante",
         href: "/club/lequipe-dirigeante",
@@ -139,7 +136,9 @@ export default function Header({ user }: HeaderProps) {
                         : "text-muted-foreground hover:bg-muted hover:text-foreground",
                     )}
                   >
-                    {item.icon && <item.icon className="size-4" aria-hidden="true" />}
+                    {item.icon && (
+                      <item.icon className="size-4" aria-hidden="true" />
+                    )}
                     <span>{item.label}</span>
                     {item.children && (
                       <ChevronDown
