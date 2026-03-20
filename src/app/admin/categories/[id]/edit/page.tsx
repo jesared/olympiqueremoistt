@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
+import { CategoryFormFields } from "~/app/admin/categories/CategoryFormFields";
 import { db as prisma } from "~/server/db";
 
 import { updateCategory } from "../actions";
@@ -57,19 +57,11 @@ export default async function AdminEditCategoryPage({
               </p>
             ) : null}
 
-            <div className="grid gap-2">
-              <label htmlFor="name" className="text-sm font-medium">
-                Nom
-              </label>
-              <Input id="name" name="name" defaultValue={category.name} required />
-            </div>
-
-            <div className="grid gap-2">
-              <label htmlFor="slug" className="text-sm font-medium">
-                Slug
-              </label>
-              <Input id="slug" name="slug" defaultValue={category.slug} required />
-            </div>
+            <CategoryFormFields
+              initialName={category.name}
+              initialSlug={category.slug}
+              autoSlug={false}
+            />
 
             <div className="flex flex-wrap gap-2">
               <Button type="submit">Enregistrer</Button>
