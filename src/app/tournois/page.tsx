@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, Trophy, Users } from "lucide-react";
+import { CalendarDays, CircleDollarSign, MapPin, TableProperties } from "lucide-react";
 
 import { TournamentRegistrationForm } from "~/components/tournaments/tournament-registration-form";
 import { Badge } from "~/components/ui/badge";
@@ -10,7 +10,6 @@ const keyInfos = [
   {
     title: "Date",
     value: new Date(featuredTournament.date).toLocaleDateString("fr-FR", {
-      weekday: "long",
       day: "2-digit",
       month: "long",
       year: "numeric",
@@ -19,21 +18,18 @@ const keyInfos = [
   },
   {
     title: "Lieu",
-    value: `${featuredTournament.venue}, ${featuredTournament.city}`,
+    value: `${featuredTournament.venue} · ${featuredTournament.city}`,
     icon: MapPin,
   },
   {
-    title: "Organisateur",
-    value: featuredTournament.organizer,
-    icon: Trophy,
+    title: "Tables",
+    value: "60 tables",
+    icon: TableProperties,
   },
   {
-    title: "Capacité",
-    value: `${featuredTournament.categories.reduce(
-      (sum, category) => sum + category.slotsLeft,
-      0,
-    )} places restantes`,
-    icon: Users,
+    title: "Tarifs",
+    value: `${Math.min(...featuredTournament.categories.map((category) => category.feeEuro))}€ à ${Math.max(...featuredTournament.categories.map((category) => category.feeEuro))}€`,
+    icon: CircleDollarSign,
   },
 ];
 
@@ -46,14 +42,54 @@ const schedule = [
   "19h00 · Finales et remise des récompenses",
 ];
 
+const regulationTables = [
+  {
+    id: "tableau-a",
+    title: "A - < 900 points",
+    startTime: "8h",
+    fee: "10€",
+    levelGroup: "Débutant",
+  },
+  {
+    id: "tableau-b",
+    title: "B - 900 à 1299 points",
+    startTime: "10h30",
+    fee: "12€",
+    levelGroup: "Confirmé",
+  },
+  {
+    id: "tableau-c",
+    title: "C - 1300 à 1699 points",
+    startTime: "13h30",
+    fee: "14€",
+    levelGroup: "Confirmé",
+  },
+  {
+    id: "tableau-open",
+    title: "Open - Toutes séries",
+    startTime: "16h",
+    fee: "15€",
+    levelGroup: "Open",
+  },
+];
+
+const groupedRegulationTables = regulationTables.reduce<
+  Record<string, typeof regulationTables>
+>((accumulator, table) => {
+  const group = accumulator[table.levelGroup] ?? [];
+  group.push(table);
+  accumulator[table.levelGroup] = group;
+  return accumulator;
+}, {});
+
 export default function TournoisPage() {
   return (
-    <main className="pb-12">
-      <section className="px-4 py-12 sm:py-16">
+    <main className="bg-slate-50 pb-12">
+      <section className="bg-gradient-to-br from-white via-sky-50 to-slate-100 px-4 py-12 sm:py-16">
         <div className="mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div>
             <Badge
-              className="mb-4 text-sky-800 hover:bg-sky-200"
+              className="mb-4 border-sky-200 bg-sky-100 text-sky-800 hover:bg-sky-200"
               variant="outline"
             >
               Tournoi annuel du club
@@ -73,22 +109,16 @@ export default function TournoisPage() {
             </div>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button
-                asChild
-                className="bg-emerald-600 text-white hover:bg-emerald-500"
-              >
+              <Button asChild className="bg-emerald-600 text-white hover:bg-emerald-500">
                 <a href="#inscriptions">S&apos;inscrire</a>
               </Button>
-              <Button
-                asChild
-                className="bg-blue-600 text-white hover:bg-blue-500"
-              >
+              <Button asChild className="bg-blue-600 text-white hover:bg-blue-500">
                 <a href="#inscrits">Voir les inscrits</a>
               </Button>
             </div>
           </div>
 
-          <div className="relative h-64 overflow-hidden rounded-2xl shadow-sm sm:h-80">
+          <div className="relative h-64 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:h-80">
             <div
               className="h-full w-full bg-cover bg-center"
               style={{
@@ -104,7 +134,7 @@ export default function TournoisPage() {
 
       <section
         id="inscrits"
-        className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8"
+        className="mx-auto w-full max-w-6xl space-y-4 bg-white px-4 py-10 sm:px-6 lg:px-8"
       >
         <h2 className="text-2xl font-semibold">Inscrits</h2>
         <Card>
@@ -115,20 +145,17 @@ export default function TournoisPage() {
         </Card>
       </section>
 
-      <section
-        id="infos-cles"
-        className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8"
-      >
-        <h2 className="text-2xl font-semibold">Infos clés</h2>
+      <section id="infos-cles" className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8">
+        <h2 className="text-2xl font-semibold">Infos importantes</h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {keyInfos.map((item) => {
             const Icon = item.icon;
 
             return (
-              <Card key={item.title}>
+              <Card key={item.title} className="rounded-2xl border-slate-200 shadow-sm">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
-                    <Icon className="size-4" />
+                    <Icon className="text-sky-700 size-4" />
                     {item.title}
                   </CardTitle>
                 </CardHeader>
@@ -143,28 +170,73 @@ export default function TournoisPage() {
 
       <section
         id="inscriptions"
-        className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8"
+        className="mx-auto w-full max-w-6xl space-y-4 bg-white px-4 py-10 sm:px-6 lg:px-8"
       >
         <h2 className="text-2xl font-semibold">Inscriptions</h2>
         <p className="text-muted-foreground text-sm">
           Choisissez vos tableaux, validez votre participation et recevez une
           confirmation de l&apos;équipe organisatrice.
         </p>
+
+        <Card className="rounded-2xl border-slate-200 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Règlement (résumé)</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            <ul className="list-disc space-y-1 pl-5">
+              <li>Matchs en 5 manches</li>
+              <li>Poules + élimination directe</li>
+              <li>2 tableaux max</li>
+              <li>Pointage 15 min avant</li>
+            </ul>
+            <a
+              href="/reglement-tournoi.pdf"
+              className="text-blue-700 underline underline-offset-4 hover:text-blue-600"
+            >
+              Voir le règlement complet (PDF)
+            </a>
+          </CardContent>
+        </Card>
+
+        <div className="space-y-5">
+          {Object.entries(groupedRegulationTables).map(([group, tables]) => (
+            <div key={group} className="space-y-3">
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-semibold">{group}</h3>
+                <Badge
+                  className="border-slate-200 bg-slate-100 text-slate-700"
+                  variant="outline"
+                >
+                  {group}
+                </Badge>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {tables.map((table) => (
+                  <Card key={table.id} className="rounded-2xl border-slate-200 shadow-sm">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">{table.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-1 text-sm">
+                      <p>⏰ {table.startTime}</p>
+                      <p>💰 {table.fee}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
         <TournamentRegistrationForm tournament={featuredTournament} />
       </section>
 
-      <section
-        id="programme"
-        className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8"
-      >
+      <section id="programme" className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-semibold">Programme</h2>
         <Card>
           <CardContent className="space-y-3 pt-6">
             {schedule.map((item) => (
-              <p
-                key={item}
-                className="border-border text-sm not-last:border-b not-last:pb-3"
-              >
+              <p key={item} className="border-border text-sm not-last:border-b not-last:pb-3">
                 {item}
               </p>
             ))}
@@ -174,27 +246,26 @@ export default function TournoisPage() {
 
       <section
         id="infos-pratiques"
-        className="mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 lg:px-8"
+        className="mx-auto w-full max-w-6xl space-y-4 bg-white px-4 py-10 sm:px-6 lg:px-8"
       >
         <h2 className="text-2xl font-semibold">Infos pratiques</h2>
         <Card>
           <CardContent className="space-y-2 pt-6 text-sm">
-            <p>
-              • Buvette et petite restauration disponibles toute la journée.
-            </p>
+            <p>• Buvette et petite restauration disponibles toute la journée.</p>
             <p>
               • Parking gratuit à proximité du complexe et accès PMR à
               l&apos;entrée principale.
             </p>
             <p>
               • Clôture des inscriptions le{" "}
-              {new Date(
-                featuredTournament.registrationDeadline,
-              ).toLocaleDateString("fr-FR", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-              })}
+              {new Date(featuredTournament.registrationDeadline).toLocaleDateString(
+                "fr-FR",
+                {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                },
+              )}
               .
             </p>
           </CardContent>
