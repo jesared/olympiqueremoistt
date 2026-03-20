@@ -42,6 +42,11 @@ type PostEditorPageProps = {
 
 const FALLBACK_CONTENT =
   "<p>Commencez à rédiger votre actualité pour voir l’aperçu.</p>";
+type PostError =
+  | "missing-fields"
+  | "invalid-image"
+  | "slug-already-used"
+  | "unknown";
 
 const ERROR_MESSAGES: Record<PostError, string> = {
   "missing-fields": "Veuillez remplir tous les champs obligatoires.",
@@ -282,6 +287,7 @@ export function PostEditorPage({
                 <Select
                   value={categoryId || "none"}
                   onValueChange={(value) =>
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                     setCategoryId(value === "none" ? "" : value)
                   }
                 >
