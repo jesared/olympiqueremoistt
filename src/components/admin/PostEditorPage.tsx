@@ -1,16 +1,16 @@
 "use client";
 
+import { Loader2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useMemo, useState, useTransition } from "react";
-import { Loader2, Sparkles } from "lucide-react";
 
 import {
   createPostAction,
   updatePostAction,
 } from "~/app/admin/posts/editor-actions";
-import RichTextEditor from "~/components/RichTextEditor";
 import { ImageUpload } from "~/components/ImageUpload";
+import RichTextEditor from "~/components/RichTextEditor";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -43,7 +43,7 @@ type PostEditorPageProps = {
 const FALLBACK_CONTENT =
   "<p>Commencez à rédiger votre actualité pour voir l’aperçu.</p>";
 
-const ERROR_MESSAGES: Record<string, string> = {
+const ERROR_MESSAGES: Record<PostError, string> = {
   "missing-fields": "Veuillez remplir tous les champs obligatoires.",
   "invalid-image": "L'URL de l'image est invalide.",
   "slug-already-used": "Ce slug est déjà utilisé par une autre actualité.",
@@ -98,7 +98,7 @@ export function PostEditorPage({
         return;
       }
 
-      setFeedback(ERROR_MESSAGES[result.error ?? "unknown"]);
+      setFeedback(ERROR_MESSAGES[result.error ?? "unknown"] ?? null);
     });
   };
 
