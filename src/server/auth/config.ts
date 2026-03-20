@@ -1,5 +1,6 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
+import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 
 import { db } from "~/server/db";
@@ -10,6 +11,13 @@ type TokenWithRole = {
   role?: SessionUserRole;
 };
 
+const hasEmailProviderConfig =
+  !!process.env.EMAIL_SERVER_HOST &&
+  !!process.env.EMAIL_SERVER_PORT &&
+  !!process.env.EMAIL_SERVER_USER &&
+  !!process.env.EMAIL_SERVER_PASSWORD &&
+  !!process.env.EMAIL_FROM;
+
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
@@ -19,7 +27,7 @@ declare module "next-auth" {
   }
 
   interface User {
-    role: SessionUserRole;
+    role?: SessionUserRole;
   }
 }
 
@@ -31,11 +39,31 @@ export const authConfig = {
   },
 
   providers: [
+    ...(hasEmailProviderConfig
+      ? [
+          EmailProvider({
+            server: {
+              host: process.env.EMAIL_SERVER_HOST,
+              port: Number(process.env.EMAIL_SERVER_PORT),
+              auth: {
+                user: process.env.EMAIL_SERVER_USER,
+                pass: process.env.EMAIL_SERVER_PASSWORD,
+              },
+            },
+            from: process.env.EMAIL_FROM,
+            maxAge: 15 * 60, // 15 minutes
+          }),
+        ]
+      : []),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+
+  pages: {
+    signIn: "/login",
+  },
 
   callbacks: {
     async jwt({ token, user }) {

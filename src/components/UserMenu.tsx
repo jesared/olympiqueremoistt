@@ -26,7 +26,7 @@ export function UserMenu({ user }: UserMenuProps) {
   if (!user) {
     return (
       <Button asChild size="sm">
-        <Link href="/api/auth/signin">Connexion</Link>
+        <Link href="/login">Connexion</Link>
       </Button>
     );
   }
