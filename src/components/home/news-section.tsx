@@ -1,29 +1,44 @@
+import Link from "next/link";
+
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-
 import SectionHeading from "~/components/home/section-heading";
+import { db as prisma } from "~/server/db";
 
-const newsItems = [
-  {
-    title: "Trois podiums au tournoi régional de Reims",
-    excerpt:
-      "Les catégories jeunes et seniors confirment leur progression avec des performances solides sur l'ensemble du week-end.",
-    date: "16 mars 2026",
-  },
-  {
-    title: "Ouverture d'un créneau compétition le mercredi soir",
-    excerpt:
-      "Un entraînement encadré supplémentaire est lancé pour renforcer la préparation tactique avant les rencontres.",
-    date: "12 mars 2026",
-  },
-  {
-    title: "Stage de printemps : inscriptions en cours",
-    excerpt:
-      "Quatre journées intensives autour du service, du démarrage revers et du jeu de transition pour tous les niveaux.",
-    date: "8 mars 2026",
-  },
-];
+const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+});
 
-export default function NewsSection() {
+function toExcerpt(content: string, maxLength = 140) {
+  const plainText = content
+    .replace(/&nbsp;|Â /g, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/[#>*_`\-\[\]()]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (plainText.length <= maxLength) {
+    return plainText;
+  }
+
+  return `${plainText.slice(0, maxLength).trimEnd()}…`;
+}
+
+export default async function NewsSection() {
+  const posts = await prisma.post.findMany({
+    where: { published: true },
+    orderBy: { createdAt: "desc" },
+    take: 3,
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      content: true,
+      createdAt: true,
+    },
+  });
+
   return (
     <section aria-labelledby="actualites-title" className="space-y-6 sm:space-y-8">
       <SectionHeading
@@ -33,23 +48,33 @@ export default function NewsSection() {
         description="Résultats, vie associative et annonces importantes : tout ce qu'il faut savoir cette semaine à l'ORTT."
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {newsItems.map((item) => (
-          <Card key={item.title} className="h-full">
-            <CardHeader className="space-y-2">
-              <p className="text-primary text-xs font-semibold tracking-[0.14em] uppercase">
-                {item.date}
-              </p>
-              <CardTitle className="text-lg leading-snug">{item.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {item.excerpt}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {posts.length === 0 ? (
+        <p className="text-muted-foreground text-sm">
+          Aucune actualité publiée pour le moment.
+        </p>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <Card key={post.id} className="h-full">
+              <CardHeader className="space-y-2">
+                <p className="text-primary text-xs font-semibold tracking-[0.14em] uppercase">
+                  {dateFormatter.format(post.createdAt)}
+                </p>
+                <CardTitle className="text-lg leading-snug">
+                  <Link href={`/actualites/${post.slug}`} className="hover:underline">
+                    {post.title}
+                  </Link>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {toExcerpt(post.content)}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

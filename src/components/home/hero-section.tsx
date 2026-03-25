@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "~/components/ui/button";
+import { TypingText } from "~/components/ui/typing-text";
 import { cn } from "~/lib/utils";
 import { Card } from "../ui/card";
 
@@ -73,8 +74,14 @@ export default function HeroSection() {
           </div>
 
           <h1 className="text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-            Club formateur, <span className="text-primary">passion locale</span>
-            , ambition nationale.
+            Club formateur,{" "}
+            <TypingText
+              words={["passion locale", "ambition nationale"]}
+              className="text-primary"
+              speed={70}
+              deleteSpeed={40}
+              cycleDelay={1400}
+            />
           </h1>
 
           <p className="text-muted-foreground max-w-2xl text-base sm:text-lg">

@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
+import Footer from "~/components/Footer";
 import Header from "~/components/Header";
 import { ThemeProvider } from "~/components/theme-provider";
 import { auth } from "~/server/auth";
@@ -39,6 +40,7 @@ export default async function RootLayout({
               >
                 {children}
               </main>
+              <Footer />
             </div>
           </TRPCReactProvider>
         </ThemeProvider>
