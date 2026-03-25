@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "~/components/ui/button";
+import { StatCount } from "~/components/ui/stat-count";
 import { TypingText } from "~/components/ui/typing-text";
 import { cn } from "~/lib/utils";
 import { Card } from "../ui/card";
@@ -131,21 +132,21 @@ export default function HeroSection() {
               <div
                 key={highlight.label}
                 className={cn(
-                  "group relative overflow-hidden rounded-2xl border p-4 transition-all",
+                  "group stat-card relative overflow-hidden rounded-2xl border p-4 transition-all",
                   "bg-card/70 hover:bg-card hover:shadow-lg",
                 )}
               >
                 <div className="from-primary/10 to-transparent pointer-events-none absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                 <dt className="text-muted-foreground relative flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em]">
-                  <span className="bg-primary/10 text-primary flex size-7 items-center justify-center rounded-full border border-primary/20">
+                  <span className="stat-icon bg-primary/10 text-primary flex size-7 items-center justify-center rounded-full border border-primary/20">
                     <Icon className="size-3.5" />
                   </span>
                   {highlight.label}
                 </dt>
 
                 <dd className="relative mt-3 text-3xl font-bold tracking-tight">
-                  {highlight.value}
+                  <StatCount value={highlight.value} durationMs={2000} />
                 </dd>
 
                 <p className="text-muted-foreground relative mt-1 text-xs">
