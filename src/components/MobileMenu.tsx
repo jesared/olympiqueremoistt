@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { Session } from "next-auth";
 
@@ -65,11 +65,15 @@ const iconMap: Record<string, LucideIcon> = {
   "/actualites": Newspaper,
   "/tournois": CalendarDays,
   "/club": Users,
+  "/club/presentation-du-club": Users,
+  "/club/inscriptions": Users,
   "/club/benevolat": Handshake,
   "/club/sponsoring": Handshake,
   "/club/joueur": UserIcon,
   "/club/lequipe-dirigeante": Users,
   "/club/lhistorique-du-club": History,
+  "/faq": Users,
+  "/plan-dacces": Users,
   "/evenements": CalendarDays,
 };
 

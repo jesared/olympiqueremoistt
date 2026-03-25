@@ -1,4 +1,4 @@
-import { Button } from "~/components/ui/button";
+﻿import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -46,7 +46,15 @@ export default function ClubPage() {
               pendant les vacances et d&apos;actions locales en lien avec les écoles
               et associations sportives de la ville.
             </p>
-            <Button variant="outline">Découvrir les adhésions</Button>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline">Découvrir les adhésions</Button>
+              <Button asChild variant="outline">
+                <a href="/club/presentation-du-club">Présentation du club</a>
+              </Button>
+              <Button asChild variant="outline">
+                <a href="/faq">FAQ</a>
+              </Button>
+            </div>
           </CardContent>
         </Card>
 

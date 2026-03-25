@@ -1,8 +1,17 @@
-"use client";
+﻿"use client";
 
 import type { Session } from "next-auth";
 
-import { CalendarDays, ChevronDown, Handshake, History, Home, Menu, Newspaper, Trophy, Users, User } from "lucide-react";
+import {
+  CalendarDays,
+  ChevronDown,
+  History,
+  Home,
+  Menu,
+  Newspaper,
+  Trophy,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -10,6 +19,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
+import Image from "next/image";
 import { MobileMenu, type MobileNavItem } from "./MobileMenu";
 import { ThemeToggle } from "./theme-toggle";
 import { UserMenu } from "./UserMenu";
@@ -28,6 +38,16 @@ const navItems: MobileNavItem[] = [
     icon: Users,
     children: [
       {
+        label: "Présentation",
+        href: "/club/presentation-du-club",
+        icon: Users,
+      },
+      {
+        label: "Inscriptions",
+        href: "/club/inscriptions",
+        icon: Users,
+      },
+      {
         label: "L'équipe dirigeante",
         href: "/club/lequipe-dirigeante",
         icon: Users,
@@ -36,6 +56,16 @@ const navItems: MobileNavItem[] = [
         label: "Historique du club",
         href: "/club/lhistorique-du-club",
         icon: History,
+      },
+      {
+        label: "FAQ",
+        href: "/faq",
+        icon: Users,
+      },
+      {
+        label: "Plan d'accès",
+        href: "/plan-dacces",
+        icon: Users,
       },
     ],
   },
@@ -85,9 +115,19 @@ export default function Header({ user }: HeaderProps) {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="text-foreground text-lg font-semibold tracking-tight transition-opacity hover:opacity-80"
+          className="text-foreground flex items-center gap-3 text-lg font-semibold tracking-tight transition-opacity hover:opacity-80"
         >
-          ORTT
+          <span className="bg-muted/60 flex h-14 w-14 items-center justify-center rounded-2xl border shadow-sm">
+            <Image
+              src="/logo.jpg"
+              alt="Logo Olympique Rémois Tennis de Table"
+              width={44}
+              height={44}
+              className="h-11 w-11 rounded-lg object-contain"
+              priority
+            />
+          </span>
+          <span className="hidden md:inline">ORTT</span>
         </Link>
 
         <nav className="hidden md:block" aria-label="Navigation principale">
