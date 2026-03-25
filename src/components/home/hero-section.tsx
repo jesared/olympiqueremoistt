@@ -8,9 +8,24 @@ import { cn } from "~/lib/utils";
 import { Card } from "../ui/card";
 
 const highlights = [
-  { label: "Licenciés", value: "220+", icon: Users },
-  { label: "Équipes engagées", value: "14", icon: Trophy },
-  { label: "Événements annuels", value: "30+", icon: CalendarDays },
+  {
+    label: "Licenciés",
+    value: "220+",
+    icon: Users,
+    detail: "Communauté active",
+  },
+  {
+    label: "Équipes engagées",
+    value: "14",
+    icon: Trophy,
+    detail: "Tous niveaux",
+  },
+  {
+    label: "Événements annuels",
+    value: "30+",
+    icon: CalendarDays,
+    detail: "Tournois & stages",
+  },
 ];
 
 export default function HeroSection() {
@@ -38,7 +53,7 @@ export default function HeroSection() {
         </svg>
       </div>
 
-      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_auto] lg:items-end">
+      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_auto] lg:items-start">
         {/* LEFT */}
         <div className="space-y-6 text-left">
           <div className="bg-background/70 relative overflow-hidden rounded-2xl border p-4 shadow-sm">
@@ -106,7 +121,7 @@ export default function HeroSection() {
 
         {/* RIGHT STATS */}
         <dl
-          className="grid w-full gap-3 sm:grid-cols-3 lg:w-[360px] lg:grid-cols-1"
+          className="grid w-full gap-4 sm:grid-cols-3 lg:w-[320px] lg:grid-cols-1 lg:self-center"
           aria-label="Chiffres clés du club"
         >
           {highlights.map((highlight) => {
@@ -116,18 +131,26 @@ export default function HeroSection() {
               <div
                 key={highlight.label}
                 className={cn(
-                  "group rounded-2xl border p-4 transition-all",
-                  "bg-card/60 hover:bg-card hover:shadow-md",
+                  "group relative overflow-hidden rounded-2xl border p-4 transition-all",
+                  "bg-card/70 hover:bg-card hover:shadow-lg",
                 )}
               >
-                <dt className="text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase">
-                  <Icon className="text-primary size-4" />
+                <div className="from-primary/10 to-transparent pointer-events-none absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                <dt className="text-muted-foreground relative flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em]">
+                  <span className="bg-primary/10 text-primary flex size-7 items-center justify-center rounded-full border border-primary/20">
+                    <Icon className="size-3.5" />
+                  </span>
                   {highlight.label}
                 </dt>
 
-                <dd className="mt-2 text-2xl font-bold tracking-tight">
+                <dd className="relative mt-3 text-3xl font-bold tracking-tight">
                   {highlight.value}
                 </dd>
+
+                <p className="text-muted-foreground relative mt-1 text-xs">
+                  {highlight.detail}
+                </p>
               </div>
             );
           })}
