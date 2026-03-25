@@ -204,3 +204,52 @@ export async function seedPresentationPage() {
 
   redirect("/admin/pages?seed=done");
 }
+
+export async function seedFaqPage() {
+  const session = await requireAdminOrModerator();
+
+  const slug = "faq";
+  const existingPage = await prisma.page.findUnique({
+    where: { slug },
+    select: { id: true },
+  });
+
+  if (existingPage) {
+    redirect("/admin/pages?seed=faq-exists");
+  }
+
+  const content = `
+    <h2>Mon enfant (12-14 ans) peut-il faire une séance d’essai ?</h2>
+    <p>Oui, c’est possible. Les essais se font généralement le mercredi et/ou le vendredi. Exemple de créneaux évoqués : mercredi 13h30-15h00 ou 17h30-19h00, et vendredi 17h30-19h00 ou 19h00-20h30. Les horaires peuvent varier selon l’âge et la période.</p>
+
+    <h2>Où ont lieu les entraînements d’essai ?</h2>
+    <p>Les entraînements ont lieu au complexe sportif René Tys à Reims.</p>
+
+    <h2>Proposez-vous des stages pendant les vacances ?</h2>
+    <p>Oui, des stages sont proposés pendant certaines vacances scolaires. Exemple : un stage jeunes du 24 au 27 février. Le contenu et les dates peuvent évoluer d’une saison à l’autre.</p>
+
+    <h2>Avez-vous un groupe loisirs adultes ?</h2>
+    <p>Oui, un groupe loisirs existe. Pour les tarifs et les jours d’entraînement, contactez le club afin d’obtenir les détails à jour.</p>
+
+    <h2>Puis-je venir jouer avec ma fille (adulte + enfant) ?</h2>
+    <p>Oui, c’est possible. Un créneau cité pour ce type de pratique est le vendredi 19h00-20h30.</p>
+
+    <h2>Comment obtenir une réponse précise et personnalisée ?</h2>
+    <p>Le club peut vous répondre par e-mail avec les informations adaptées à votre situation (âge, niveau, période).</p>
+  `;
+
+  await prisma.page.create({
+    data: {
+      title: "FAQ",
+      slug,
+      content,
+      published: true,
+      authorId: session.user.id,
+    },
+  });
+
+  revalidatePath("/admin/pages");
+  revalidatePath(`/p/${slug}`);
+
+  redirect("/admin/pages?seed=faq-done");
+}

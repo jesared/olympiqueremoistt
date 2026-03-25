@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { seedPresentationPage } from "~/app/admin/pages/actions";
+import { seedFaqPage, seedPresentationPage } from "~/app/admin/pages/actions";
 import { PageDeleteButton } from "~/app/admin/pages/PageDeleteButton";
 import { PagePublishToggleButton } from "~/app/admin/pages/PagePublishToggleButton";
 import { Button } from "~/components/ui/button";
@@ -38,6 +38,7 @@ export default async function AdminPagesPage({
   const hasPresentation = pages.some(
     (page) => page.slug === "presentation-du-club",
   );
+  const hasFaq = pages.some((page) => page.slug === "faq");
 
   return (
     <div className="space-y-6">
@@ -49,6 +50,13 @@ export default async function AdminPagesPage({
               <form action={seedPresentationPage}>
                 <Button type="submit" variant="outline">
                   Importer Présentation
+                </Button>
+              </form>
+            ) : null}
+            {!hasFaq ? (
+              <form action={seedFaqPage}>
+                <Button type="submit" variant="outline">
+                  Importer FAQ
                 </Button>
               </form>
             ) : null}
@@ -67,6 +75,16 @@ export default async function AdminPagesPage({
           {seed === "exists" ? (
             <p className="border-amber-200 bg-amber-50 text-amber-700 mb-4 rounded-md border px-3 py-2 text-sm">
               La page Présentation existe déjà.
+            </p>
+          ) : null}
+          {seed === "faq-done" ? (
+            <p className="border-emerald-200 bg-emerald-50 text-emerald-700 mb-4 rounded-md border px-3 py-2 text-sm">
+              FAQ importée avec succès. Vous pouvez la modifier si besoin.
+            </p>
+          ) : null}
+          {seed === "faq-exists" ? (
+            <p className="border-amber-200 bg-amber-50 text-amber-700 mb-4 rounded-md border px-3 py-2 text-sm">
+              La page FAQ existe déjà.
             </p>
           ) : null}
           {pages.length === 0 ? (
