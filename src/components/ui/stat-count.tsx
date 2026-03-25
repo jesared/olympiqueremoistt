@@ -67,7 +67,7 @@ export function StatCount({ value, durationMs = 900, className }: StatCountProps
     let frameId: number;
 
     const animate = (timestamp: number) => {
-      if (start === null) start = timestamp;
+      start ??= timestamp;
       const progress = Math.min((timestamp - start) / durationMs, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
 

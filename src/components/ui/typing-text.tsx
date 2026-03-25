@@ -18,7 +18,7 @@ export function TypingText({
   text,
   words,
   speed = 38,
-  startDelay = 300,
+  startDelay: _startDelay = 300,
   cycleDelay = 1200,
   deleteSpeed = 22,
   loop = true,
