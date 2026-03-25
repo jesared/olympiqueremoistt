@@ -63,17 +63,17 @@ export default function ClubInscriptionsPage() {
     <main className="mx-auto w-full max-w-5xl space-y-10 px-4 py-8 sm:px-6 lg:px-8">
       <PageHeader
         title="Inscriptions 2025-2026"
-        description="Bordereaux d'adhésion, documents et planning des entraînements pour rejoindre l'ORTT."
+        description="Bordereaux d&apos;adhésion, documents et planning des entraînements pour rejoindre l&apos;ORTT."
       />
 
       <section className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Pratiquer le tennis de table à l'ORTT</CardTitle>
+            <CardTitle>Pratiquer le tennis de table à l&apos;ORTT</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm leading-relaxed">
             <p>
-              L'Olympique Rémois Tennis de Table vous accueille toute l'année pour pratiquer le tennis de table sous toutes ses formes.
+              L&apos;Olympique Rémois Tennis de Table vous accueille toute l&apos;année pour pratiquer le tennis de table sous toutes ses formes.
             </p>
             <ul className="list-disc space-y-1.5 pl-5">
               {practiceTypes.map((item) => (
@@ -145,17 +145,17 @@ export default function ClubInscriptionsPage() {
       <section className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Les salles d'entraînement</CardTitle>
+            <CardTitle>Les salles d&apos;entraînement</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
             <p>
-              Salle d'entraînement : Complexe René Tys, 5 impasse Léo Lagrange, 51100 Reims.
+              Salle d&apos;entraînement : Complexe René Tys, 5 impasse Léo Lagrange, 51100 Reims.
             </p>
             <p>
               Championnat par équipes : Gymnase Géo André, rue François Mauriac, 51100 Reims.
             </p>
             <Button asChild variant="outline" className="w-fit">
-              <a href="/plan-dacces">Plan d'accès</a>
+              <a href="/plan-dacces">Plan d&apos;accès</a>
             </Button>
           </CardContent>
         </Card>
