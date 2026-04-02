@@ -48,6 +48,11 @@ const navItems: MobileNavItem[] = [
         icon: Users,
       },
       {
+        label: "Newsletter",
+        href: "/club/newsletter",
+        icon: Users,
+      },
+      {
         label: "L'équipe dirigeante",
         href: "/club/lequipe-dirigeante",
         icon: Users,

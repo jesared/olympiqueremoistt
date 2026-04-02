@@ -67,6 +67,7 @@ const iconMap: Record<string, LucideIcon> = {
   "/club": Users,
   "/club/presentation-du-club": Users,
   "/club/inscriptions": Users,
+  "/club/newsletter": Users,
   "/club/benevolat": Handshake,
   "/club/sponsoring": Handshake,
   "/club/joueur": UserIcon,
