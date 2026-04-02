@@ -58,7 +58,7 @@ export default function NewsletterPage() {
               Pour recevoir la newsletter, contactez le club et indiquez votre e-mail.
             </p>
             <Button asChild className="w-full">
-              <a href="/contact">Contacter le club</a>
+              <a href="/contact">Recevoir la newsletter</a>
             </Button>
           </CardContent>
         </Card>
@@ -110,7 +110,7 @@ export default function NewsletterPage() {
               Inscrivez-vous pour recevoir les prochaines éditions.
             </p>
             <Button asChild className="w-full">
-              <a href="/contact">S’inscrire</a>
+              <a href="/contact">Recevoir la newsletter</a>
             </Button>
           </CardContent>
         </Card>
