@@ -1,4 +1,5 @@
 ﻿import { PageHeader } from "~/components/page/page-header";
+import { ContactForm } from "~/components/contact/ContactForm";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
@@ -15,11 +16,12 @@ export default function ContactPage() {
           <CardHeader>
             <CardTitle>Nous contacter</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <CardContent className="space-y-4 text-sm text-muted-foreground">
             <p>
               Pour recevoir la newsletter <strong>La bulle du ping</strong>, indiquez simplement
               votre e‑mail dans votre message.
             </p>
+            <ContactForm />
             <div className="flex flex-wrap gap-2">
               <Button asChild variant="outline">
                 <a href="mailto:contact@ortt.fr">contact@ortt.fr</a>
