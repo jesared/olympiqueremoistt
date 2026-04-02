@@ -11,19 +11,14 @@ const highlights = [
 
 const latestNewsletters = [
   {
-    title: "La bulle du ping — Mars 2026",
-    date: "Mars 2026",
-    href: "",
+    title: "La bulle du ping — Octobre",
+    date: "Octobre",
+    href: "https://www.ortt.fr/wp-content/uploads/2026/04/LA-BULLE-DU-PING-EDITION-OCTOBRE-1.pdf",
   },
   {
-    title: "La bulle du ping — Février 2026",
-    date: "Février 2026",
-    href: "",
-  },
-  {
-    title: "La bulle du ping — Janvier 2026",
-    date: "Janvier 2026",
-    href: "",
+    title: "La bulle du ping — Décembre",
+    date: "Décembre",
+    href: "https://www.ortt.fr/wp-content/uploads/2026/04/LA-BULLE-DU-PING-EDITION-DECEMBRE.pdf",
   },
 ];
 
