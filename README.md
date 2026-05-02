@@ -50,7 +50,7 @@ Le socle technique est issu d’un bootstrap T3 (Next.js App Router + Prisma + N
 - **tRPC** présent mais encore partiellement scaffold (cf. section “Notes techniques”)
 
 ### Stockage média
-- **Supabase Storage** (bucket `posts`) pour upload d’images d’actualités
+- **Cloudinary** pour l’upload et l’hébergement des images d’actualités
 
 ---
 
@@ -101,7 +101,7 @@ Le socle technique est issu d’un bootstrap T3 (Next.js App Router + Prisma + N
 
 ## Admin (fonctionnel sur plusieurs modules)
 - **Gestion des actualités** : listing, création, édition, suppression, publication/dépublication.
-- **Upload d’image** pour actualités via Supabase Storage (URL publique enregistrée).
+- **Upload d’image** pour actualités via Cloudinary (URL publique enregistrée).
 - **Gestion des catégories** : création, édition, suppression.
 - **Gestion des événements** : création, édition, suppression, statut publié/brouillon.
 - **Gestion des utilisateurs** : listing paginé, filtrage UI, changement de rôle, suppression (avec protection auto-suppression).
@@ -193,15 +193,16 @@ AUTH_SECRET=
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 DATABASE_URL=
-SUPABASE_URL=
-SUPABASE_ANON_KEY=
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=
+NEXT_PUBLIC_CLOUDINARY_FOLDER=
 NODE_ENV=development
 ```
 
 ### Notes
 - `AUTH_SECRET` est requis en production.
-- `SUPABASE_URL` + `SUPABASE_ANON_KEY` sont nécessaires pour l’upload d’images.
-- Le bucket Supabase attendu est `posts` (public).
+- `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` et `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` sont nécessaires pour l’upload d’images.
+- `NEXT_PUBLIC_CLOUDINARY_FOLDER` est optionnel et permet de ranger les uploads dans un dossier dédié.
 
 ---
 

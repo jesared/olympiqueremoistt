@@ -19,8 +19,6 @@ export const env = createEnv({
     EMAIL_SERVER_PASSWORD: z.string().min(1).optional(),
     EMAIL_FROM: z.string().email().optional(),
     DATABASE_URL: z.string().url(),
-    SUPABASE_URL: z.string().url(),
-    SUPABASE_ANON_KEY: z.string().min(1),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -32,7 +30,9 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string().min(1),
+    NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: z.string().min(1),
+    NEXT_PUBLIC_CLOUDINARY_FOLDER: z.string().min(1).optional(),
   },
 
   /**
@@ -49,8 +49,12 @@ export const env = createEnv({
     EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,
     EMAIL_FROM: process.env.EMAIL_FROM,
     DATABASE_URL: process.env.DATABASE_URL,
-    SUPABASE_URL: process.env.SUPABASE_URL,
-    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:
+      process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+    NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET:
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+    NEXT_PUBLIC_CLOUDINARY_FOLDER:
+      process.env.NEXT_PUBLIC_CLOUDINARY_FOLDER,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**

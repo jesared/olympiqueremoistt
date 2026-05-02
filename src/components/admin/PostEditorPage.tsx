@@ -23,8 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { uploadImage } from "~/lib/cloudinary";
 import { slugify } from "~/lib/slug";
-import { uploadImage } from "~/lib/supabase";
 
 type PostEditorPageProps = {
   initialData?: {
