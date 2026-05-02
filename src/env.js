@@ -30,8 +30,8 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string().min(1),
-    NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: z.string().min(1),
+    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string().min(1).optional(),
+    NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: z.string().min(1).optional(),
     NEXT_PUBLIC_CLOUDINARY_FOLDER: z.string().min(1).optional(),
   },
 
