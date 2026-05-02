@@ -7,6 +7,18 @@ type CloudinaryUploadResponse = {
   };
 };
 
+function toFriendlyCloudinaryError(message?: string) {
+  if (!message) {
+    return "Impossible de televerser l'image sur Cloudinary.";
+  }
+
+  if (message.includes("Upload preset must be whitelisted for unsigned uploads")) {
+    return "Le preset Cloudinary doit etre configure en upload non signe (unsigned).";
+  }
+
+  return message;
+}
+
 export async function uploadImage(file: File): Promise<string> {
   if (!file.type.startsWith("image/")) {
     throw new Error("Seuls les fichiers image sont autorises.");
@@ -40,9 +52,7 @@ export async function uploadImage(file: File): Promise<string> {
   const data = (await response.json()) as CloudinaryUploadResponse;
 
   if (!response.ok || !data.secure_url) {
-    throw new Error(
-      data.error?.message ?? "Impossible de televerser l'image sur Cloudinary.",
-    );
+    throw new Error(toFriendlyCloudinaryError(data.error?.message));
   }
 
   return data.secure_url;

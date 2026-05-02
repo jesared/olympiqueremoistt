@@ -83,8 +83,12 @@ export function ImageUpload({
       setIsUploading(true);
       const uploadedUrl = await uploadImage(file);
       onUploaded(uploadedUrl);
-    } catch {
-      setError("Impossible d’uploader l’image. Réessayez dans quelques secondes.");
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Impossible d'uploader l'image. Reessayez dans quelques secondes.",
+      );
     } finally {
       setIsUploading(false);
     }
@@ -164,9 +168,9 @@ export function ImageUpload({
           </div>
 
           <div>
-            <p className="text-sm font-medium">Déposez une image ici</p>
+            <p className="text-sm font-medium">Deposez une image ici</p>
             <p className="text-muted-foreground text-xs">
-              PNG, JPG, WEBP… ou utilisez le bouton ci-dessous.
+              PNG, JPG, WEBP... ou utilisez le bouton ci-dessous.
             </p>
           </div>
 
@@ -178,7 +182,7 @@ export function ImageUpload({
             className="w-full sm:w-auto"
           >
             <ImagePlus className="mr-2 size-4" />
-            {previewUrl ? "Changer l’image" : "Choisir une image"}
+            {previewUrl ? "Changer l'image" : "Choisir une image"}
           </Button>
         </div>
 
@@ -187,12 +191,12 @@ export function ImageUpload({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={previewUrl}
-              alt="Prévisualisation de l’image"
+              alt="Previsualisation de l'image"
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.01]"
             />
           ) : (
             <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
-              Aucune image sélectionnée
+              Aucune image selectionnee
             </div>
           )}
         </div>
@@ -202,7 +206,7 @@ export function ImageUpload({
         {isUploading ? (
           <div className="text-muted-foreground inline-flex items-center gap-2 text-sm">
             <Loader2 className="size-4 animate-spin" />
-            Upload en cours…
+            Upload en cours...
           </div>
         ) : null}
 
@@ -215,7 +219,7 @@ export function ImageUpload({
             disabled={isUploading}
           >
             <Trash2 className="mr-2 size-4" />
-            Supprimer l’image
+            Supprimer l'image
           </Button>
         ) : null}
       </div>
