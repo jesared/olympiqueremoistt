@@ -182,7 +182,7 @@ export function ImageUpload({
             className="w-full sm:w-auto"
           >
             <ImagePlus className="mr-2 size-4" />
-            {previewUrl ? "Changer l'image" : "Choisir une image"}
+            {previewUrl ? "Changer l’image" : "Choisir une image"}
           </Button>
         </div>
 
@@ -191,7 +191,7 @@ export function ImageUpload({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={previewUrl}
-              alt="Previsualisation de l'image"
+              alt="Previsualisation de l’image"
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.01]"
             />
           ) : (
@@ -219,7 +219,7 @@ export function ImageUpload({
             disabled={isUploading}
           >
             <Trash2 className="mr-2 size-4" />
-            Supprimer l'image
+            Supprimer l’image
           </Button>
         ) : null}
       </div>
