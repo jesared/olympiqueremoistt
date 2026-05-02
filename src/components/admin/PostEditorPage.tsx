@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Sparkles } from "lucide-react";
+import { Check, Copy, Loader2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useMemo, useState, useTransition } from "react";
@@ -70,6 +70,7 @@ export function PostEditorPage({
   const [published, setPublished] = useState(initialData?.published ?? false);
   const [categoryId, setCategoryId] = useState(initialData?.categoryId ?? "");
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [imageUrlCopied, setImageUrlCopied] = useState(false);
 
   const titleLabel =
     mode === "create" ? "Créer une actualité" : "Modifier une actualité";
@@ -105,6 +106,19 @@ export function PostEditorPage({
 
       setFeedback(ERROR_MESSAGES[result.error ?? "unknown"] ?? null);
     });
+  };
+
+  const copyImageUrl = async () => {
+    if (!imageUrl.trim()) {
+      return;
+    }
+
+    await navigator.clipboard.writeText(imageUrl);
+    setImageUrlCopied(true);
+
+    window.setTimeout(() => {
+      setImageUrlCopied(false);
+    }, 1500);
   };
 
   return (
@@ -316,12 +330,33 @@ export function PostEditorPage({
                   uploadImage={uploadImage}
                   onUploaded={setImageUrl}
                 />
-                <Input
-                  id="image-url-input"
-                  placeholder="https://..."
-                  value={imageUrl}
-                  onChange={(event) => setImageUrl(event.target.value)}
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="image-url-input"
+                    placeholder="https://..."
+                    value={imageUrl}
+                    onChange={(event) => setImageUrl(event.target.value)}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => void copyImageUrl()}
+                    disabled={!imageUrl.trim()}
+                    aria-label="Copier l'URL de l'image"
+                    title={
+                      imageUrlCopied
+                        ? "Lien copie"
+                        : "Copier l'URL de l'image"
+                    }
+                  >
+                    {imageUrlCopied ? (
+                      <Check className="size-4" />
+                    ) : (
+                      <Copy className="size-4" />
+                    )}
+                  </Button>
+                </div>
                 <input type="hidden" name="imageUrl" value={imageUrl} />
               </CardContent>
             </Card>
