@@ -196,6 +196,10 @@ DATABASE_URL=
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
 NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=
 NEXT_PUBLIC_CLOUDINARY_FOLDER=
+NEXT_PUBLIC_SANITY_PROJECT_ID=
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_API_TOKEN=
+SANITY_API_VERSION=2026-05-08
 NODE_ENV=development
 ```
 
@@ -203,6 +207,12 @@ NODE_ENV=development
 - `AUTH_SECRET` est requis en production.
 - `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` et `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` sont nécessaires pour l’upload d’images.
 - `NEXT_PUBLIC_CLOUDINARY_FOLDER` est optionnel et permet de ranger les uploads dans un dossier dédié.
+- Les variables `NEXT_PUBLIC_SANITY_*` et `SANITY_*` sont optionnelles tant que le studio embarqué n’est pas utilisé.
+
+### Sanity (installation non invasive)
+- Le studio embarqué est disponible sur `/studio`.
+- Aucun contenu public existant n’est encore branché sur Sanity.
+- Les schémas initiaux ajoutés sont `page` et `post`, pour préparer une migration progressive du contenu éditorial.
 
 ---
 

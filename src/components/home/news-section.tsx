@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import SectionHeading from "~/components/home/section-heading";
-import { db as prisma } from "~/server/db";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { getPublishedNewsItems } from "~/sanity/lib/news";
 
 const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
   day: "2-digit",
@@ -10,37 +10,14 @@ const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
   year: "numeric",
 });
 
-function toExcerpt(content: string, maxLength = 140) {
-  const plainText = content
-    .replace(/&nbsp;|Â /g, " ")
-    .replace(/<[^>]*>/g, " ")
-    .replace(/[#>*_`\-\[\]()]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  if (plainText.length <= maxLength) {
-    return plainText;
-  }
-
-  return `${plainText.slice(0, maxLength).trimEnd()}…`;
-}
-
 export default async function NewsSection() {
-  const posts = await prisma.post.findMany({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
-    take: 3,
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      content: true,
-      createdAt: true,
-    },
-  });
+  const posts = await getPublishedNewsItems(3);
 
   return (
-    <section aria-labelledby="actualites-title" className="space-y-6 sm:space-y-8">
+    <section
+      aria-labelledby="actualites-title"
+      className="space-y-6 sm:space-y-8"
+    >
       <SectionHeading
         id="actualites-title"
         eyebrow="Actualités"
@@ -58,17 +35,20 @@ export default async function NewsSection() {
             <Card key={post.id} className="h-full">
               <CardHeader className="space-y-2">
                 <p className="text-primary text-xs font-semibold tracking-[0.14em] uppercase">
-                  {dateFormatter.format(post.createdAt)}
+                  {dateFormatter.format(post.publishedAt)}
                 </p>
                 <CardTitle className="text-lg leading-snug">
-                  <Link href={`/actualites/${post.slug}`} className="hover:underline">
+                  <Link
+                    href={`/actualites/${post.slug}`}
+                    className="hover:underline"
+                  >
                     {post.title}
                   </Link>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  {toExcerpt(post.content)}
+                  {post.excerpt}
                 </p>
               </CardContent>
             </Card>

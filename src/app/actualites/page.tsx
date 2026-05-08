@@ -1,11 +1,12 @@
+import { Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
 import { CategoryBadge } from "~/components/category-badge";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import { db as prisma } from "~/server/db";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { auth } from "~/server/auth";
-import { Pencil } from "lucide-react";
+import { getPublishedNewsItems } from "~/sanity/lib/news";
 
 const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
   day: "2-digit",
@@ -13,43 +14,20 @@ const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
   year: "numeric",
 });
 
-function toExcerpt(content: string, maxLength = 160) {
-  const plainText = content
-    .replace(/&nbsp;| /g, " ")
-    .replace(/<[^>]*>/g, " ")
-    .replace(/[#>*_`\-\[\]()]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  if (plainText.length <= maxLength) {
-    return plainText;
-  }
-
-  return `${plainText.slice(0, maxLength).trimEnd()}…`;
+function getAdminEditHref(post: {
+  id: string;
+  source: "sanity" | "prisma";
+  studioEditUrl: string | null;
+}) {
+  return post.source === "sanity"
+    ? (post.studioEditUrl ?? "#")
+    : `/admin/posts/${post.id}/edit`;
 }
 
 export default async function ActualitesPage() {
   const session = await auth();
   const isAdmin = session?.user?.role === "ADMIN";
-
-  const posts = await prisma.post.findMany({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      imageUrl: true,
-      content: true,
-      createdAt: true,
-      category: {
-        select: {
-          name: true,
-          color: true,
-        },
-      },
-    },
-  });
+  const posts = await getPublishedNewsItems();
 
   const [featuredPost, ...otherPosts] = posts;
 
@@ -77,7 +55,7 @@ export default async function ActualitesPage() {
                 <div className="absolute top-4 right-4 z-20">
                   <Button asChild size="icon-xs" variant="secondary">
                     <Link
-                      href={`/admin/posts/${featuredPost.id}/edit`}
+                      href={getAdminEditHref(featuredPost)}
                       aria-label={`Editer ${featuredPost.title}`}
                     >
                       <Pencil className="size-3.5" />
@@ -109,7 +87,7 @@ export default async function ActualitesPage() {
 
                 <div className="absolute right-0 bottom-0 left-0 z-20 flex flex-col gap-2 p-5 sm:gap-3 sm:p-8">
                   <p className="text-xs font-medium tracking-wide text-white/80 uppercase">
-                    {dateFormatter.format(featuredPost.createdAt)}
+                    {dateFormatter.format(featuredPost.publishedAt)}
                   </p>
                   {featuredPost.category?.name ? (
                     <CategoryBadge
@@ -122,7 +100,7 @@ export default async function ActualitesPage() {
                     {featuredPost.title}
                   </h2>
                   <p className="line-clamp-2 max-w-3xl text-sm leading-relaxed text-white/95 sm:text-base">
-                    {toExcerpt(featuredPost.content, 120)}
+                    {featuredPost.excerpt}
                   </p>
                   <Button
                     asChild
@@ -150,7 +128,7 @@ export default async function ActualitesPage() {
                     <div className="absolute top-3 right-3 z-10">
                       <Button asChild size="icon-xs" variant="outline">
                         <Link
-                          href={`/admin/posts/${post.id}/edit`}
+                          href={getAdminEditHref(post)}
                           aria-label={`Editer ${post.title}`}
                         >
                           <Pencil className="size-3.5" />
@@ -178,7 +156,7 @@ export default async function ActualitesPage() {
 
                     <CardHeader className="space-y-1 p-0">
                       <p className="text-muted-foreground/80 text-xs font-medium tracking-wide uppercase">
-                        {dateFormatter.format(post.createdAt)}
+                        {dateFormatter.format(post.publishedAt)}
                       </p>
                       {post.category?.name ? (
                         <CategoryBadge
@@ -194,7 +172,7 @@ export default async function ActualitesPage() {
 
                     <CardContent className="mt-auto p-0">
                       <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
-                        {toExcerpt(post.content)}
+                        {post.excerpt}
                       </p>
                     </CardContent>
                   </Link>

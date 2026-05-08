@@ -263,6 +263,60 @@
     text-decoration: underline;
   }
 
+  .article-content {
+    @apply text-foreground/90;
+  }
+
+  .article-content::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+
+  .article-content > * + * {
+    margin-top: 1.15rem;
+  }
+
+  .article-content h1 {
+    @apply mt-8 text-3xl leading-tight font-semibold tracking-tight sm:text-4xl;
+  }
+
+  .article-content h2 {
+    @apply mt-12 text-2xl leading-tight font-semibold tracking-tight sm:text-3xl;
+  }
+
+  .article-content h3 {
+    @apply mt-8 text-xl leading-tight font-semibold tracking-tight sm:text-2xl;
+  }
+
+  .article-content p {
+    @apply text-[1.02rem] leading-8 sm:text-[1.06rem];
+  }
+
+  .article-content ul {
+    @apply my-6 list-disc space-y-3 pl-6 marker:text-primary;
+  }
+
+  .article-content ol {
+    @apply my-6 list-decimal space-y-3 pl-6 marker:font-semibold marker:text-primary;
+  }
+
+  .article-content li {
+    @apply pl-1 text-[1.02rem] leading-8 sm:text-[1.06rem];
+  }
+
+  .article-content blockquote {
+    @apply border-primary/35 bg-primary/5 text-foreground/85 my-10 rounded-2xl border-l-4 px-5 py-4 text-lg leading-8 italic;
+  }
+
+  .article-content strong {
+    @apply font-semibold text-foreground;
+  }
+
+  .article-content a {
+    @apply decoration-primary/35 underline underline-offset-4 transition-colors hover:text-primary;
+  }
+
   .hero-emphasis {
     position: relative;
   }

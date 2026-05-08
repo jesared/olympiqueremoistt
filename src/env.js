@@ -19,6 +19,8 @@ export const env = createEnv({
     EMAIL_SERVER_PASSWORD: z.string().min(1).optional(),
     EMAIL_FROM: z.string().email().optional(),
     DATABASE_URL: z.string().url(),
+    SANITY_API_TOKEN: z.string().min(1).optional(),
+    SANITY_API_VERSION: z.string().min(1).optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -33,6 +35,8 @@ export const env = createEnv({
     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string().min(1).optional(),
     NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: z.string().min(1).optional(),
     NEXT_PUBLIC_CLOUDINARY_FOLDER: z.string().min(1).optional(),
+    NEXT_PUBLIC_SANITY_PROJECT_ID: z.string().min(1).optional(),
+    NEXT_PUBLIC_SANITY_DATASET: z.string().min(1).optional(),
   },
 
   /**
@@ -49,12 +53,16 @@ export const env = createEnv({
     EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,
     EMAIL_FROM: process.env.EMAIL_FROM,
     DATABASE_URL: process.env.DATABASE_URL,
+    SANITY_API_TOKEN: process.env.SANITY_API_TOKEN,
+    SANITY_API_VERSION: process.env.SANITY_API_VERSION,
     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:
       process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
     NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET:
       process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
     NEXT_PUBLIC_CLOUDINARY_FOLDER:
       process.env.NEXT_PUBLIC_CLOUDINARY_FOLDER,
+    NEXT_PUBLIC_SANITY_PROJECT_ID: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+    NEXT_PUBLIC_SANITY_DATASET: process.env.NEXT_PUBLIC_SANITY_DATASET,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**
